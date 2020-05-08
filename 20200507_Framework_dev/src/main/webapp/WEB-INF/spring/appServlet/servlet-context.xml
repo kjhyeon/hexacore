@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+<!-- TODO 2 web.xml에서 dispatcherServlet이 필요로 하는 환경 설정 파일, 설정한 서블릿 name의 -servlet.xml, 기본 위치는 WEB-INF -->
+<!-- /WEB-INF/servletname-servlet.xml -->
+<!-- 나중에 설정파일을 모아서 관리하기 위해서 web.xml에 servlet 호출하는 parameter인 init-param을 사용해서 manual로 작성 -->
+
+<!-- base-top-level 하위에 있는 package 및 class에 선언된 component 모두 bean으로 생성이 된다 -->
+<!-- 그 중에 MVC에 관련된 Controller Service Repository Annotation은 dispatcherServlet 구성 생성 -->
+<context:component-scan base-package="com.min.edu.spring"/>
+<mvc:annotation-driven/>
+
+<!-- Resolver : DispatcherServlet에 의해서 반환된 text를 조합하여 contextroot로 실행  -->
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="prefix" value="/WEB-INF/views/"></property>
+	<property name="suffix" value=".jsp"></property>
+</bean>
+
+<tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>
