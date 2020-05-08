@@ -7,7 +7,7 @@
 <title>전체글 보기</title>
 </head>
 <body>
-	<h1>전체글 보기</h1>
+	<h1>전체글 보기1111111111</h1>
 	${lists}
 </body>
 </html>
