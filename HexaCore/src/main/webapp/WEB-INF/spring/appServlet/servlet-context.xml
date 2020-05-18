@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+<context:component-scan base-package="hexa.core.web"/>
+<mvc:annotation-driven/>
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="prefix" value="/WEB-INF/views/"/>
+	<property name="suffix" value=".jsp"/>
+</bean>
+<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<mvc:interceptors>
+<!-- 		<mvc:interceptor> -->
+<!-- 			<mvc:mapping path="/bbsList.do" /> -->
+<!-- 			<mvc:mapping path="/memberListMAV.do" /> -->
+<!-- 			<bean class="com.min.edu.interceptor.Interceptor" /> -->
+<!-- 		</mvc:interceptor> -->
+			<bean 
+				class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+			<property name="cacheSeconds" value="0" />
+			<property name="useCacheControlHeader" value="true" />
+			<property name="useCacheControlNoStore" value="true" />
+			<property name="useExpiresHeader" value="true" />
+			<property name="cacheMappings">
+				<props>
+				<prop key="/img/**">86400</prop>
+<!-- 				 key는 해당 위치 주소, 값은 시간 -->
+ 				</props>
+			</property>
+ 		</bean>
+		
+	</mvc:interceptors>
+</beans>
