@@ -45,7 +45,7 @@
 
 <!-- 트랜잭션을 AOP를 통해서 설정 -->
 <aop:config>
-	<aop:pointcut expression="execution(public * com.min.edu.model.*Service*.*(..))" id="pointCut"/>
+	<aop:pointcut expression="execution(public * hexa.core.web.model.*Service*.*(..))" id="pointCut"/>
 	<aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut"/>
 </aop:config>
 
