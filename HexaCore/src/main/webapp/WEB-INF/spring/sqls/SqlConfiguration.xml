@@ -3,9 +3,9 @@
 <configuration>
 
 	<typeAliases>
-		<typeAlias type="hexa.core.web.edocument.dtos.Approval_DTO" alias="ApprDTO"/>
-		<typeAlias type="hexa.core.web.edocument.dtos.Document_DTO" alias="DocDTO"/>
-		<typeAlias type="hexa.core.web.edocument.dtos.DocumentType_DTO" alias="DocTDTO"/>
+		<typeAlias type="hexa.core.web.edoc.dtos.Approval_DTO" alias="ApprDTO"/>
+		<typeAlias type="hexa.core.web.edoc.dtos.Document_DTO" alias="DocDTO"/>
+		<typeAlias type="hexa.core.web.edoc.dtos.DocumentType_DTO" alias="DocTDTO"/>
 	</typeAliases>
 	
 	<mappers>
