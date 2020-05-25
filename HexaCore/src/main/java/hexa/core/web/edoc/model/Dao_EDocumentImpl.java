@@ -10,4 +10,5 @@ public class Dao_EDocumentImpl implements IDao_EDocument{
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	private final String NS="hexa.core.web.sqls.";
+	//test
 }
