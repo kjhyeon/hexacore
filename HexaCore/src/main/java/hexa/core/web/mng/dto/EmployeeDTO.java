@@ -9,6 +9,7 @@ public class EmployeeDTO {
 	private String phone          ;
 	private String email          ;
 	private int e_rank         ;
+	private String auth;
 	private String e_rank_name    ;
 	private String birth         ;
 	private int department_id  ;
@@ -18,6 +19,7 @@ public class EmployeeDTO {
 	private String postcode       ;
 	private String address        ;
 	private String detailaddress  ;
+	private String state;
 	private String profile_img    ;
 	private String sign_img       ;
 	public EmployeeDTO() {
@@ -131,12 +133,25 @@ public class EmployeeDTO {
 	public void setSign_img(String sign_img) {
 		this.sign_img = sign_img;
 	}
+	public String getAuth() {
+		return auth;
+	}
+	public void setAuth(String auth) {
+		this.auth = auth;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
 	@Override
 	public String toString() {
 		return "EmployeeDTO [employee_number=" + employee_number + ", id=" + id + ", password=" + password + ", name="
-				+ name + ", phone=" + phone + ", email=" + email + ", e_rank=" + e_rank + ", e_rank_name=" + e_rank_name
-				+ ", birth=" + birth + ", department_id=" + department_id + ", department_name=" + department_name
-				+ ", join_date=" + join_date + ", gender=" + gender + ", postcode=" + postcode + ", address=" + address
-				+ ", detailaddress=" + detailaddress + ", profile_img=" + profile_img + ", sign_img=" + sign_img + "]";
+				+ name + ", phone=" + phone + ", email=" + email + ", e_rank=" + e_rank + ", auth=" + auth
+				+ ", e_rank_name=" + e_rank_name + ", birth=" + birth + ", department_id=" + department_id
+				+ ", department_name=" + department_name + ", join_date=" + join_date + ", gender=" + gender
+				+ ", postcode=" + postcode + ", address=" + address + ", detailaddress=" + detailaddress + ", state="
+				+ state + ", profile_img=" + profile_img + ", sign_img=" + sign_img + "]";
 	}
 }

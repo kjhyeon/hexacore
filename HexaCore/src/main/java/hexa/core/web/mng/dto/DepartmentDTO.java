@@ -6,6 +6,7 @@ public class DepartmentDTO {
 	private int upper_id     ;
 	private String faxnum    ;
 	private String d_phone   ;
+	private String state;
 	public DepartmentDTO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -45,5 +46,13 @@ public class DepartmentDTO {
 	public String toString() {
 		return "DepartmentDTO [department_id=" + department_id + ", name=" + name + ", upper_id=" + upper_id
 				+ ", faxnum=" + faxnum + ", d_phone=" + d_phone + "]";
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 }
