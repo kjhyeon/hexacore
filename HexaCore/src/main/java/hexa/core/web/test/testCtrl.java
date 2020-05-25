@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class testCtrl {
 
 	@RequestMapping("/test.do")
-	public String Test() {
+	public String Test(String ckedit) {
+		System.out.println(ckedit);
 		
 		return "test/test";
 	}
