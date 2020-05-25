@@ -1,4 +1,4 @@
-package hexa.core.web.edocument.model;
+package hexa.core.web.edoc.model;
 
 public interface IService_EDocument {
 

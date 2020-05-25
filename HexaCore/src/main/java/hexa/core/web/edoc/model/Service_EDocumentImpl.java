@@ -1,4 +1,4 @@
-package hexa.core.web.edocument.model;
+package hexa.core.web.edoc.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

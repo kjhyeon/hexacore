@@ -1,4 +1,4 @@
-package hexa.core.web.edocument.model;
+package hexa.core.web.edoc.model;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
