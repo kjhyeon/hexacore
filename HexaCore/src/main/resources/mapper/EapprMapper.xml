@@ -105,13 +105,85 @@
 <!-- 	</select> -->
 	
 	<!-- 문서 양식 조회 -->
-	<select id="docTypeList" resultType="docTypeDto">
+	<select id="selectDocTypeList" resultType="DocumentTypeDto">
 		SELECT TYPE_SEQ, NAME, CATEGORY FROM DOCUMENT_TYPE ORDER BY CATEGORY
 	</select>
 	
 	<!-- 문서 양식 선택, 미리보기 출력 -->
-	<select id="docTypePreview" parameterType="java.lang.String" resultType="java.lang.String">
+	<select id="selectDocType" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT CONTENT FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
 	</select>
-
+	
+	<!-- 문서 양식 삭제 -->
+	<delete id="deleteDocType" parameterType="java.lang.String">
+		DELETE * FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
+	</delete>
+	
+	<!-- 문서 상세조회 -->
+	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto">
+		SELECT * FROM DOCUMENT WHERE SEQ = #{seq}
+	</select>
+	
+	<!-- 결재자 정보 삭제 -->
+	<delete id="deleteApprInfo" parameterType="java.lang.String">
+		DELETE * FROM APPROVAL WHERE SEQ = #{seq}
+	</delete>
+	
+	<!-- 문서 삭제 -->
+	<delete id="deleteDoc" parameterType="java.lang.String">
+		DELETE * FROM DOCUMENT WHERE SEQ = #{seq}
+	</delete>
+	
+	<!-- 상신문서함에 있는 문서의 총 개수 -->
+	<select id="selectReportCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND (STATE = '1' OR STATE = '2')
+	</select>
+	
+	<!-- 문서의 개수 (0:임시저장함/1:상신문서함-결재대기중문서/2:상신문서함-결재중문서/3:결재완료함/4:반려문서함) -->
+	<select id="selectMyDocCount" parameterType="DocumentDto" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = #{state}
+	</select>
+	
+	<!-- 참조문서함에 있는 문서의 개수 -->
+	<select id="selectReferDocCount" parameterType="ApprovalDto" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM APPROVAL WHERE ID = #{id} AND APPR_TURN = '0'
+	</select>
+	
+	<!-- 결재문서함-문서의 총 개수 -->
+	<select id="selectApprDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND (a.TURN>0)
+	</select>
+	
+	<!-- 결재문서함-결재해야할 문서의 개수 -->
+	<select id="selectNeedApprDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F'
+	</select>
+	
+	<!-- 문서 상신(임시보관함에서 상신하는 경우) -->
+	<update id="updateSaveToAppr">
+		UPDATE DOCUMENT SET APPR_TURN = '1'
+	</update>
+	
+	<!-- 문서에 첨부된 파일 정보 가져오기 -->
+<!-- 	<select id="selectFileInfo" parameterType="java.lang.String" resultType="FileDto"> -->
+<!-- 		SELECT * FROM FILES WHERE CATEGORY = '0' AND SEQ = #{seq} -->
+<!-- 	</select> -->
+	
+	<!-- 결재자의 서명 정보 가져오기 -->
+	<select id="selectSignImg" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT SIGN_IMG FROM EMPLOYEES WHERE ID = #{id}
+	</select>
+	
+	<!-- 문서 작성(STATE 0:임시저장/1:바로상신) -->
+	<insert id="insertNewDoc" parameterType="DocumentDto">
+		INSERT INTO DOCUMENT (SEQ, AUTHOR, TITLE, CONTENT, TYPE_SEQ, STATE, REGDATE, APPR_TURN)
+			VALUES (DOCUMENT_SEQ.NEXTVAL, #{id}, #{title}, #{content}, #{type_seq}, #{state}, #{regdate}, '1')
+	</insert>
+	
+	<!-- 결재자(turn 1부터 1씩 증가), 참조자(turn:0) 정보 입력 -->
+	<insert id="inserApprInfo" parameterType="ApprovalDto">
+		INSERT INTO APPROVAL (SEQ, ID, CHK, TURN)
+			VALUES (MAX(SELECT SEQ FROM DOCUMENT), #{id}, 'F', #{turn})
+	</insert>
+	
 </mapper>

@@ -3,9 +3,9 @@
 <configuration>
 
 	<typeAliases>
-		<typeAlias type="com.hexa.core.dto.ApprovalDTO" alias="approvalDto"/>
-		<typeAlias type="com.hexa.core.dto.DocumentDTO" alias="documentDto"/>
-		<typeAlias type="com.hexa.core.dto.DocumentTypeDTO" alias="documentTypeDto"/>
+		<typeAlias type="com.hexa.core.dto.ApprovalDTO" alias="ApprovalDto"/>
+		<typeAlias type="com.hexa.core.dto.DocumentDTO" alias="DocumentDto"/>
+		<typeAlias type="com.hexa.core.dto.DocumentTypeDTO" alias="DocumentTypeDto"/>
 	</typeAliases>
 	
 	<mappers>
