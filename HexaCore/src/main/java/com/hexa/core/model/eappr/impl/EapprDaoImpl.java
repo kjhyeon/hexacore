@@ -15,7 +15,7 @@ import com.hexa.core.model.eappr.inf.EapprIDao;
 public class EapprDaoImpl implements EapprIDao{
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-	private final String NS = "hexa.core.web.edoc.sqls.";
+	private final String NS = "hexa.core.web.eappr.sqls.";
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
