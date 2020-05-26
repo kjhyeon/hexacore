@@ -186,4 +186,6 @@
 			VALUES (MAX(SELECT SEQ FROM DOCUMENT), #{id}, 'F', #{turn})
 	</insert>
 	
+	<!-- 테스트할겁니다. -->
+	
 </mapper>
