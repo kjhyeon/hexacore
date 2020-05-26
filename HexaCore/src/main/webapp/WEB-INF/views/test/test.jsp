@@ -8,5 +8,6 @@
 </head>
 <body>
 	<h1>테스트 페이지</h1>
+	${lists}
 </body>
 </html>

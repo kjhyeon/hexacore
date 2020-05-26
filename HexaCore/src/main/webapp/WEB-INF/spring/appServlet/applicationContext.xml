@@ -25,7 +25,7 @@
 
 <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 	<property name="dataSource" ref="dataSource"/>
-	<property name="configLocation" value="/WEB-INF/spring/sqls/SqlConfiguration.xml"/>
+	<property name="configLocation" value="/WEB-INF/spring/sqlconfiguration/SqlConfiguration.xml"/>
 </bean>
 
 <bean class="org.mybatis.spring.SqlSessionTemplate">
@@ -36,32 +36,15 @@
 	<property name="dataSource" ref="dataSource"/>
 </bean>
 
-<!-- 트랜잭션이 자동으로 동작되는 메소드 -->
 <tx:advice id="txAdvice" transaction-manager="transactionManager">
 	<tx:attributes>
 		<tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
 	</tx:attributes>
 </tx:advice>
 
-<!-- 트랜잭션을 AOP를 통해서 설정 -->
 <aop:config>
-	<aop:pointcut expression="execution(public * hexa.core.web.model.*Service*.*(..))" id="pointCut"/>
+	<aop:pointcut expression="execution(public * com.hexa.core.model.*Service*.*(..))" id="pointCut"/>
 	<aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut"/>
 </aop:config>
-
-<bean class="org.springframework.mail.javamail.JavaMailSenderImpl" id="javaMailSender">
-	<property name="host" value="smtp.gmail.com"/>
-	<property name="username" value="test.hexacore@gmail.com"/> <!-- info.happy0612.gmail.com / nobrand001! -->
-	<property name="password" value="gprtk12!@"/>
-	<property name="port" value="587"/>
-	<property name="javaMailProperties">
-		<props>
-			<prop key="mail.debug">true</prop>
-			<prop key="mail.smtp.auth">true</prop>
-			<prop key="mail.transport.protocol">smtp</prop>
-			<prop key="mail.smtp.starttls.enable">true</prop>
-		</props>                                                                                                                                                                                                                                                       
-	</property>
-</bean>
 
 </beans>

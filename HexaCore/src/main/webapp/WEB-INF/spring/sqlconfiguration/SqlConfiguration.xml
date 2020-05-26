@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+
+	<typeAliases>
+		<typeAlias type="com.hexa.core.dto.ApprovalDTO" alias="approvalDto"/>
+		<typeAlias type="com.hexa.core.dto.DocumentDTO" alias="documentDto"/>
+		<typeAlias type="com.hexa.core.dto.DocumentTypeDTO" alias="documentTypeDto"/>
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="/mapper/EapprMapper.xml"/>
+	</mappers>
+</configuration>
