@@ -22,4 +22,9 @@ public class EapprServiceImpl implements EapprIService{
 		log.info("selectDocTypeList serviceImpl 실행");
 		return dao.selectDocTypeList();
 	}
+
+	@Override
+	public String selectDocType(String type_seq) {
+		return null;
+	}
 }

@@ -10,5 +10,7 @@ public interface EapprIService {
 	 * @return 문서 양식 리스트
 	 */
 	public List<DocumentTypeDTO> selectDocTypeList();
+	
+	public String selectDocType(String type_seq);
 
 }
