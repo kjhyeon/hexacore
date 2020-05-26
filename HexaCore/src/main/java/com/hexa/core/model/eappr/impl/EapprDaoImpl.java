@@ -15,14 +15,14 @@ import com.hexa.core.model.eappr.inf.EapprIDao;
 public class EapprDaoImpl implements EapprIDao{
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-	private final String NS = "hexa.core.web.edoc.sqls.";
+	private final String NS = "hexa.core.web.eappr.sqls.";
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 	
 	@Override
-	public List<DocumentTypeDTO> docTypeList() {
-		log.info("docTypeList daoImpl 실행");
-		return sqlSession.selectList(NS+"docTypeList");
+	public List<DocumentTypeDTO> selectDocTypeList() {
+		log.info("selectDocTypeList daoImpl 실행");
+		return sqlSession.selectList(NS+"selectDocTypeList");
 	}
 }

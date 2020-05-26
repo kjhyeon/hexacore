@@ -1,11 +1,17 @@
 package com.hexa.core.model.mng.inf;
 
+import java.util.List;
+
+import com.hexa.core.dto.DepartmentDTO;
+
 public interface DepartmentIDao {
 
-	public boolean insertDept();
+	public boolean insertDept(DepartmentDTO dto);
 	
-	public boolean deleteDept();
+	public boolean deleteDept(String deptId);
 	
-	public boolean updateDept();
+	public boolean updateDept(DepartmentDTO dto);
+	
+	public List<DepartmentDTO> selectChildDeptList(String deptId);
 	
 }

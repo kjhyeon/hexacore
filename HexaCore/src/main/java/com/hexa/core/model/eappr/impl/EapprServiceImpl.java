@@ -18,8 +18,14 @@ public class EapprServiceImpl implements EapprIService{
 	private EapprIDao dao;
 
 	@Override
-	public List<DocumentTypeDTO> docTypeList() {
-		log.info("docTypeList serviceImpl 실행");
-		return dao.docTypeList();
+	public List<DocumentTypeDTO> selectDocTypeList() {
+		log.info("selectDocTypeList serviceImpl 실행");
+		return dao.selectDocTypeList();
+	}
+
+	@Override
+	public String selectDocType(String type_seq) {
+		//안녕테스트김정현
+		return null;
 	}
 }
