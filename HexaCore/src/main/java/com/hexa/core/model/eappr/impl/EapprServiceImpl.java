@@ -25,7 +25,7 @@ public class EapprServiceImpl implements EapprIService{
 
 	@Override
 	public String selectDocType(String type_seq) {
-		//안녕테스트
+		//안녕테스트정지원
 		return null;
 	}
 }
