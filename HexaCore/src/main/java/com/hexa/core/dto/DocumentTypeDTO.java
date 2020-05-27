@@ -4,17 +4,14 @@ import java.io.Serializable;
 
 public class DocumentTypeDTO implements Serializable{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8787103545048636634L;
+	
 	private int type_seq;
 	private String name;
 	private String content;
 	private String category;
 	
 	public DocumentTypeDTO() {
-		super();
 	}
 
 	public DocumentTypeDTO(int type_seq, String name, String content, String category) {
