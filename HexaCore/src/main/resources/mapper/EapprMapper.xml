@@ -96,9 +96,9 @@
 	</delete>
 	
 	<!-- 문서 상세조회 -->
-	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto">
-		SELECT * FROM DOCUMENT WHERE SEQ = #{seq}
-	</select>
+<!-- 	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto"> -->
+<!-- 		SELECT * FROM DOCUMENT WHERE SEQ = #{seq} -->
+<!-- 	</select> -->
 	
 	<!-- 결재자 정보 삭제 -->
 	<delete id="deleteApprInfo" parameterType="java.lang.String">
