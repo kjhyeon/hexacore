@@ -5,6 +5,8 @@
 	<typeAliases>
 		<typeAlias type="com.hexa.core.dto.ApprovalDTO" alias="ApprovalDto"/>
 		<typeAlias type="com.hexa.core.dto.DocumentDTO" alias="DocumentDto"/>
+		<typeAlias type="com.hexa.core.dto.DocCommentDTO" alias="DocCommentDto"/>
+		<typeAlias type="com.hexa.core.dto.DocFileDTO" alias="DocFileDto"/>
 		<typeAlias type="com.hexa.core.dto.DocumentTypeDTO" alias="DocumentTypeDto"/>
 		<typeAlias type="com.hexa.core.dto.EmployeeDTO" alias="empDto"/>
 		<typeAlias type="com.hexa.core.dto.DepartmentDTO" alias="deptDto"/>

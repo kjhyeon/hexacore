@@ -75,7 +75,7 @@
 			WHERE SEQ = #{seq}
 	</update>
 <!-- 7.문서 양식 추가	관리자가 문서양식을 추가할 수 있는 쿼리 작성 및 테스트 -->
-	<insert id="insertDocType" parameterType="docTypeDto">
+	<insert id="insertDocType" parameterType="DocumentTypeDto">
 	INSERT INTO DOCUMENT_TYPE (TYPE_SEQ , NAME, CONTENT, CATEGORY)
 		VALUES((SELECT MAX(TYPE_SEQ) FROM DOCUMENT_TYPE)+1, #{name}, #{content}, #{category})
 	</insert>

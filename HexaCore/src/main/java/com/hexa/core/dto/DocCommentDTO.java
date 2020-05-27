@@ -3,7 +3,7 @@ package com.hexa.core.dto;
 import java.io.Serializable;
 import java.util.Date;
 
-public class DocComment implements Serializable{
+public class DocCommentDTO implements Serializable{
 	
 	
 	private static final long serialVersionUID = -4378413964846488201L;
@@ -14,11 +14,11 @@ public class DocComment implements Serializable{
 	String content   ;
 	Date regdate     ;
 	
-	public DocComment() {
+	public DocCommentDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DocComment(int seq, int comment_seq, String id, String name, String content, Date regdate) {
+	public DocCommentDTO(int seq, int comment_seq, String id, String name, String content, Date regdate) {
 		super();
 		this.seq = seq;
 		this.comment_seq = comment_seq;
