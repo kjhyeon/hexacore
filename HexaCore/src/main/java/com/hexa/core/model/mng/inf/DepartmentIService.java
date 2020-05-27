@@ -15,5 +15,5 @@ public interface DepartmentIService {
 	
 	public Map<String, Object> selectDeptList();
 	
-	
+	public Map<String, Object> selectCompanyTree();
 }

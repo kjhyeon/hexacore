@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hexa.core.emp">
+	<insert id="insertEmployee" parameterType="empDTO">
+		INSERT INTO EMPLOYEES
+			(EMPLOYEE_NUMBER, ID, PASSWORD, NAME, PHONE, EMAIL, E_RANK, AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE,PROFILE_IMG, SIGN_IMG)
+				VALUES(E_NUM_SEQ.NEXTVAL, #{id}, #{password}, #{name}, #{phone}, #{email}, #{e_rank}
+						, 'U', #{birth}, #{department_id}, SYSDATE, #{gender}, #{postcode}, #{address}, #{detailaddress}, 0, #{profile_img}, #{sign_img})
+
+	</insert>
+	
+	<update id="deleteEmployee" parameterType="java.lang.String">
+		UPDATE EMPLYEES SET STATE='-1' WHERE EMPLOYEE_NUMBER=#{num}
+	</update>
+	
+	<update id="updateEmployee" parameterType="empDTO">
+		UPDATE EMPLOYEES
+			SET 
+				<choose>
+					<when test="empDTO.password != null">
+						PASSWORD=#{password} 
+					</when>
+					<otherwise>
+						PHONE=#{phone}, EMAIL=#{email}, E_RANK=#{e_rank}, AUTH=#{auth}, DEP0ARTMENT_ID=#{department_id}, 
+						POSTCODE=#{postcode}, ADDRESS=#{address], DETAILADDRESS=#{detailaddress}, STATE=#{state}, PROFILE_IMG=#{profile_img}, SIGN_IMG=#{sign_img}
+					</otherwise>
+				</choose> 
+					WHERE EMPLOYEE_NUMBER=#{employee_number}
+	</update>
+	
+	<select id="selectEmployeeList" parameterType="java.lang.String">
+		SELECT EMPLOYEE_NUMBER, ID, NAME, PHONE, EMAIL, E_RANK, 
+			AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE, PROFILE_IMG, SIGN_IMG
+				FROM HEXA.EMPLOYEES
+	</select>
+	<select id="selectEmployee" parameterType="java.lang.String">
+		SELECT EMPLOYEE_NUMBER, ID, PASSWORD, NAME, PHONE, EMAIL, E_RANK, 
+			AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE, PROFILE_IMG, SIGN_IMG
+				FROM EMPLOYEES
+					WHERE EMPLOYEE_NUMBER = #{employee_number}
+	</select>
+	
+	<select id="selectEmpPw" parameterType="java.lang.String" resultType="empDTO">
+		SELECT PASSWORD
+				FROM EMPLOYEES
+					WHERE ID = #{id}
+	</select>
+	
+	<select id="selectLoginInfo" parameterType="java.lang.String" resultType="empDTO">
+		SELECT EMPLOYEE_NUMBER, ID, NAME, PHONE, EMAIL, E_RANK, 
+			AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE, PROFILE_IMG, SIGN_IMG
+				FROM EMPLOYEES
+					WHERE PASSWORD={password}
+	</select>
+	
+	
+</mapper>

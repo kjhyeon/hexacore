@@ -6,9 +6,13 @@
 		<typeAlias type="com.hexa.core.dto.ApprovalDTO" alias="approvalDto"/>
 		<typeAlias type="com.hexa.core.dto.DocumentDTO" alias="documentDto"/>
 		<typeAlias type="com.hexa.core.dto.DocumentTypeDTO" alias="documentTypeDto"/>
+		<typeAlias type="com.hexa.core.dto.EmployeeDTO" alias="empDto"/>
+		<typeAlias type="com.hexa.core.dto.DepartmentDTO" alias="deptDto"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="/mapper/EapprMapper.xml"/>
+		<mapper resource="/mapper/EmployeeMapper.xml"/>
+		<mapper resource="/mapper/DeplartmentMapper.xml"/>
 	</mappers>
 </configuration>

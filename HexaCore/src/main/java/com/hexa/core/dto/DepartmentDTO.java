@@ -1,6 +1,12 @@
 package com.hexa.core.dto;
 
-public class DepartmentDTO {
+import java.io.Serializable;
+
+public class DepartmentDTO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7747644485169517834L;
 	private int department_id;
 	private String name      ;
 	private int upper_id     ;

@@ -1,7 +1,12 @@
 package com.hexa.core.dto;
 
+import java.io.Serializable;
 
-public class EmployeeDTO {
+public class EmployeeDTO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6323328089244077737L;
 	private int employee_number;
 	private String id;
 	private String password       ;

@@ -20,4 +20,8 @@ public interface EmployeeIDao {
 	
 	public EmployeeDTO selectEmployee(String employee_number);
 	
+	public String selectEmpPw(String id);
+	
+	public EmployeeDTO selectLoginInfo(String id);
+	
 }

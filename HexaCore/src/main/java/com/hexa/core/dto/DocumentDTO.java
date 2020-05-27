@@ -1,7 +1,13 @@
 package com.hexa.core.dto;
 
-public class DocumentDTO {
+import java.io.Serializable;
 
+public class DocumentDTO implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1436728376708896407L;
 	private int seq;
 	private String author;
 	private String title;

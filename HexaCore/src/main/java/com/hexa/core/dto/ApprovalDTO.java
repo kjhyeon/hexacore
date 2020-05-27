@@ -1,7 +1,13 @@
 package com.hexa.core.dto;
 
-public class ApprovalDTO {
+import java.io.Serializable;
+
+public class ApprovalDTO implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1634172012210979602L;
 	private int seq;
 	private String id;
 	private String chk;
