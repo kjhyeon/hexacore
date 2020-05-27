@@ -6,12 +6,14 @@ import com.hexa.core.dto.DepartmentDTO;
 
 public interface DepartmentIDao {
 
-	public boolean insertDept(DepartmentDTO dto);
+	public boolean insertDepartment(DepartmentDTO dto);
 	
-	public boolean deleteDept(String deptId);
+	public boolean deleteDepartment(int department_id);
 	
-	public boolean updateDept(DepartmentDTO dto);
+	public boolean updateDepartment(DepartmentDTO dto);
 	
-	public List<DepartmentDTO> selectChildDeptList(String deptId);
+	public List<DepartmentDTO> selectChildDepartmentList(int department_id);
+	
+	public DepartmentDTO selectDepartment(int department_id);
 	
 }

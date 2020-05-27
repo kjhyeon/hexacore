@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hexa.core.dept">
-
+	<insert id="insertDepartment" parameterType="deptDTO">
+		INSERT INTO DEPARTMENTS VALUES((SELECT MAX(DEPARTMENT_ID) FROM DEPARTMENT)+1,#{name},#{upper_id},#{faxnum},#{d_phone},0)
+	</insert>
+	
+	<update id="updateDepartment" parameterType="deptDTO">
+		UPDATE DEPARTMENTS SET UPPER_ID = #{upper_id}, NAME=#{name}, FAXNUM =#{faxnum}, D_PHONE=#{d_phone}
+			WHERE DEPARTMENT_ID = #{department_id}
+	</update>
+	
+	<delete id="deleteDepartment" parameterType="java.lang.Integer">
+		DELETE FROM DEPARTMENT WHERE DEPARTMENT_ID = #{department_id}
+	</delete>
+	
+	<select id="selectDepartment" parameterType="java.lang.String" resultType="deptDTO">
+		SELECT DEPARTMENT_ID, NAME, UPPER_ID, FAXNUM, D_PHONE, STATE FROM DEPARTMENTS
+			WHERE DEPARTMENT_ID=#{department_id}
+	</select>
+	
+	<select id="selectDepartmentList" parameterType="java.util.Map" resultType="deptDTO">
+		SELECT d.DEPARTMENT_ID, d.NAME ,UPPER_ID 
+			FROM DEPARTMENTS d 
+				WHERE UPPER_ID = #{dept_id} AND DEPARTMENT_ID != 0
+	</select>
+	
+<!-- 	SELECT d.DEPARTMENT_ID, d.NAME -->
+<!-- 			<if test="dept_id != '0' and dept_id!=null"> -->
+<!-- 				, CONNECT_BY_ISLEAF AS ISLEAF  -->
+<!-- 			</if> -->
+<!-- 			,UPPER_ID  -->
+<!-- 				FROM DEPARTMENTS d  -->
+<!-- 					WHERE UPPER_ID = #{dept_id} AND DEPARTMENT_ID != 0 -->
+<!-- 						<if test="dept_id!= '0' and dept_id!=null"> -->
+<!-- 							START WITH d.UPPER_ID !=0 CONNECT BY d.UPPER_ID = PRIOR d.DEPARTMENT_ID -->
+<!-- 						</if> -->
 </mapper>

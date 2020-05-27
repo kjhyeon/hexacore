@@ -9,7 +9,7 @@
 
 	</insert>
 	
-	<update id="deleteEmployee" parameterType="java.lang.String">
+	<update id="deleteEmployee" parameterType="java.lang.Integer">
 		UPDATE EMPLYEES SET STATE='-1' WHERE EMPLOYEE_NUMBER=#{num}
 	</update>
 	
@@ -28,30 +28,43 @@
 					WHERE EMPLOYEE_NUMBER=#{employee_number}
 	</update>
 	
-	<select id="selectEmployeeList" parameterType="java.lang.String">
-		SELECT EMPLOYEE_NUMBER, ID, NAME, PHONE, EMAIL, E_RANK, 
-			AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE, PROFILE_IMG, SIGN_IMG
-				FROM HEXA.EMPLOYEES
-	</select>
-	<select id="selectEmployee" parameterType="java.lang.String">
-		SELECT EMPLOYEE_NUMBER, ID, PASSWORD, NAME, PHONE, EMAIL, E_RANK, 
-			AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE, PROFILE_IMG, SIGN_IMG
-				FROM EMPLOYEES
-					WHERE EMPLOYEE_NUMBER = #{employee_number}
+	<select id="selectChildEmployeeList" parameterType="java.lang.Integer" resultType="empDTO">
+		SELECT EMPLOYEE_NUMBER, ID, e.NAME, PHONE, EMAIL, E_RANK, 
+			AUTH, BIRTH, e.DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, e.STATE, PROFILE_IMG, SIGN_IMG, d.NAME DEPARTMENT_NAME, r.NAME E_RANK_NAME
+				FROM EMPLOYEES e, DEPARTMENTS d, "RANK" r
+					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM AND e.DEPARTMENT_ID = #{department_id} AND e.STATE != '-1'
 	</select>
 	
-	<select id="selectEmpPw" parameterType="java.lang.String" resultType="empDTO">
+	<select id="selectEmployeeList" resultType="empDTO">
+			SELECT EMPLOYEE_NUMBER, ID, e.NAME, PHONE, EMAIL, E_RANK, 
+			AUTH, BIRTH, e.DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, e.STATE, PROFILE_IMG, SIGN_IMG, d.NAME DEPARTMENT_NAME, r.NAME E_RANK_NAME
+				FROM EMPLOYEES e, DEPARTMENTS d, "RANK" r
+					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM
+	</select>
+	
+	<select id="selectEmployee" parameterType="java.lang.Integer" resultType="empDTO">
+			SELECT EMPLOYEE_NUMBER, ID, PASSWORD,e.NAME, PHONE, EMAIL, E_RANK, 
+			AUTH, BIRTH, e.DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, e.STATE, PROFILE_IMG, SIGN_IMG, d.NAME DEPARTMENT_NAME, r.NAME E_RANK_NAME
+				FROM EMPLOYEES e, DEPARTMENTS d, "RANK" r
+					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM AND EMPLOYEE_NUMBER = #{employee_number}
+	</select>
+	
+	<select id="selectEmpPw" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT PASSWORD
 				FROM EMPLOYEES
 					WHERE ID = #{id}
 	</select>
 	
 	<select id="selectLoginInfo" parameterType="java.lang.String" resultType="empDTO">
-		SELECT EMPLOYEE_NUMBER, ID, NAME, PHONE, EMAIL, E_RANK, 
-			AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE, PROFILE_IMG, SIGN_IMG
-				FROM EMPLOYEES
-					WHERE PASSWORD={password}
+		SELECT EMPLOYEE_NUMBER, ID, e.NAME, EAMIL, E_RANK, 
+			AUTH, e.DEPARTMENT_ID, e.STATE, PROFILE_IMG, d.NAME DEPARTMENT_NAME, r.NAME E_RANK_NAME
+				FROM EMPLOYEES e, DEPARTMENTS d, "RANK" r
+					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM AND ID=#{id} AND e.STATE != '-1'
 	</select>
 	
-	
+	<update id="moveEmployee" parameterType="java.lang.Integer">
+		UPDATE EMPLOYEES
+                        SET  DEPARTMENT_ID=0, 
+                               WHERE DEPARTMENT_ID=#{department_id}
+	</update>
 </mapper>

@@ -25,12 +25,12 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	
 	@Override
 	public boolean insertEmployee(EmployeeDTO dto) {
-		
+		log.info("Employee Service insertEmployee : {}: ",dto);
 		return dao.insertEmployee(dto);
 	}
 
 	@Override
-	public boolean deleteEmployee(String employee_number) {
+	public boolean deleteEmployee(int employee_number) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -42,7 +42,7 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	}
 
 	@Override
-	public List<EmployeeDTO> selectChildEmployeeList(String deplartment_id) {
+	public List<EmployeeDTO> selectChildEmployeeList(int department_id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -60,20 +60,20 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	}
 
 	@Override
-	public EmployeeDTO selectEmployee(String employee_number) {
+	public EmployeeDTO selectEmployee(int employee_number) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public EmployeeDTO selectLoginInfo(EmployeeDTO dto) {
-		log.info("Login Member Dao encryption: "+dto.getPassword());
+		log.info("Login Member Service encryption: "+dto.getPassword());
 		String encoryptionPw = dao.selectEmpPw(dto.getId());
 		
 		String inputPw= dto.getPassword();
 
-		log.info("Login Member Dao encryption: "+encoryptionPw);
-		log.info("Login Member Dao encryption: "+inputPw);
+		log.info("Login Member Service encryption: "+encoryptionPw);
+		log.info("Login Member Service encryption: "+inputPw);
 
 //		//화면에서 얻은 pw를 암호화 시긴 값
 //		String enPw = passwordEncoder.encode(inputPw);

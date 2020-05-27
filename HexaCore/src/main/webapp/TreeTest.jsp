@@ -4,11 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="./Tree-Plugin-jQuery-jsTree/dist/themes/default/style.css">
+<link rel="stylesheet" href="./dist/themes/default/style.css">
 <!-- <link rel="stylesheet" href="./css/themes/default-dark/style.min.css"> -->
 <title>Insert title here</title>
-<script type="text/javascript" src="./javascript/jquery-3.4.1.js"></script>
-<script type="text/javascript" src="./Tree-Plugin-jQuery-jsTree/dist/jstree.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+<script type="text/javascript" src="./dist/jstree.js"></script>
 <!-- <script type="text/javascript" src="./Tree-Plugin-jQuery-jsTree/src/jstree.search.js"></script> -->
 <!-- <script type="text/javascript" src="./Tree-Plugin-jQuery-jsTree/src/jstree.dnd.js"></script> -->
 </head>
@@ -35,7 +38,7 @@ $('#tree').jstree({	// id가 tree인 영역에 트리 세팅
 								"id" : node.id
 							}
 						},
-						"method" : "post",	//ajax 방식
+						"method" : "get",	//ajax 방식
 						"dataType" : "json" //json형식으로 데이터를 받아옴
 					}
 				},
@@ -47,8 +50,8 @@ $('#tree').jstree({	// id가 tree인 영역에 트리 세팅
 						"icon" : "./img/reply.png" //사원 아이콘 지정
 					}
 				},
-				"plugins" : [ "contextmenu", "dnd", "search", "state", "types",
-						"wholerow", "json_data" ], //사용할 플러그인들 설정
+				"plugins" : [ "contextmenu", "dnd", "search", "state", "types","checkbox",
+					"wholerow", "json_data" ], //사용할 플러그인들 설정
 				"themes" : {	// icon true로 지정한 아이콘 사용
 					"theme" : "classic",
 					"dots" : true,

@@ -8,20 +8,21 @@ public interface EmployeeIDao {
 
 	public boolean insertEmployee(EmployeeDTO dto);
 	
-	public boolean deleteEmployee(String employee_number);
+	public boolean deleteEmployee(int employee_number);
 	
 	public boolean updateEmployee(EmployeeDTO dto);
 	
-	public List<EmployeeDTO> selectChildEmployeeList(String deplartment_id);
+	public List<EmployeeDTO> selectChildEmployeeList(int department_id);
 	
 	public List<EmployeeDTO> selectEmployeeList();
 	
 	public List<EmployeeDTO> selectAllEmployeeList();
 	
-	public EmployeeDTO selectEmployee(String employee_number);
+	public EmployeeDTO selectEmployee(int employee_number);
 	
 	public String selectEmpPw(String id);
 	
 	public EmployeeDTO selectLoginInfo(String id);
 	
+	public boolean moveEmployee(int department_id);
 }

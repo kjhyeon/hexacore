@@ -13,6 +13,8 @@ public class DepartmentDTO implements Serializable{
 	private String faxnum    ;
 	private String d_phone   ;
 	private String state;
+	private int isleaf;
+	
 	public DepartmentDTO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -51,7 +53,7 @@ public class DepartmentDTO implements Serializable{
 	@Override
 	public String toString() {
 		return "DepartmentDTO [department_id=" + department_id + ", name=" + name + ", upper_id=" + upper_id
-				+ ", faxnum=" + faxnum + ", d_phone=" + d_phone + "]";
+				+ ", faxnum=" + faxnum + ", d_phone=" + d_phone + ". isleaf=" + isleaf +"]";
 	}
 
 	public String getState() {
@@ -60,5 +62,13 @@ public class DepartmentDTO implements Serializable{
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public int getIsleaf() {
+		return isleaf;
+	}
+
+	public void setIsleaf(int isleaf) {
+		this.isleaf = isleaf;
 	}
 }

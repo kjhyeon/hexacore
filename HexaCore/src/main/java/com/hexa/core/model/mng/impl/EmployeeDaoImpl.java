@@ -34,7 +34,7 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	}
 
 	@Override
-	public boolean deleteEmployee(String employee_number) {
+	public boolean deleteEmployee(int employee_number) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -46,7 +46,7 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	}
 
 	@Override
-	public List<EmployeeDTO> selectChildEmployeeList(String deplartment_id) {
+	public List<EmployeeDTO> selectChildEmployeeList(int department_id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -64,7 +64,7 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	}
 
 	@Override
-	public EmployeeDTO selectEmployee(String employee_number) {
+	public EmployeeDTO selectEmployee(int employee_number) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -79,6 +79,12 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	public EmployeeDTO selectLoginInfo(String id) {
 		log.info("EmployeeDAO selectLoginInfo : {}",id);
 		return session.selectOne(NS+"selectLoginInfo", id);
+	}
+
+	@Override
+	public boolean moveEmployee(int department_id) {
+		log.info("EmployeeDAO moveEmp : {}",department_id);
+		return session.update(NS+"moveEmployee",department_id)>0?true:false;
 	}
 
 }

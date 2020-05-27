@@ -43,7 +43,7 @@
 </tx:advice>
 
 <aop:config>
-	<aop:pointcut expression="execution(public * com.hexa.core.model.*Service*.*(..))" id="pointCut"/>
+	<aop:pointcut expression="execution(public * com.hexa.core.model.*.impl.*Service*.*(..))" id="pointCut"/>
 	<aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut"/>
 </aop:config>
 

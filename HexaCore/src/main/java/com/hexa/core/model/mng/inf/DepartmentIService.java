@@ -1,5 +1,6 @@
 package com.hexa.core.model.mng.inf;
 
+import java.util.List;
 import java.util.Map;
 
 import com.hexa.core.dto.DepartmentDTO;
@@ -7,13 +8,15 @@ import com.hexa.core.dto.DepartmentDTO;
 public interface DepartmentIService {
 
 
-	public boolean insertDept(DepartmentDTO dto);
+	public boolean insertDepartment(DepartmentDTO dto);
 	
-	public boolean deleteDept(String deptId);
+	public boolean deleteDepartment(int department_id);
 	
-	public boolean updateDept(DepartmentDTO dto);
+	public boolean updateDepartment(DepartmentDTO dto);
 	
-	public Map<String, Object> selectDeptList();
+	public List<DepartmentDTO> selectDepartmentList(int department_id);
 	
-	public Map<String, Object> selectCompanyTree();
+	public List<Map<String, Object>> selectCompanyTree(int department_id);
+	
+	public DepartmentDTO selectDepartment(int department_id);
 }
