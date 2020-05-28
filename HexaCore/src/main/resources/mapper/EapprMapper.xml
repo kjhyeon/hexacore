@@ -2,61 +2,61 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="hexa.core.web.eappr.sqls">
 
-<!-- 	1-1.해당 문서 조회 -->
+
+<!-- 문서 수정을 위한 해당 문서 조회 -->
 	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto">
-	SELECT SEQ, AUTHOR, TITLE, CONTENT, TYPE_SEQ, STATE, REGDATE, APPR_TURN 
-		FROM DOCUMENT
-			WHERE SEQ = #{seq}
+	SELECT d.SEQ SEQ, AUTHOR, TITLE, STATE, REGDATE, APPR_TURN, TYPE_SEQ, CONTENT 
+		  ,a.SEQ, ID, NAME, DUTY, CHK, TURN, APPR_DATE, APPR_KIND, APPR_SIGN
+		FROM DOCUMENT d, APPROVAL a
+			WHERE d.SEQ = a.SEQ AND d.SEQ = #{seq}
 	</select>
-<!-- 	1-2 문서 수정 -->
+	
+<!-- 문서 수정된 사항 UPDATE -->
 	<update id="updateDoc" parameterType="DocumentDto">
-	UPDATE DOCUMENT
-		SET TITLE = #{title} , CONTENT =#{content}
-			WHERE SEQ = #{seq}
+	UPDATE HEXA.DOCUMENT
+		SET TITLE=#{title}, STATE=0, REGDATE=SYSDATE , APPR_TURN=1, TYPE_SEQ=#{seq}, CONTENT=#{content}
+			WHERE SEQ=#{seq};
 	</update>
-<!-- 	1-3 결재 루트 삭제 -->
+<!-- 결재 루트 삭제 -->
 	<delete id="deleteApprRoot" parameterType="java.lang.String">
 	DELETE FROM APPROVAL
 		WHERE SEQ = #{seq}
 	</delete>
-	<!-- 1-4결재루트 입력 -->
+<!-- 결재루트 입력 -->
 	<insert id="insertApprRoot" parameterType="ApprovalDto">
-	INSERT INTO APPROVAL
-		SET ID = #{id} , TURN = #{turn}
-			WHERE SEQ = #{seq}
+	INSERT INTO HEXA.APPROVAL
+		(SEQ, ID, NAME, DUTY, CHK, TURN, APPR_KIND)
+	VALUES(#{seq}, #{id}, #{name}, #{duty}, 'F', #{turn}, #{appr_kind})
 	</insert>
 	
-<!-- 2.문서 상신 취소	결재 루트 삭제 하는 쿼리 작성 및 테스트 -->
-<!-- 	1-1.해당 문서 조회 -->
-<!-- id="SearchDoc"사용 -->
-<!-- 	2-2.해당문서 결재루트 체크 -->
+<!-- 문서 상신/취소-->
+	<update id="updateDocState" parameterType="DocumentDto">
+	UPDATE DOCUMENT
+		SET STATE = #{state} <!-- 1,2,3 -->
+			WHERE SEQ = #{seq}
+	</update>
+<!-- 해당문서 결재루트 체크 -->
 	<select id="selectApprRoot" parameterType="java.lang.String" resultType="ApprovalDto">
 	SELECT ID , CHK , TURN
 		FROM DOCUMENT d , APPROVAL a
 			WHERE d.SEQ = a.SEQ AND d.SEQ = #{seq}
 		ORDER BY TURN
 	</select>
-	
-<!-- 	2-3.해당 문서 상신 취소 -->
-	<!-- 6번 확인 -->
-	<!-- 결재루트 지우는쿼리 1-3-->
 
-<!-- 3.파일 업로드		DB에 첨부파일 저장 하는 쿼리 작성 및 테스트 -->
-	<!-- 	<insert id="uploadFile" parameterType=""> -->
-	<!-- 	INSERT INTO FILES (NAME, SEQ, F_PATH, ORI_NAME, F_SIZE, CATEGORY) -->
-	<!-- 		VALUES(#{name},#{seq}, #{f_path},#{ori_name},#{f_size},#{category}) -->
-	<!-- 	</insert>	 -->
+<!-- 파일 업로드 DB에 첨부파일 저장 하는 쿼리 작성 및 테스트 -->
+
 <!-- 완료4.업로드한 파일 삭제		DB에 저장되어있는 첨부파일 영구 삭제 하는 쿼리 작성 및 테스트 -->
 	<delete id="deleteFile" parameterType="java.lang.String">
 	DELETE FROM FILES
 		WHERE SEQ= #{seq}
 	</delete>
-<!-- 5.문서 승인	결재자 승인시 다음 결재자에게 결재 권한이 주어지는 쿼리 작성 및 테스트(최종 결재자가 승인 후 결재완료 처리) -->
+<!-- 문서 승인 첫번째 결재자 -->
 	<update id="updateApprChk" parameterType="ApprovalDto">
 	UPDATE APPROVAL
 		SET CHK ='T' 
 			WHERE SEQ =#{seq} AND ID = #{id}
 	</update>
+
 <!-- 	5-1	 문서함 TURN 업데이트 -->
 	<update id="updateDocTurn" parameterType="java.lang.String">
 	UPDATE DOCUMENT
