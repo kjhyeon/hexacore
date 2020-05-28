@@ -15,5 +15,6 @@ public interface DepartmentIDao {
 	public List<DepartmentDTO> selectChildDepartmentList(int department_id);
 	
 	public DepartmentDTO selectDepartment(int department_id);
-	
+
+	public int selectMaxId();
 }

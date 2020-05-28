@@ -4,8 +4,8 @@
 	<insert id="insertEmployee" parameterType="empDTO">
 		INSERT INTO EMPLOYEES
 			(EMPLOYEE_NUMBER, ID, PASSWORD, NAME, PHONE, EMAIL, E_RANK, AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE,PROFILE_IMG, SIGN_IMG)
-				VALUES(E_NUM_SEQ.NEXTVAL, #{id}, #{password}, #{name}, #{phone}, #{email}, #{e_rank}
-						, 'U', #{birth}, #{department_id}, SYSDATE, #{gender}, #{postcode}, #{address}, #{detailaddress}, 0, #{profile_img}, #{sign_img})
+				VALUES(E_NUM_SEQ.NEXTVAL, #{id}, #{password}, #{name}, #{phone}, #{email}, 16
+						, 'U', #{birth}, #{department_id}, SYSDATE, #{gender}, #{postcode}, #{address}, #{detailaddress}, 0, #{profile_img}, null)
 
 	</insert>
 	

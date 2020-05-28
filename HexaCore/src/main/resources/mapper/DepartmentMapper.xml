@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hexa.core.dept">
 	<insert id="insertDepartment" parameterType="deptDTO">
-		INSERT INTO DEPARTMENTS VALUES((SELECT MAX(DEPARTMENT_ID) FROM DEPARTMENT)+1,#{name},#{upper_id},#{faxnum},#{d_phone},0)
+		INSERT INTO DEPARTMENTS VALUES((SELECT MAX(DEPARTMENT_ID) FROM DEPARTMENTS)+1,'새 부서',#{upper_id},null,null,0)
 	</insert>
 	
 	<update id="updateDepartment" parameterType="deptDTO">
@@ -20,11 +20,14 @@
 	</select>
 	
 	<select id="selectDepartmentList" parameterType="java.util.Map" resultType="deptDTO">
-		SELECT d.DEPARTMENT_ID, d.NAME ,UPPER_ID 
+		SELECT d.DEPARTMENT_ID, d.NAME ,UPPER_ID, FAXNUM, D_PHONE
 			FROM DEPARTMENTS d 
 				WHERE UPPER_ID = #{dept_id} AND DEPARTMENT_ID != 0
 	</select>
 	
+	<select id="selectMaxId" resultType="java.lang.Integer">
+		SELECT MAX(DEPARTMENT_ID) FROM DEPARTMENTS		
+	</select>
 <!-- 	SELECT d.DEPARTMENT_ID, d.NAME -->
 <!-- 			<if test="dept_id != '0' and dept_id!=null"> -->
 <!-- 				, CONNECT_BY_ISLEAF AS ISLEAF  -->

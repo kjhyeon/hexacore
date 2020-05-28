@@ -43,8 +43,8 @@ public class EmployeeServiceImpl implements EmployeeIService {
 
 	@Override
 	public List<EmployeeDTO> selectChildEmployeeList(int department_id) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmpServiceImpl selectChildEmpList : {}",department_id);
+		return dao.selectChildEmployeeList(department_id);
 	}
 
 	@Override

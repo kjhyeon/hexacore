@@ -47,8 +47,8 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 
 	@Override
 	public List<EmployeeDTO> selectChildEmployeeList(int department_id) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmpDaoImpl selectChildEmplList : {}",department_id);
+		return session.selectList(NS+"selectChildEmployeeList", department_id);
 	}
 
 	@Override

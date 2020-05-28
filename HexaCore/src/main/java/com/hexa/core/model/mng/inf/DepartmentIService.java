@@ -7,8 +7,10 @@ import com.hexa.core.dto.DepartmentDTO;
 
 public interface DepartmentIService {
 
+	static public final boolean deptTree = false;
+	static public final boolean allTree = true;
 
-	public boolean insertDepartment(DepartmentDTO dto);
+	public int insertDepartment(DepartmentDTO dto);
 	
 	public boolean deleteDepartment(int department_id);
 	
@@ -16,7 +18,9 @@ public interface DepartmentIService {
 	
 	public List<DepartmentDTO> selectDepartmentList(int department_id);
 	
-	public List<Map<String, Object>> selectCompanyTree(int department_id);
+	public List<Map<String, Object>> selectCompanyTree(int department_id, boolean mode);
 	
 	public DepartmentDTO selectDepartment(int department_id);
+
+	public int selectMaxId();
 }

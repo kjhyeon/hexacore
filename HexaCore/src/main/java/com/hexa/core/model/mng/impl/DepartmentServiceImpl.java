@@ -28,9 +28,10 @@ public class DepartmentServiceImpl implements DepartmentIService {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
-	public boolean insertDepartment(DepartmentDTO dto) {
+	public int insertDepartment(DepartmentDTO dto) {
 		log.info("DepartmentServiceImpl insertDept : {}",dto);
-		return dao.insertDepartment(dto);
+		dao.insertDepartment(dto);
+		return dao.selectMaxId();
 	}
 
 	@Override
@@ -59,7 +60,7 @@ public class DepartmentServiceImpl implements DepartmentIService {
 	}
 
 	@Override
-	public List<Map<String, Object>> selectCompanyTree(int department_id) {
+	public List<Map<String, Object>> selectCompanyTree(int department_id,boolean mode) {
 		log.info("DepartmentServiceImpl selectCompanyTree");
 		List<DepartmentDTO> list = dao.selectChildDepartmentList(department_id);
 		List<Map<String,Object>> result = Lists.newArrayList();
@@ -70,27 +71,33 @@ public class DepartmentServiceImpl implements DepartmentIService {
 			children.put("text", dto.getName());
 			children.put("type", "folder");
 			children.put("parent",department_id);
-			List<Map<String,Object>> childNodes = selectCompanyTree(dto.getDepartment_id());
+			List<Map<String,Object>> childNodes = selectCompanyTree(dto.getDepartment_id(),mode);
 			if(childNodes==null) {
 				childNodes = Lists.newArrayList();
 			}
-			List<EmployeeDTO> employees = eDao.selectChildEmployeeList(dto.getDepartment_id());
-			if(employees!=null) {
-				for (EmployeeDTO eDto : employees) {
-					Map<String,Object> employee = Maps.newHashMap();
-					employee.put("id",eDto.getId());
-					employee.put("text", dto.getName());
-					employee.put("type", "person");
-					employee.put("parent", dto.getDepartment_id());
-					Map<String,Object> attr = Maps.newHashMap();
-					attr.put("deptname",eDto.getDepartment_name());
-					attr.put("e_rank",eDto.getE_rank());
-					attr.put("e_rank_name",eDto.getE_rank_name());
-					employee.put("attr", attr);
-					childNodes.add(employee);
+			if(mode) {
+				List<EmployeeDTO> employees = eDao.selectChildEmployeeList(dto.getDepartment_id());
+				if(employees!=null) {
+					for (EmployeeDTO eDto : employees) {
+						Map<String,Object> employee = Maps.newHashMap();
+						employee.put("id",eDto.getId());
+						employee.put("text", eDto.getName());
+						employee.put("type", "people");
+						employee.put("parent", eDto.getDepartment_id());
+						Map<String,Object> attr = Maps.newHashMap();
+						attr.put("deptname",eDto.getDepartment_name());
+						attr.put("e_rank",eDto.getE_rank());
+						attr.put("e_rank_name",eDto.getE_rank_name());
+						employee.put("li_attr", attr);
+						childNodes.add(employee);
+					}
 				}
+			}else {
+				Map<String,Object> deptInfo = Maps.newHashMap();
+				deptInfo.put("faxnum", dto.getFaxnum());
+				deptInfo.put("d_phone", dto.getD_phone());
+				children.put("li_attr", deptInfo);
 			}
-			
 			children.put("children",childNodes);
 			result.add(children);
 		}
@@ -103,6 +110,12 @@ public class DepartmentServiceImpl implements DepartmentIService {
 	public DepartmentDTO selectDepartment(int department_id) {
 		log.info("DepartmentServiceImpl selectDept : {}",department_id);
 		return dao.selectDepartment(department_id);
+	}
+
+	@Override
+	public int selectMaxId() {
+		log.info("DepartmentServiceImpl selecMaxId");
+		return dao.selectMaxId();
 	}
 
 }

@@ -12,20 +12,10 @@
   integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
   crossorigin="anonymous"></script>
 <script type="text/javascript" src="./dist/jstree.js"></script>
-<!-- <script type="text/javascript" src="./Tree-Plugin-jQuery-jsTree/src/jstree.search.js"></script> -->
-<!-- <script type="text/javascript" src="./Tree-Plugin-jQuery-jsTree/src/jstree.dnd.js"></script> -->
-</head>
-<body>
-<input type="text" id="menu_name" class="jstree-default jstree-search" name="menu_name" value="" onchange="search()" >
-<input type="button" id="search_menu" name="search_menu" value="검색하기" onclick="search()">
-
-<div id="tree" class="jstree-default"></div>
-
-<input type="button" id="open_all" name="open_all" value="전체열기" onclick="open_all()">
-<input type="button" id="close_all" name="close_all" value="전체닫기" onclick="close_all()">
 
 <script type="text/javascript">
-$('#tree').jstree({	// id가 tree인 영역에 트리 세팅
+window.onload = function(){
+	$('#tree').jstree({	// id가 tree인 영역에 트리 세팅
 	'core' : {
 					check_callback : true,
 					'data' : {	// 초기 데이터 세팅 ajax로 갖고옴
@@ -38,7 +28,7 @@ $('#tree').jstree({	// id가 tree인 영역에 트리 세팅
 								"id" : node.id
 							}
 						},
-						"method" : "get",	//ajax 방식
+						"method" : "post",	//ajax 방식
 						"dataType" : "json" //json형식으로 데이터를 받아옴
 					}
 				},
@@ -84,7 +74,7 @@ $('#tree').jstree({	// id가 tree인 영역에 트리 세팅
 	}).bind("dnd_stop.vakata", function(e, data) {
 		console.log("stop dnd");
 	});
-
+}
 	function search() { //트리 내 name을 통한 노드 검색
 		if ($("#menu_name").val()) {
 			$("#tree").jstree(true).search($("#menu_name").val());
@@ -102,6 +92,16 @@ $('#tree').jstree({	// id가 tree인 영역에 트리 세팅
 
 	}
 </script>
+
+</head>
+<body>
+<input type="text" id="menu_name" class="jstree-default jstree-search" name="menu_name" value="" onchange="search()" >
+<input type="button" id="search_menu" name="search_menu" value="검색하기" onclick="search()">
+
+<div id="tree" class="jstree-default"></div>
+
+<input type="button" id="open_all" name="open_all" value="전체열기" onclick="open_all()">
+<input type="button" id="close_all" name="close_all" value="전체닫기" onclick="close_all()">
 
 </body>
 </html>
