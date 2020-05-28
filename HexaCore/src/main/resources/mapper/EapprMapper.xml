@@ -68,32 +68,34 @@
 		<!-- 6-1번 체크 -->
 		
 <!-- 6.문서 반려	결재자가 반려하면 문서의 상태가 변경되는 쿼리 작성 및 테스트 -->
+
+	<!-- 문서 상태 변경 -->
+<!-- 	<update id="updateDocState" parameterType="DocumentDto"> -->
+<!-- 	UPDATE DOCUMENT -->
+<!-- 		SET STATE = #{state} 1,2,3 -->
+<!-- 			WHERE SEQ = #{seq} -->
+<!-- 	</update> -->
 <!-- 7.문서 양식 추가	관리자가 문서양식을 추가할 수 있는 쿼리 작성 및 테스트 -->
 	<insert id="insertDocType" parameterType="DocumentTypeDto">
 	INSERT INTO DOCUMENT_TYPE (TYPE_SEQ , NAME, CONTENT, CATEGORY)
 		VALUES((SELECT MAX(TYPE_SEQ) FROM DOCUMENT_TYPE)+1, #{name}, #{content}, #{category})
 	</insert>
 	
-	<!-- 문서 양식 조회 -->
+	<!-- 문서 양식 리스트 출력 -->
 	<select id="selectDocTypeList" resultType="DocumentTypeDto">
 		SELECT TYPE_SEQ, NAME, CATEGORY FROM DOCUMENT_TYPE ORDER BY CATEGORY
 	</select>
 	
 	<!-- 문서 양식 선택, 미리보기 출력 -->
 	<select id="selectDocType" parameterType="java.lang.String" resultType="java.lang.String">
-		SELECT CONTENT FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
+		SELECT TYPE_SEQ, NAME, CONTENT FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
 	</select>
 	
 	<!-- 문서 양식 삭제 -->
 	<delete id="deleteDocType" parameterType="java.lang.String">
 		DELETE * FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
 	</delete>
-	
-	<!-- 결재자 정보 삭제 -->
-	<delete id="deleteApprInfo" parameterType="java.lang.String">
-		DELETE * FROM APPROVAL WHERE SEQ = #{seq}
-	</delete>
-	
+		
 	<!-- 문서 삭제 -->
 	<delete id="deleteDoc" parameterType="java.lang.String">
 		DELETE * FROM DOCUMENT WHERE SEQ = #{seq}
