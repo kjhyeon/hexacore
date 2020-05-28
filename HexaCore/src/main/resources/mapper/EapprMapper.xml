@@ -29,7 +29,7 @@
 	VALUES(#{seq}, #{id}, #{name}, #{duty}, 'F', #{turn}, #{appr_kind})
 	</insert>
 	
-<!-- 문서 상신/취소-->
+<!-- 문서 상신/취소의 문서 상태 변경 쿼리-->
 	<update id="updateDocState" parameterType="DocumentDto">
 	UPDATE DOCUMENT
 		SET STATE = #{state} <!-- 1,2,3 -->
@@ -44,37 +44,80 @@
 	</select>
 
 <!-- 파일 업로드 DB에 첨부파일 저장 하는 쿼리 작성 및 테스트 -->
-
-<!-- 완료4.업로드한 파일 삭제		DB에 저장되어있는 첨부파일 영구 삭제 하는 쿼리 작성 및 테스트 -->
+	<insert id="insertFile">
+		INSERT INTO HEXA.DOC_FILES
+			(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE)
+			VALUES(#{NAME}, #{SEQ}, #{F_PATH}, #{ORI_NAME}, #{F_SIZE})
+		
+	</insert>
+<!-- 업로드한 파일 삭제		DB에 저장되어있는 첨부파일 영구 삭제 하는 쿼리 작성 및 테스트 -->
 	<delete id="deleteFile" parameterType="java.lang.String">
 	DELETE FROM FILES
 		WHERE SEQ= #{seq}
 	</delete>
-<!-- 문서 승인 첫번째 결재자 -->
+	
+<!-- 문서승인 -->
+<!-- 본인이 포함된 결재선 정보 쿼리-->
+	<select id="selectApprMyTurnChk" parameterType="ApprovalDto" resultType="ApprovalDto">
+	SELECT SEQ, ID, NAME, DUTY, CHK, TURN, APPR_DATE, APPR_KIND, APPR_SIGN
+		FROM APPROVAL a 
+			WHERE ID=#{id} AND SEQ =#{seq} AND 
+			<if test="APPR_KIND.equals('기안')">
+				APPR_KIND ='기안'
+			</if>
+			<if test="APPR_KIND.equals('합의')">
+				APPR_KIND ='합의'
+			</if>
+			<if test="APPR_KIND.equals('결재')">
+				APPR_KIND ='결재'
+			</if>
+			<if test="APPR_KIND.equals('참조')">
+				APPR_KIND ='참조'
+			</if>
+	</select>
+	
+<!-- 본인이 승인해야 될 문서 조회 -->
+	<select id="selectDocMyTurn" parameterType="java.lang.String" resultType="java.util.Map">
+	SELECT *
+		FROM DOCUMENT d JOIN APPROVAL a 
+				ON d.SEQ = a.SEQ
+			WHERE a.ID=#{id} AND
+					(d.STATE= 1 OR d.STATE =2) AND a.TURN  = d.APPR_TURN
+	</select>
+	
+<!-- 문서 결재시 결재선 업데이트 CHK T 반려시 R 업데이트-->
 	<update id="updateApprChk" parameterType="ApprovalDto">
 	UPDATE APPROVAL
-		SET CHK ='T' 
+		SET CHK =#{chk}, APPR_DATE=SYSDATE, APPR_SIGN=#{appr_sign}
 			WHERE SEQ =#{seq} AND ID = #{id}
 	</update>
-
-<!-- 	5-1	 문서함 TURN 업데이트 -->
-	<update id="updateDocTurn" parameterType="java.lang.String">
+<!-- 문서 결재시 코멘트 입력 -->
+	<insert id="insertComment" parameterType="DocCommentDto">
+	INSERT INTO HEXA.DOC_COMMENTS
+		(SEQ, COMMENT_SEQ, ID, NAME, CONTENT, REGDATE)
+			VALUES({seq}, #{comment_seq},#{id}, #{name}, #{content}, SYSDATE)
+				WHERE ID=#{id}
+	</insert>
+<!-- 	승인시  문서함 TURN 업데이트 -->
+	<update id="updateDocTurn" parameterType="ApprovalDto">
 	UPDATE DOCUMENT
-		SET APPR_TURN = (SELECT MAX(APPR_TURN) FROM DOCUMENT)+1
-			WHERE SEQ =#{seq}
+		SET 
+		<if test="turn=1 OR turn=2">
+			STATE = 2
+		</if>
+		<if test="turn=3">
+			STATE = 3
+		</if>
+			,
+			<if test="turn gte 1 AND turn lte 2">
+				APPR_TURN = (SELECT MAX(APPR_TURN) FROM DOCUMENT)+1
+			</if>
+			<if test="turn=3">
+				APPR_TURN = (SELECT MAX(APPR_TURN) FROM DOCUMENT)
+			</if>
+				WHERE SEQ =#{seq}
 	</update>
-<!-- 	5-2 	문서함 STATE 업데이트 (결재중) -->
-<!-- 	5-3		문서 최종 승인권자 승인 시 문서함 STATE 업데이트 -->
-		<!-- 6-1번 체크 -->
-		
-<!-- 6.문서 반려	결재자가 반려하면 문서의 상태가 변경되는 쿼리 작성 및 테스트 -->
 
-	<!-- 문서 상태 변경 -->
-<!-- 	<update id="updateDocState" parameterType="DocumentDto"> -->
-<!-- 	UPDATE DOCUMENT -->
-<!-- 		SET STATE = #{state} 1,2,3 -->
-<!-- 			WHERE SEQ = #{seq} -->
-<!-- 	</update> -->
 <!-- 7.문서 양식 추가	관리자가 문서양식을 추가할 수 있는 쿼리 작성 및 테스트 -->
 	<insert id="insertDocType" parameterType="DocumentTypeDto">
 	INSERT INTO DOCUMENT_TYPE (TYPE_SEQ , NAME, CONTENT, CATEGORY)
