@@ -58,8 +58,14 @@ public class DepartmentDaoImpl implements DepartmentIDao {
 
 	@Override
 	public int selectMaxId() {
-		log.info("DepartmentDao selectMaxId: {}");
+		log.info("DepartmentDao selectMaxId");
 		return session.selectOne(NS+"selectMaxId");
+	}
+
+	@Override
+	public boolean moveDepartment(DepartmentDTO dto) {
+		log.info("DepartmentDao moveDept: {}",dto);
+		return session.update(NS+"moveDepartment",dto)>0?true:false;
 	}
 
 

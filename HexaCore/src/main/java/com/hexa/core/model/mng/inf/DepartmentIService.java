@@ -16,6 +16,8 @@ public interface DepartmentIService {
 	
 	public boolean updateDepartment(DepartmentDTO dto);
 	
+	public boolean moveDepartment(DepartmentDTO dto);
+	
 	public List<DepartmentDTO> selectDepartmentList(int department_id);
 	
 	public List<Map<String, Object>> selectCompanyTree(int department_id, boolean mode);

@@ -23,7 +23,5 @@
 <input type="button" id="open_all" name="open_all" value="전체열기" onclick="open_all()">
 <input type="button" id="close_all" name="close_all" value="전체닫기" onclick="close_all()">
 
-<input type="button" id="open_all" name="open_all" value="생성" onclick="create()">
-
 </body>
 </html>

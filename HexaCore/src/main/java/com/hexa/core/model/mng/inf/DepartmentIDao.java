@@ -12,6 +12,8 @@ public interface DepartmentIDao {
 	
 	public boolean updateDepartment(DepartmentDTO dto);
 	
+	public boolean moveDepartment(DepartmentDTO dto);
+	
 	public List<DepartmentDTO> selectChildDepartmentList(int department_id);
 	
 	public DepartmentDTO selectDepartment(int department_id);

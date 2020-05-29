@@ -22,28 +22,25 @@ public class MngCtrl {
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	@RequestMapping(value="/testTree.do", method = RequestMethod.GET)
-	public String goTree(){
-		
-		return "mng/deptTree";
-	}
-	
 	@RequestMapping(value="/deptTree.do", method = RequestMethod.GET)
 	public String goDeptTree(){
-		
 		return "mng/deptTree";
 	}
 	
 	@RequestMapping(value="/allTree.do", method = RequestMethod.GET)
 	public String goAllTree(){
-		
 		return "mng/allTree";
 	}
 	
 	@RequestMapping(value="/deptMngTree.do", method = RequestMethod.GET)
 	public String goMngTree(){
-		
 		return "mng/deptMngTree";
+	}
+	
+	@RequestMapping(value="/updateDepartment.do",method=RequestMethod.GET)
+	public String goToDeptMng() {
+		
+		return "mng/updateDepartment";
 	}
 	
 	

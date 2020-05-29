@@ -3,6 +3,8 @@ package com.hexa.core.ctrl;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +23,8 @@ public class TreeCtrl {
 	
 	@Autowired
 	private DepartmentIService dService;
+	
+	Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@RequestMapping(value="/deptTree.do", method = RequestMethod.POST)
 	public Map<String,Object> deptTree(){
@@ -52,9 +56,30 @@ public class TreeCtrl {
 	
 	@RequestMapping(value="/createDept.do", method = RequestMethod.POST)
 	public String createDept(DepartmentDTO dto) {
+		log.info("####### ajax tree create : {} ######",dto);
 		System.out.println(dto);
 		String dept_id = String.valueOf(dService.insertDepartment(dto));
 		return dept_id;
 	}
 	
+	@RequestMapping(value="/deleteDept.do", method = RequestMethod.POST)
+	public String deleteDept(String department_id) {
+		log.info("####### ajax tree delete : {} ######",department_id);
+		dService.deleteDepartment(Integer.parseInt(department_id));
+		return "성공";
+	}
+	
+	@RequestMapping(value="/updateDept.do", method = RequestMethod.POST)
+	public String updateDept(DepartmentDTO dto) {
+		log.info("####### ajax tree update : {} ######",dto);
+		dService.updateDepartment(dto);
+		return "성공";
+	}
+	
+	@RequestMapping(value="/moveDept.do", method = RequestMethod.POST)
+	public String moveDept(DepartmentDTO dto) {
+		log.info("####### ajax tree move : {} ######",dto);
+		dService.moveDepartment(dto);
+		return "성공";
+	}
 }

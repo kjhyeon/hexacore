@@ -118,4 +118,10 @@ public class DepartmentServiceImpl implements DepartmentIService {
 		return dao.selectMaxId();
 	}
 
+	@Override
+	public boolean moveDepartment(DepartmentDTO dto) {
+		log.info("DepartmentServiceImpl moveDept : {}",dto);
+		return dao.moveDepartment(dto);
+	}
+
 }

@@ -64,7 +64,7 @@
 	
 	<update id="moveEmployee" parameterType="java.lang.Integer">
 		UPDATE EMPLOYEES
-                        SET  DEPARTMENT_ID=0, 
-                               WHERE DEPARTMENT_ID=#{department_id}
+               SET  DEPARTMENT_ID=0
+                   WHERE DEPARTMENT_ID=#{department_id}
 	</update>
 </mapper>

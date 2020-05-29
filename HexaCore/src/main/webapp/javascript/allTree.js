@@ -24,15 +24,13 @@ window.onload = function(){
 				"icon" : "./image/people.png" //사원 아이콘 지정
 			}
 		},
-		"plugins" : [ "contextmenu", "search", "state", "types","checkbox",
+		"plugins" : [ "search", "state", "types","checkbox",
 			"wholerow", "json_data" ], //사용할 플러그인들 설정
 			"themes" : {	// icon true로 지정한 아이콘 사용
 				"theme" : "classic",
 				"dots" : true,
 				"icons" : true
 			}
-	}).bind("move_node.jstree", function(e, data) {	// 드래그 앤 드롭이 끝났을때 콜백함수
-		console.log("Drop node " + data.node.id + " to " + data.parent);
 	});
 
 	$("#deptTree").on("click", ".jstree-anchor", function(e) {	//노드 클릭 시 콜백함수
@@ -47,13 +45,6 @@ window.onload = function(){
 		}
 	});
 
-	$(document).bind("dnd_start.vakata", function(e, data) {
-		console.log("Start dnd");
-	}).bind("dnd_move.vakata", function(e, data) {
-		console.log("Move dnd");
-	}).bind("dnd_stop.vakata", function(e, data) {
-		console.log("stop dnd");
-	});
 }
 function search() { //트리 내 name을 통한 노드 검색
 	if ($("#menu_name").val()) {

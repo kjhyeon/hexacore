@@ -21,57 +21,51 @@ window.onload = function(){
 				"icon" : "./image/department2.png" //폴더 아이콘 지정
 			},
 		},
-		"plugins" : [ "contextmenu", "search", "state", "types","dnd",
+		"plugins" : [ "search", "state", "types","dnd",
 			"wholerow", "json_data" ], //사용할 플러그인들 설정
 		"themes" : {	// icon true로 지정한 아이콘 사용
 				"theme" : "classic",
 				"dots" : true,
 				"icons" : true
 			}
-		, 'contextmenu': {
-		    'items': function (node) {
-		        var tmp = $.jstree.defaults.contextmenu.items();
-		        delete tmp.rename;
-		        delete tmp.remove;
-		        delete tmp.ccp;
-		        tmp.create.label = "New Folder";
-		        tmp.create.action = function (dta) {
-		            // I have $10 for you if you can comprehensively explane everything going on in the following.
-		            var inst = $.jstree.reference(dta.reference)
-		            var obj = inst.get_node(dta.reference);
-		            inst.create_node(obj, { type: "default" }, "last", function (new_node) {
-		                setTimeout(function () { inst.edit(new_node); }, 0);
-		            });
-		        }
-		        return tmp;
-		    }
-		, 'check_callback': function (o, n, p, i, m) {
-	        if (m && m.dnd && (m.pos !== 'i'))
-	            return false;
-	        /* not allowed options for this application
-	        if(o === "move_node" || o === "copy_node") {
-	            if(this.get_node(n).parent === this.get_node(p).id) { return false; }
-	        }
-	        */
-	        return true;
-		}
-		}
 	}).bind("move_node.jstree", function(e, data) {	// 드래그 앤 드롭이 끝났을때 콜백함수
-		console.log("Drop node " + data.node.id + " to " + data.parent);
-	}).bind("create_node.jstree", function(e, data){
+		$.ajax({
+			url : "./moveDept.do",
+			method : "post",
+			datatype : "json",
+			data : {"department_id":data.node.id,"upper_id":data.parent},
+			success : function(msg){
+				console.log(msg+" : Drop node " + data.node.id + " to " + data.parent);
+			},
+			error : function(){
+				alert("부서이동에러");
+			}
+		});
+	}).bind("create_node.jstree", function(e, data){// 노드를 생성했을 때 콜백함수
 //		$("#deptTree").jstree(true).get_node(data.parent).state.opened=true;
-//		alert(data.node.id);
 		$.ajax({
 			url : "./createDept.do",
 			method : "post",
 			datatype : "json",
 			data : {"upper_id":data.node.parent},
 			success : function(msg){
-//				alert(msg);
-				$(this).jstree(true).set_id(data.node, msg);
+				$("#deptTree").jstree("set_id",data.node, msg);
+				$("#deptTree").jstree("set_icon",data.node, "./image/department2.png");
 			},
 			error : function(){
 				alert("부서생성에러");
+			}
+		});
+	}).bind("delete_node.jstree", function(e, data){// 노드를 삭제했을 때 콜백함수
+		$.ajax({
+			url : "./deleteDept.do",
+			method : "post",
+			datatype : "json",
+			data : {"department_id":data.node.id},
+			success : function(msg){
+			},
+			error : function(){
+				alert("부서삭제에러");
 			}
 		});
 	});
@@ -85,10 +79,13 @@ window.onload = function(){
 			
 			if($("#"+node.id).attr("faxnum")!=undefined&&$("#"+node.id).attr("faxnum")!='null' ){
 				top.document.getElementById("department_fax").value = $("#"+node.id).attr("faxnum");
+			}else{
+				top.document.getElementById("department_fax").value = '';
 			}
-			
 			if($("#"+node.id).attr("d_phone")!=undefined&&$("#"+node.id).attr("d_phone")!='null' ){
 				top.document.getElementById("department_phone").value = $("#"+node.id).attr("d_phone");
+			}else{
+				top.document.getElementById("department_phone").value = '';
 			}
 		}
 	});
@@ -119,12 +116,72 @@ function close_all() { // 트리 전체 닫기
 
 }
 
-function create() { // 트리 전체 열기
+function createDept() { // 트리 전체 열기
 	$("#deptTree").jstree("create_node", $("#deptTree").jstree("get_selected"), '새 부서', 50, false, false);
 }
 
-function updateDept(){
-	$.ajax({
-		
-	});
+function updateDept() {
+	var id = $("#deptTree").jstree("get_selected");
+	var node = ($("#deptTree").jstree("get_node",id));
+	if(id!=0){
+		$.ajax({
+			url : "./updateDept.do",
+			method : "post",
+			data : {'department_id':id[0],'upper_id':node.parent,'name':parent.document.all['department_name'].value,'d_phone':parent.document.all['d_phone'].value,'faxnum':parent.document.all['faxnum'].value
+			},
+			success : function() {
+				$("#deptTree").jstree("get_node",id).li_attr['d_phone'] = parent.document.all['d_phone'].value;
+				$("#deptTree").jstree("get_node",id).li_attr['faxnum'] = parent.document.all['faxnum'].value;
+				$("#deptTree").jstree("get_node",id).text = parent.document.all['department_name'].value;
+				$('#deptTree').jstree(true).refresh();
+			},
+			error : function(){
+				alert("부서수정에러");
+			}
+		});
+	}
 }
+
+
+//var reg_uid = /^.*(?=^.{8,50}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/;       //6~16자의 영문 대/소문자, 숫자, 특수문자 조합  // 정규표현식
+                 //비밀번호는 최소 길이 8자리 이상 : 영대문자(A~Z, 26개), 영소문자(a~z, 26개), 숫자(0~9, 10개) 및 특수문자(32개) 중 3종류 이상으로 구성
+//var reg_uid = /^.*(?=^.{8,50}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*()=-+]).*$/;
+//var reg_uid = /^.*(?=^.{6,12}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[~,!,@,#,$,*,(,),=,+,_,.,|,[,],{,}]).*$/;
+
+function updateChk(){
+	var phoneChk =  /^\d{2,3}-\d{3,4}-\d{4}$/;
+	phone=parent.document.all['d_phone'].value;
+	fax=parent.document.all['faxnum'].value;
+	name = parent.document.all['department_name'].value;
+	if(name==''||name==undefined||name==null){
+		alert("부서 이름을 입력해주세요");
+		window.parent.document.getElementById("department_name").focus();
+	}else if(phone!=''&&!phoneChk.test(phone)){
+		alert("올바른 번호가 아닙니다");
+		window.parent.document.getElementById("department_phone").focus();
+	}else if(fax!=''&&!phoneChk.test(fax)){
+		alert("올바른 번호가 아닙니다");
+		window.parent.document.getElementById("department_fax").focus();
+	}else{
+		updateDept();
+	}
+}
+
+function deleteDept() {
+	var id = $("#deptTree").jstree("get_selected");
+	var node = ($("#deptTree").jstree("get_node",id));
+	if(id!=0){
+		var children = $("#deptTree").jstree("get_children_dom",node);
+		var confirm1 = confirm("선택한 부서를 삭제하시겠습니까?");
+		if(confirm1){
+			if(children.length>0){
+				var confirm2 = confirm("하위 부서까지 삭제됩니다 괜찮으시겠습니까?");
+				if(!confirm2){
+					return null;
+				}
+			}
+			$("#deptTree").jstree("delete_node", $("#deptTree").jstree("get_selected"));
+		}
+	}
+}
+
