@@ -1,6 +1,9 @@
 package com.hexa.core.model.eappr.inf;
 
 import java.util.List;
+
+import com.hexa.core.dto.ApprovalDTO;
+import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 
 public interface EapprIService {
@@ -11,4 +14,31 @@ public interface EapprIService {
 	 */
 	public List<DocumentTypeDTO> docTypeList();
 
+	/**
+	 * 해당 문서내용 조회
+	 * @param seq 문서 seq
+	 * @return 문서 내용
+	 */
+	public DocumentDTO selectDoc(String seq);
+	
+	/**
+	 * 문서 수정사항 업데이트
+	 * @param DocumentDTO 문서 seq, title, content, type_seq
+	 * @return True : 성공 / False 실패
+	 */
+	public boolean updateDoc(DocumentDTO Ddto);
+	
+	/**
+	 * 결재 루트 삭제
+	 * @param seq 문서 seq
+	 * @return True : 성공 / False 실패
+	 */
+	public boolean deleteApprRoot(String seq);
+	
+	/**
+	 * 결재루트 입력
+	 * @param ApprovalDto 결재선 seq, id, name, duty, turn, appr_kind
+	 * @return True : 성공 / False 실패
+	 */
+	public boolean insertApprRoot(ApprovalDTO Adto);
 }

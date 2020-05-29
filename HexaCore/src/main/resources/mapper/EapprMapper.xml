@@ -5,16 +5,15 @@
 
 	<!-- 문서 수정을 위한 해당 문서 조회 -->
 	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto">
-	SELECT d.SEQ SEQ, AUTHOR, TITLE, STATE, REGDATE, APPR_TURN, TYPE_SEQ, CONTENT 
-		  ,a.SEQ, ID, NAME, DUTY, CHK, TURN, APPR_DATE, APPR_KIND, APPR_SIGN
-		FROM DOCUMENT d, APPROVAL a
-			WHERE d.SEQ = a.SEQ AND d.SEQ = #{seq}
+	SELECT SEQ, AUTHOR, TITLE, STATE, APPR_TURN, TYPE_SEQ, CONTENT 
+		FROM DOCUMENT
+			WHERE SEQ = #{seq}
 	</select>
 	
 	<!-- 문서 수정된 사항 UPDATE -->
 	<update id="updateDoc" parameterType="DocumentDto">
 	UPDATE HEXA.DOCUMENT
-		SET TITLE=#{title}, STATE=0, REGDATE=SYSDATE , APPR_TURN=1, TYPE_SEQ=#{seq}, CONTENT=#{content}
+		SET TITLE=#{title}, STATE=0, REGDATE=SYSDATE , APPR_TURN=1, TYPE_SEQ=#{type_seq}, CONTENT=#{content}
 			WHERE SEQ=#{seq};
 	</update>
 	
@@ -78,15 +77,6 @@
 			<if test="APPR_KIND.equals('참조')">
 				APPR_KIND ='참조'
 			</if>
-	</select>
-	
-	<!-- 본인이 승인해야 될 문서 조회 -->
-	<select id="selectDocMyTurn" parameterType="java.lang.String" resultType="java.util.Map">
-	SELECT *
-		FROM DOCUMENT d JOIN APPROVAL a 
-				ON d.SEQ = a.SEQ
-			WHERE a.ID=#{id} AND
-					(d.STATE= 1 OR d.STATE =2) AND a.TURN  = d.APPR_TURN
 	</select>
 	
 <!-- 문서 결재시 결재선 업데이트 CHK T 반려시 R 업데이트-->
