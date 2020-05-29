@@ -48,7 +48,7 @@
 
 	<!-- 파일 업로드 DB에 첨부파일 저장 하는 쿼리 작성 및 테스트 -->
 	<insert id="insertFile">
-		INSERT INTO HEXA.DOC_FILES
+		INSERT INTO DocFileDTO
 			(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE)
 			VALUES(#{NAME}, #{SEQ}, #{F_PATH}, #{ORI_NAME}, #{F_SIZE})
 		
@@ -56,7 +56,7 @@
 	
 	<!-- 업로드한 파일 삭제	DB에 저장되어있는 첨부파일 영구 삭제 하는 쿼리 작성 및 테스트 -->
 	<delete id="deleteFile" parameterType="java.lang.String">
-	DELETE FROM DOC_FILES
+	DELETE FROM DocFileDTO
 		WHERE SEQ= #{seq}
 	</delete>
 	
@@ -99,8 +99,7 @@
 	<insert id="insertComment" parameterType="DocCommentDto">
 	INSERT INTO HEXA.DOC_COMMENTS
 		(SEQ, COMMENT_SEQ, ID, NAME, CONTENT, REGDATE)
-			VALUES({seq}, #{comment_seq},#{id}, #{name}, #{content}, SYSDATE)
-				WHERE ID=#{id}
+			VALUES({seq}, #{turn},#{id}, #{name}, #{content}, SYSDATE)
 	</insert>
 <!-- 	승인시  문서함 TURN 업데이트 -->
 	<update id="updateDocTurn" parameterType="ApprovalDto">
