@@ -26,7 +26,7 @@ public class EapprCtrl1 {
 	// 문서 양식 리스트 화면으로 이동
 	@RequestMapping(value = "/goDocTypeList.do", method = RequestMethod.GET)
 	public String DocTypeList(Model model) {
-		List<DocumentTypeDTO> list = service.docTypeList();
+		List<DocumentTypeDTO> list = service.selectDocTypeList();
 		model.addAttribute("list", list);
 		return "eappr/docTypeList";
 	}

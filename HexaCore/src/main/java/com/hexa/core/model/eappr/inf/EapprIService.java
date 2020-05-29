@@ -12,7 +12,7 @@ public interface EapprIService {
 	 * 문서 양식 리스트 출력
 	 * @return 문서 양식 리스트
 	 */
-	public List<DocumentTypeDTO> docTypeList();
+	public List<DocumentTypeDTO> selectDocTypeList();
 
 	/**
 	 * 해당 문서내용 조회
