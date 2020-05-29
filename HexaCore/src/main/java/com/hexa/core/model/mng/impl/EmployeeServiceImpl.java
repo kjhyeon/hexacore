@@ -66,25 +66,9 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	}
 
 	@Override
-	public EmployeeDTO selectLoginInfo(EmployeeDTO dto) {
-		log.info("Login Member Service encryption: "+dto.getPassword());
-		String encoryptionPw = dao.selectEmpPw(dto.getId());
-		
-		String inputPw= dto.getPassword();
-
-		log.info("Login Member Service encryption: "+encoryptionPw);
-		log.info("Login Member Service encryption: "+inputPw);
-
-//		//화면에서 얻은 pw를 암호화 시긴 값
-//		String enPw = passwordEncoder.encode(inputPw);
-//
-//		log.info("입력 값 암호화 pw:{}",enPw);
-		
-		if(passwordEncoder.matches(inputPw, encoryptionPw)) {
-			log.info("&&&& 비밀번호 일치 &&&&");
-			return dao.selectLoginInfo(dto.getId());
-		}else
-			return null;
+	public EmployeeDTO selectLoginInfo(String id) {
+		log.info("Security Login get UserInfo : {}",id);
+		return dao.selectLoginInfo(id);
 	}
 
 }

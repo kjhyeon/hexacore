@@ -56,7 +56,7 @@
 	</select>
 	
 	<select id="selectLoginInfo" parameterType="java.lang.String" resultType="empDTO">
-		SELECT EMPLOYEE_NUMBER, ID, e.NAME, EAMIL, E_RANK, 
+		SELECT ID, PASSWORD,e.NAME, EMAIL, E_RANK, 
 			AUTH, e.DEPARTMENT_ID, e.STATE, PROFILE_IMG, d.NAME DEPARTMENT_NAME, r.NAME E_RANK_NAME
 				FROM EMPLOYEES e, DEPARTMENTS d, "RANK" r
 					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM AND ID=#{id} AND e.STATE != '-1'

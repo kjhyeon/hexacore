@@ -2,7 +2,7 @@ package com.hexa.core.dto;
 
 import java.io.Serializable;
 
-public class EmployeeDTO implements Serializable{
+public class EmployeeDTO  implements Serializable{
 	/**
 	 * 
 	 */

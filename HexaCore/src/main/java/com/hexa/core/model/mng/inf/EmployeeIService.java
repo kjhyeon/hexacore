@@ -20,7 +20,7 @@ public boolean insertEmployee(EmployeeDTO dto);
 	
 	public EmployeeDTO selectEmployee(int employee_number);
 	
-	public EmployeeDTO selectLoginInfo(EmployeeDTO dto);
+	public EmployeeDTO selectLoginInfo(String id);
 	
 	
 }
