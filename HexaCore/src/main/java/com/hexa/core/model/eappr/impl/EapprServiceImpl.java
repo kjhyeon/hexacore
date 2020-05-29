@@ -15,10 +15,10 @@ import com.hexa.core.model.eappr.inf.EapprIService;
 @Service
 public class EapprServiceImpl implements EapprIService{
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
-	
 	@Autowired
 	private EapprIDao dao;
+	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Override
 	public List<DocumentTypeDTO> docTypeList() {

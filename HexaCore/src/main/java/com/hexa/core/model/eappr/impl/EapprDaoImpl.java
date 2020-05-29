@@ -16,11 +16,11 @@ import com.hexa.core.model.eappr.inf.EapprIDao;
 @Repository
 public class EapprDaoImpl implements EapprIDao{
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
-	private final String NS = "hexa.core.web.edoc.sqls.";
-	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
+	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final String NS = "hexa.core.web.eappr.sqls.";
 	
 	@Override
 	public List<DocumentTypeDTO> docTypeList() {
