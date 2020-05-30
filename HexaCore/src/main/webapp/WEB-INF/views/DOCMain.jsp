@@ -26,6 +26,7 @@
       <div class="well">
         <p><a href="#">My Profile</a></p>
         <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+        <button onclick="modifyDoc()">글수정</button>
       </div>
       <div class="well">
     	  <p><a href="#">문서작성</a></p>
