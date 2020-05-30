@@ -13,9 +13,22 @@
 	<!-- 문서 수정된 사항 UPDATE -->
 	<update id="updateDoc" parameterType="DocumentDto">
 	UPDATE DOCUMENT
-		SET TITLE=#{title}, STATE=0, REGDATE=SYSDATE , APPR_TURN=1, TYPE_SEQ=#{type_seq}, CONTENT=#{content}
-			WHERE SEQ=#{seq};
+		SET STATE=#{state}, APPR_TURN=#{appr_turn}, REGDATE=SYSDATE
+		<if test = "title!=null AND content !=null">
+		,TITLE=#{title},CONTENT=#{content}
+		</if>
+			WHERE SEQ=#{seq}
 	</update>
+	
+	<!-- 해당문서 결재루트 체크 -->
+	<select id="selectApprRoot" parameterType="ApprovalDto" resultType="ApprovalDto">
+	SELECT ID , CHK , TURN, NAME, DUTY, APPR_DATE, APPR_KIND, APPR_SIGN
+		FROM APPROVAL 
+			WHERE SEQ = #{seq}
+			<if test="id!=null">
+				AND ID=#{id}
+			</if>
+	</select>
 	
 	<!-- 결재 루트 삭제 -->
 	<delete id="deleteApprRoot" parameterType="java.lang.String">
@@ -31,22 +44,12 @@
 	</insert>
 	
 	<!-- 문서 상신/취소의 문서 상태 변경 쿼리-->
-	<update id="updateDocState" parameterType="DocumentDto">
+<!-- 	<update id="updateDocState" parameterType="DocumentDto">
 	UPDATE DOCUMENT
-		SET STATE = #{state}, APPR_TURN = #{appr_turn}
+		SET STATE = #{state}, APPR_TURN = #{appr_turn}, REGDATE=SYSDATE
 			WHERE SEQ = #{seq}
-	</update>
+	</update> -->
 	
-	<!-- 해당문서 결재루트 체크 -->
-	<select id="selectApprRoot" parameterType="ApprovalDto" resultType="ApprovalDto">
-	SELECT ID , CHK , TURN, NAME, DUTY, APPR_DATE, APPR_KIND, APPR_SIGN
-		FROM APPROVAL 
-			WHERE SEQ = #{seq}
-			<if test="id!=null">
-				AND ID=#{id}
-			</if>
-	</select>
-
 	<!-- 파일 업로드 DB에 첨부파일 저장 하는 쿼리 작성 및 테스트 -->
 	<insert id="insertFile" parameterType="DocFileDto">
 		INSERT INTO DocFileDTO
@@ -78,11 +81,8 @@
 	<update id="updateDocTurn" parameterType="ApprovalDto">
 	UPDATE DOCUMENT
 		SET STATE =#{state}
-		<if test="turn gte 1 AND turn lte 2">
+		<if test="appr_turn!= null AND appr_turn gte 1 AND appr_turn lte 2">
 			,APPR_TURN = (SELECT MAX(APPR_TURN) FROM DOCUMENT)+1
-		</if>
-		<if test="turn=3">
-			,APPR_TURN = (SELECT MAX(APPR_TURN) FROM DOCUMENT)
 		</if>
 			WHERE SEQ =#{seq}
 	</update>

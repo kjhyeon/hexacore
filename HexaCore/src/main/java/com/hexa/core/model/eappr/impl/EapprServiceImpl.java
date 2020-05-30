@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hexa.core.dto.ApprovalDTO;
+import com.hexa.core.dto.DocCommentDTO;
+import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.model.eappr.inf.EapprIDao;
@@ -47,6 +49,48 @@ public class EapprServiceImpl implements EapprIService{
 	@Override
 	public boolean insertApprRoot(ApprovalDTO Adto) {
 		log.info("insertApprRoot serviceImpl 실행");
+		return false;
+	}
+
+	@Override
+	public List<ApprovalDTO> selectApprRoot(ApprovalDTO Adto) {
+		log.info("selectApprRoot serviceImpl 실행");
+		return null;
+	}
+
+	@Override
+	public boolean insertFile(DocFileDTO DFdto) {
+		log.info("insertFile serviceImpl 실행");
+		return false;
+	}
+
+	@Override
+	public boolean deleteFile(String seq) {
+		log.info("deleteFIle serviceImpl 실행");
+		return false;
+	}
+
+	@Override
+	public boolean updateApprChk(ApprovalDTO Adto) {
+		log.info("updateApprChk serviceImpl 실행");
+		return false;
+	}
+
+	@Override
+	public boolean insertComment(DocCommentDTO DCdto) {
+		log.info("insertComment serviceImpl 실행");
+		return false;
+	}
+
+	@Override
+	public boolean updateDocTurn(ApprovalDTO Adto) {
+		log.info("updateDocTurn serviceImpl 실행");
+		return false;
+	}
+
+	@Override
+	public boolean insertDocType(DocumentTypeDTO DTdto) {
+		log.info("insertDocType serviceImpl 실행");
 		return false;
 	}
 }

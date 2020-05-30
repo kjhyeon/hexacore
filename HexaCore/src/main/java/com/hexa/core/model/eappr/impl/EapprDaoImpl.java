@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hexa.core.dto.ApprovalDTO;
+import com.hexa.core.dto.DocCommentDTO;
+import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.model.eappr.inf.EapprIDao;
@@ -27,31 +29,81 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("selectDocTypeList daoImpl 실행");
 		return sqlSession.selectList(NS+"selectDocTypeList");
 	}
-	
+
 	@Override
 	public DocumentDTO selectDoc(String seq) {
 		log.info("selectDoc daoImpl 실행 : {}",seq);
-		return sqlSession.selectOne(NS+"selectDoc");
+		return sqlSession.selectOne(NS+"selectDoc",seq);
 	}
 
 	@Override
 	public boolean updateDoc(DocumentDTO Ddto) {
 		log.info("updateDoc daoImpl 실행 : {}",Ddto);
-		int n = sqlSession.update(NS+"selectDoc");
+		int n = sqlSession.update(NS+"selectDoc",Ddto);
 		return (n>0)?true:false;
 	}
 
 	@Override
 	public boolean deleteApprRoot(String seq) {
 		log.info("deleteApprRoot daoImpl 실행 : {}",seq);
-		int n = sqlSession.delete(NS+"deleteApprRoot");
+		int n = sqlSession.delete(NS+"deleteApprRoot",seq);
 		return (n>0)?true:false;
 	}
 
 	@Override
 	public boolean insertApprRoot(ApprovalDTO Adto) {
 		log.info("insertApprRoot daoImpl 실행 : {}",Adto);
-		int n = sqlSession.insert(NS+"insertApprRoot");
+		int n = sqlSession.insert(NS+"insertApprRoot,Adto");
 		return (n>0)?true:false;
 	}
+
+	@Override
+	public List<ApprovalDTO> selectApprRoot(ApprovalDTO Adto) {
+		log.info("selectApprRoot daoImpl 실행 : {}",Adto);
+		return sqlSession.selectList(NS+"selectApprRoot",Adto);
+	}
+
+	@Override
+	public boolean insertFile(DocFileDTO DFdto) {
+		log.info("insertFile daoImpl 실행 : {}",DFdto);
+		int n = sqlSession.insert(NS+"insertFile",DFdto);
+		return (n>0)?true:false;
+	}
+
+	@Override
+	public boolean deleteFile(String seq) {
+		log.info("deleteFile daoImpl 실행 : {}",seq);
+		int n = sqlSession.insert(NS+"deleteFile",seq);
+		return (n>0)?true:false;
+	}
+
+	@Override
+	public boolean updateApprChk(ApprovalDTO Adto) {
+		log.info("updateApprChk daoImpl 실행 : {}",Adto);
+		int n = sqlSession.insert(NS+"updateApprChk",Adto);
+		return (n>0)?true:false;
+	}
+
+	@Override
+	public boolean insertComment(DocCommentDTO DCdto) {
+		log.info("insertComment daoImpl 실행 : {}",DCdto);
+		int n = sqlSession.insert(NS+"insertComment",DCdto);
+		return (n>0)?true:false;
+	}
+
+	@Override
+	public boolean updateDocTurn(ApprovalDTO Adto) {
+		log.info("updateDocTurn daoImpl 실행 : {}",Adto);
+		int n = sqlSession.insert(NS+"updateDocTurn",Adto);
+		return (n>0)?true:false;
+	}
+
+	@Override
+	public boolean insertDocType(DocumentTypeDTO DTdto) {
+		log.info("insertDocType daoImpl 실행 : {}",DTdto);
+		int n = sqlSession.insert(NS+"insertDocType",DTdto);
+		return (n>0)?true:false;
+	}
+	
+
 }
