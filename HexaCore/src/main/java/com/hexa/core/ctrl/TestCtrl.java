@@ -13,8 +13,5 @@ public class TestCtrl {
 		return "test/test";
 	}
 
-	@RequestMapping(value= "/maintest.do", method = RequestMethod.GET)
-	public String mainTest() {
-		return "MainTest";
-	}
+
 }

@@ -5,7 +5,7 @@
 
 	<!-- 문서 수정을 위한 해당 문서 조회 -->
 	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto">
-	SELECT SEQ, AUTHOR, TITLE, STATE, APPR_TURN, TYPE_SEQ, CONTENT 
+	SELECT SEQ, AUTHOR, TITLE, STATE, APPR_TURN, TYPE_SEQ, CONTENT,REGDATE 
 		FROM DOCUMENT
 			WHERE SEQ = #{seq}
 	</select>
