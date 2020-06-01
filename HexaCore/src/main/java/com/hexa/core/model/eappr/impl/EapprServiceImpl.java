@@ -55,55 +55,55 @@ public class EapprServiceImpl implements EapprIService{
 	@Override
 	public boolean deleteApprRoot(String seq) {
 		log.info("deleteApprRoot serviceImpl 실행");
-		return false;
+		return dao.deleteApprRoot(seq);
 	}
 
 	@Override
 	public boolean insertApprRoot(ApprovalDTO Adto) {
 		log.info("insertApprRoot serviceImpl 실행");
-		return false;
+		return dao.insertApprRoot(Adto);
 	}
 
 	@Override
 	public List<ApprovalDTO> selectApprRoot(ApprovalDTO Adto) {
 		log.info("selectApprRoot serviceImpl 실행");
-		return null;
+		return dao.selectApprRoot(Adto);
 	}
 
 	@Override
 	public boolean insertFile(DocFileDTO DFdto) {
 		log.info("insertFile serviceImpl 실행");
-		return false;
+		return dao.insertFile(DFdto);
 	}
 
 	@Override
 	public boolean deleteFile(String seq) {
 		log.info("deleteFIle serviceImpl 실행");
-		return false;
+		return dao.deleteFile(seq);
 	}
 
 	@Override
 	public boolean updateApprChk(ApprovalDTO Adto) {
 		log.info("updateApprChk serviceImpl 실행");
-		return false;
+		return dao.updateApprChk(Adto);
 	}
 
 	@Override
 	public boolean insertComment(DocCommentDTO DCdto) {
 		log.info("insertComment serviceImpl 실행");
-		return false;
+		return dao.insertComment(DCdto);
 	}
 
 	@Override
 	public boolean updateDocTurn(ApprovalDTO Adto) {
 		log.info("updateDocTurn serviceImpl 실행");
-		return false;
+		return dao.updateDocTurn(Adto);
 	}
 
 	@Override
 	public boolean insertDocType(DocumentTypeDTO DTdto) {
 		log.info("insertDocType serviceImpl 실행");
-		return false;
+		return dao.insertDocType(DTdto);
 	}
 
 	@Override
