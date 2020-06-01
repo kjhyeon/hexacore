@@ -18,6 +18,8 @@
 		<mapper resource="/mapper/EapprMapper.xml"/>
 		<mapper resource="/mapper/EmployeeMapper.xml"/>
 		<mapper resource="/mapper/DepartmentMapper.xml"/>
-		<mapper resource="/mapper/BoardMapper.xml"/>
+		<mapper resource="/mapper/FileBMapper.xml"/>
+		<mapper resource="/mapper/FreeBMapper.xml"/>
+		<mapper resource="/mapper/NoticeBMapper.xml"/>
 	</mappers>
 </configuration>
