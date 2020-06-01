@@ -27,4 +27,6 @@ public interface EmployeeIDao {
 	public boolean moveEmployee(int department_id);
 	
 	public String selectId(String id);
+	
+	public List<EmployeeDTO> selectRank();
 }

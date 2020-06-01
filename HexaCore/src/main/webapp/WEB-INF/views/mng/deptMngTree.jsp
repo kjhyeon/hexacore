@@ -6,10 +6,7 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./dist/themes/default/style.css">
 <title>부서 목록</title>
-<script
-  src="https://code.jquery.com/jquery-3.5.1.js"
-  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
-  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 <script type="text/javascript" src="./dist/jstree.js"></script>
 <script type="text/javascript" src="./javascript/deptMngTree.js"></script>
 

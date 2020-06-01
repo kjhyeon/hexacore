@@ -37,8 +37,8 @@ public class EmployeeServiceImpl implements EmployeeIService {
 
 	@Override
 	public boolean updateEmployee(EmployeeDTO dto) {
-		// TODO Auto-generated method stub
-		return false;
+		log.info("EmpServiceImpl updateEmp : {}",dto);
+		return dao.updateEmployee(dto);
 	}
 
 	@Override
@@ -49,20 +49,20 @@ public class EmployeeServiceImpl implements EmployeeIService {
 
 	@Override
 	public List<EmployeeDTO> selectEmployeeList() {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmpServiceImpl selectEmpList : {}");
+		return dao.selectEmployeeList();
 	}
 
 	@Override
 	public List<EmployeeDTO> selectAllEmployeeList() {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmpServiceImpl selectEmpList : {}");
+		return dao.selectAllEmployeeList();
 	}
 
 	@Override
 	public EmployeeDTO selectEmployee(int employee_number) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmpServiceImpl selectEmp : {}",employee_number);
+		return dao.selectEmployee(employee_number);
 	}
 
 	@Override
@@ -75,6 +75,12 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	public String selectId(String id) {
 		log.info("EmpServiceImpl selectId : {}",id);
 		return dao.selectId(id);
+	}
+
+	@Override
+	public List<EmployeeDTO> selectRank() {
+		log.info("EmpServiceImpl selectRank : {}");
+		return dao.selectRank();
 	}
 	
 	

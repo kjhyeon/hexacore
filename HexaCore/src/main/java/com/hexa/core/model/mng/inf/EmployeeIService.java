@@ -24,5 +24,5 @@ public boolean insertEmployee(EmployeeDTO dto);
 	
 	public String selectId(String id);
 	
-	
+	public List<EmployeeDTO> selectRank();
 }

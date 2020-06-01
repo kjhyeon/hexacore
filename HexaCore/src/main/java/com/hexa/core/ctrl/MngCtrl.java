@@ -62,14 +62,15 @@ public class MngCtrl {
 		boolean isc = eService.insertEmployee(dto);
 		
 		if(isc)
-			return "mng/insertEmployee";
+			return "redirect:/employeeList.do";
 		else
 			return "../../error";
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/IdChk.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/idChk.do", method = RequestMethod.POST)
 	public String login(String id) {
+		log.info("welcome idChk : {}",id);
 		String chkId = eService.selectId(id);
 		if(chkId!=null) {
 			return "false";
@@ -78,12 +79,15 @@ public class MngCtrl {
 	}
 	
 	@RequestMapping(value="/updateEmployee.do",method=RequestMethod.GET)
-	public String goEmpUpdateForm() {
-		
+	public String goEmpUpdateForm(String employee_number, Model model) {
+		log.info("Welcome goEmpUpdateForm {}", employee_number);
+		model.addAttribute("dto",eService.selectEmployee(Integer.parseInt(employee_number)));
+		model.addAttribute("ranks",eService.selectRank());
+		System.out.println("################################3"+eService.selectRank().size());
 		return "mng/updateEmployee";
 	}
 	
-	@RequestMapping(value="/insertEmployee.do",method=RequestMethod.POST)
+	@RequestMapping(value="/updateEmployee.do",method=RequestMethod.POST)
 	public String EmployeeUpdate(EmployeeDTO dto) {
 		log.info("Welcome EmployeeInsert {}", dto);
 //		if(dto.getProfile_img()==null) {
@@ -99,7 +103,7 @@ public class MngCtrl {
 
 	@RequestMapping(value="/employeeList.do",method=RequestMethod.GET)
 	public String EmployeeList(Model model) {
-		
+		log.info("Welcome page EmployList.do");
 		model.addAttribute("list", eService.selectEmployeeList());
 		
 		return "mng/employeeList";

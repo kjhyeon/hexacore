@@ -41,8 +41,8 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 
 	@Override
 	public boolean updateEmployee(EmployeeDTO dto) {
-		// TODO Auto-generated method stub
-		return false;
+		log.info("EmployeeDAO updateEmployee : {}",dto);
+		return session.update(NS+"updateEmployee", dto)>0?true:false;
 	}
 
 	@Override
@@ -53,20 +53,20 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 
 	@Override
 	public List<EmployeeDTO> selectEmployeeList() {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmpDaoImpl selectEmplList : {}");
+		return session.selectList(NS+"selectEmployeeList");
 	}
 
 	@Override
 	public List<EmployeeDTO> selectAllEmployeeList() {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmpDaoImpl selectAllEmplList : {}");
+		return session.selectList(NS+"selectAllEmployeeList");
 	}
 
 	@Override
 	public EmployeeDTO selectEmployee(int employee_number) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmployeeDAO selectEmployee : {}",employee_number);
+		return session.selectOne(NS+"selectEmployee", employee_number);
 	}
 
 	@Override
@@ -92,5 +92,13 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 		log.info("EmployeeDAO selectId : {}",id);
 		return session.selectOne(NS+"selectEmpId", id);
 	}
+
+	@Override
+	public List<EmployeeDTO> selectRank() {
+		log.info("EmployeeDAO selectRank : {}");
+		return session.selectList(NS+"selectRank");
+	}
+	
+	
 
 }
