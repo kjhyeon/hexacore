@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hexa.core.notice.board">
+	<!-- 게시판 목록 출력 -->
+	<select id="selectBbsList" parameterType="RowNum"
+							   resultType="BbsDto">
+		SELECT SEQ, ID, NAME, TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+			FROM NOTICE_BBS
+				WHERE SEQ = #{seq}
+	</select>
+	
+	<!-- 게시판 글 수정 -->
+	<update id="updateBbs" parameterType="BbsDto">
+		UPDATE NOTICE_BBS
+			SET TITLE='#{title}', CONTENT='#{content}'
+				WHERE SEQ=#{seq}
+	</update>
+	
+	<!-- 게시판 글 다중삭제 -->
+	<update id="deleteBbs" parameterType="java.lang.Integer">
+		UPDATE NOTICE_BBS 
+			SET STATE = #{state}
+			<where>
+				SEQ IN 
+				<foreach collection="seqs" open="(" separator="," close=")" item="seq">
+						#{seq}
+				</foreach>
+			</where> 
+	</update>
+	
+	<!-- Root 글쓰기 -->
+	<insert id="insertBbs" parameterType="BbsDto">
+		INSERT INTO NOTICE_BBS 
+			(SEQ, 		ID, 		NAME, 		TITLE, 
+			 CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
+			 ROOT, 		REPLY_SEQ, 	BBS_DEPTH)
+		VALUES (NOTICE_BBS_SEQ.NEXTVAL, #{id}, #{name}, #{title}, 
+				#{content}, #{state}, SYSDATE, #{views}, 
+			   (SELECT NVL(MAX(#{root}),0)+1 FROM NOTICE_BBS), #{reply_seq}, #{bbs_depth})
+	</insert>
+	
+	<!-- 게시판 답글 입력 -->
+	<insert id="insertReply" parameterType="BbsDto">
+		INSERT INTO NOTICE_BBS 
+			(SEQ, ID, NAME, TITLE, 
+			 CONTENT, STATE, REGDATE, VIEWS, 
+			 ROOT, REPLY_SEQ, BBS_DEPTH)
+		VALUES (NOTICE_BBS_SEQ.NEXTVAL, #{id}, #{name}, #{title}, 
+				#{content}, #{state}, SYSDATE, #{views},
+			(SELECT ROOT FROM NOTICE_BBS WHERE SEQ = #{seq}),
+			(SELECT REPLY_SEQ FROM NOTICE_BBS WHERE SEQ = #{seq}) +1),
+			(SELECT BBS_DEPTH FROM NOTICE_BBS WHERE SEQ = #{seq}) +1);
+	</insert>
+</mapper>

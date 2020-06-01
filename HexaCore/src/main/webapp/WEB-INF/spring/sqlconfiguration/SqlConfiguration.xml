@@ -10,11 +10,14 @@
 		<typeAlias type="com.hexa.core.dto.DocumentTypeDTO" alias="DocumentTypeDto"/>
 		<typeAlias type="com.hexa.core.dto.EmployeeDTO" alias="empDto"/>
 		<typeAlias type="com.hexa.core.dto.DepartmentDTO" alias="deptDto"/>
+		<typeAlias type="com.hexa.core.dto.BbsDTO" alias="BbsDto"/>
+		<typeAlias type="com.hexa.core.dto.CommentDTO" alias="CommentDto"/>
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="/mapper/EapprMapper.xml"/>
 		<mapper resource="/mapper/EmployeeMapper.xml"/>
 		<mapper resource="/mapper/DepartmentMapper.xml"/>
+		<mapper resource="/mapper/BoardMapper.xml"/>
 	</mappers>
 </configuration>
