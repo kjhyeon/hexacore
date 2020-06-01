@@ -21,10 +21,15 @@ public class DocumentTypeDTO implements Serializable{
 		this.content = content;
 		this.category = category;
 	}
+	
+	public DocumentTypeDTO(int type_seq) {
+		super();
+		this.type_seq = type_seq;
+	}
 
 	@Override
 	public String toString() {
-		return "DocTypeDTO [type_seq=" + type_seq + ", name=" + name + ", content=" + content + ", category=" + category
+		return "DocumentTypeDTO [type_seq=" + type_seq + ", name=" + name + ", content=" + content + ", category=" + category
 				+ "]";
 	}
 

@@ -15,6 +15,13 @@ public interface EapprIDao {
 	 * @return 문서 양식 리스트
 	 */
 	public List<DocumentTypeDTO> selectDocTypeList();
+	
+	/**
+	 * 문서 양식 미리보기
+	 * @param type_seq
+	 * @return 문서 양식
+	 */
+	public DocumentTypeDTO selectDocType(String type_seq);
 
 	/**
 	 * 해당 문서내용 조회

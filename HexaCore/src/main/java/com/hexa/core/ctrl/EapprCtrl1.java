@@ -2,6 +2,8 @@ package com.hexa.core.ctrl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,8 @@ public class EapprCtrl1 {
 	
 	@Autowired
 	private EapprIService service;
+	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	// 전자결재 홈 화면으로 이동
 	@RequestMapping(value = "/goEapprHome.do", method = RequestMethod.GET)
@@ -33,7 +37,11 @@ public class EapprCtrl1 {
 	
 	// 문서 양식 미리보기 화면으로 이동
 	@RequestMapping(value = "/goDocTypePreview.do", method = RequestMethod.GET)
-	public String DocTypePreview() {
-		return "eappr/docTypeList";
+	public String DocTypePreview(String type_seq, Model model) {
+		log.info("seq값 확인 : {}", type_seq);
+		DocumentTypeDTO dto = service.selectDocType(type_seq);
+		log.info("dto 확인 : {}", dto);
+		model.addAttribute("dto", dto);
+		return "eappr/docTypePreview";
 	}
 }

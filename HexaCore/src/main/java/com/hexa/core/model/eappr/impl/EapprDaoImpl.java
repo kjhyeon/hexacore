@@ -29,6 +29,12 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("selectDocTypeList daoImpl 실행");
 		return sqlSession.selectList(NS+"selectDocTypeList");
 	}
+	
+	@Override
+	public DocumentTypeDTO selectDocType(String type_seq) {
+		log.info("selectDocType daoImpl 실행");
+		return sqlSession.selectOne(NS+"selectDocType", type_seq);
+	}
 
 	@Override
 	public DocumentDTO selectDoc(String seq) {
@@ -104,6 +110,5 @@ public class EapprDaoImpl implements EapprIDao{
 		int n = sqlSession.insert(NS+"insertDocType",DTdto);
 		return (n>0)?true:false;
 	}
-	
 
 }
