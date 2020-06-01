@@ -51,7 +51,7 @@ public class EapprDaoImpl implements EapprIDao{
 	@Override
 	public boolean updateDoc(DocumentDTO Ddto) {
 		log.info("updateDoc daoImpl 실행 : {}",Ddto);
-		int n = sqlSession.update(NS+"selectDoc",Ddto);
+		int n = sqlSession.update(NS+"updateDoc",Ddto);
 		return (n>0)?true:false;
 	}
 

@@ -14,8 +14,8 @@
 	<update id="updateDoc" parameterType="DocumentDto">
 	UPDATE DOCUMENT
 		SET STATE=#{state}, APPR_TURN=#{appr_turn}, REGDATE=SYSDATE
-		<if test = "title!=null AND content !=null">
-		,TITLE=#{title},CONTENT=#{content}
+		<if test="content !=null and title!=null">
+		,CONTENT=#{content} ,TITLE=#{title}
 		</if>
 			WHERE SEQ=#{seq}
 	</update>

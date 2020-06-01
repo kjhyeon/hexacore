@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +21,8 @@ public class EapprCtrl2 {
 	
 	@Autowired
 	private EapprIService service;
+	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	
 	@RequestMapping(value = "/eApprMain.do", method = RequestMethod.GET)
@@ -68,7 +72,9 @@ public class EapprCtrl2 {
 	
 	@RequestMapping(value="/saveDoc.do", method= RequestMethod.GET)
 	public String saveDoc(DocumentDTO Ddto) {
+		log.info("Ddto 확인용 로그1 : {}", Ddto);
 		Ddto.setAppr_turn(1);
+		log.info("Ddto 확인용 로그2 : {}", Ddto);
 		boolean isc = service.updateDoc(Ddto);
 		System.out.println("*****************************"+Ddto);
 		return isc?"redirect:/docDetail.do":"redirect:/docDetail.do";
