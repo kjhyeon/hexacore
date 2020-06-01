@@ -5,6 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>사원 목록</title>
+<script type="text/javascript">
+function gotoCreate(){
+	location.href="./insertEmployee.do";
+}
+</script>
 </head>
 <body>
 	<%@include file="./../../header.jsp" %>
@@ -12,7 +17,7 @@
 		<table>
 			<thead>
 				<tr>
-					<td>No.</td><td>아이디</td><td>이름</td><td>상태</td><td>입사일</td>
+					<td>No.</td><td>아이디</td><td>이름</td><td>상태</td><td>권한</td><td>입사일</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -23,17 +28,25 @@
 							<a href="./updateEmployee.do?employee_number=${dto.employee_number }">${dto.id}</a>
 						</td>
 						<td>${dto.name}</td>
-						<td><c:choose>
+						<td>
+							<c:choose>
 								<c:when test="${dto.state eq -1}">퇴사</c:when>
 								<c:when test="${dto.state eq 0}">재직</c:when>
 								<c:when test="${dto.state eq 1}">휴가</c:when>
-							</c:choose></td>
+							</c:choose>
+						</td>
+						<td>
+							<c:choose>
+								<c:when test="${dto.auth eq 'A'}">관리자</c:when>
+								<c:when test="${dto.auth eq 'U'}">일반</c:when>
+							</c:choose>
+						</td>
 						<td>${dto.join_date}</td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
-		
+		<input type="button" value="생성" onclick="gotoCreate()">
 		<input type="hidden" name="index" id="index" value="${row.index }">
 		<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
 		<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">

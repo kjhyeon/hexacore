@@ -67,7 +67,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th>프로필이미지</th><td><input multiple="multiple" type="file" name="profile_img" onchange="a(this)"></td>
+				<th>프로필이미지</th><td><input multiple="multiple" type="file" name="profile_file" onchange="a(this)"></td>
 			</tr>
 		</table>
 		<div id="right-content">

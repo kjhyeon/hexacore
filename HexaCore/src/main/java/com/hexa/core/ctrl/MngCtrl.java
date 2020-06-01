@@ -61,16 +61,21 @@ public class MngCtrl {
 	}
 	
 	@RequestMapping(value="/insertEmployee.do",method=RequestMethod.POST)
-	public String EmployeeInsert(EmployeeDTO dto, MultipartFile profile_img) {
-		log.info("Welcome EmployeeInsert {}/{}", dto,profile_img);
+	public String EmployeeInsert(EmployeeDTO dto, MultipartFile profile_file) {
+		log.info("Welcome EmployeeInsert {}/{}", dto,profile_file);
 		if(dto.getProfile_img()==null) {
 			dto.setProfile_img("");
 		}
 		
+		File indexFolder = new File(attach_path);
+		if(indexFolder.isDirectory() == false){
+			indexFolder.mkdirs();
+		}
+		
 		try {
-			String saveName = "profile"+UUID.randomUUID()+profile_img.getOriginalFilename();
+			String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
 			File f = new File(attach_path,saveName);
-			profile_img.transferTo(f);
+			profile_file.transferTo(f);
 			dto.setProfile_img(saveName);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,10 +108,35 @@ public class MngCtrl {
 		System.out.println("################################3"+eService.selectRank().size());
 		return "mng/updateEmployee";
 	}
-	
 	@RequestMapping(value="/updateEmployee.do",method=RequestMethod.POST)
-	public String EmployeeUpdate(EmployeeDTO dto) {
-		log.info("Welcome EmployeeInsert {}", dto);
+	public String EmployeeUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
+		log.info("Welcome EmployeeInsert {}/{}/{}", dto,profile_file,sign_file);
+		
+		File indexFolder = new File(attach_path);
+		if(indexFolder.isDirectory() == false){
+			indexFolder.mkdirs();
+		}
+		if(profile_file!=null) {
+			try {
+				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
+				File f = new File(attach_path,saveName);
+				profile_file.transferTo(f);
+				dto.setProfile_img(saveName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if(sign_file!=null) {
+			try {
+				String saveName = "sign_"+UUID.randomUUID()+"_"+sign_file.getOriginalFilename();
+				File f = new File(attach_path,saveName);
+				sign_file.transferTo(f);
+				dto.setSign_img(saveName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		boolean isc = eService.updateEmployee(dto);
 		if(isc)
 			return "redirect:/employeeList.do";
