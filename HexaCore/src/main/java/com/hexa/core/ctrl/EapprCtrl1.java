@@ -1,5 +1,6 @@
 package com.hexa.core.ctrl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.hexa.core.dto.ApprovalDTO;
+import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.model.eappr.inf.EapprIService;
 
@@ -54,7 +57,9 @@ public class EapprCtrl1 {
 	
 	// 문서 작성
 		@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
-		public String DocDetail() {
-			return "eappr/DocDetail";
+		public String DocDetail(DocumentDTO dto, Model model) {
+			log.info("리스트 확인 : {}", dto.getLists().get(0));
+			model.addAttribute("dto", dto);
+			return "eappr/docDetail";
 		}
 }
