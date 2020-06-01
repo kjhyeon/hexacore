@@ -44,4 +44,17 @@ public class EapprCtrl1 {
 		model.addAttribute("dto", dto);
 		return "eappr/docTypePreview";
 	}
+	
+	// 문서 작성 화면으로 이동
+	@RequestMapping(value = "/goDocWriteForm.do", method = RequestMethod.POST)
+	public String DocTypePreview(DocumentTypeDTO dto, Model model) {
+		model.addAttribute("dto", dto);
+		return "eappr/DocWriteForm";
+	}
+	
+	// 문서 작성
+		@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
+		public String DocDetail() {
+			return "eappr/DocDetail";
+		}
 }
