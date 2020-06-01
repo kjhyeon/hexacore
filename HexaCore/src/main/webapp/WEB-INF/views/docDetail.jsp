@@ -29,7 +29,7 @@
 	<!--javascript를 통한 form 전송  -->
 	<div style="text-align: center; margin-top: 10px; margin-bottom: 100px;">
 	<form name="form1" id="form1">
-		<input  type="button" name="btn" id="modifyDoc" value="수정" onclick="modifyForm(1)">
+		<input  type="button" name="btn" id="modifyDoc" value="수정" onclick="modifyForm(${Ddto.seq})">
 		<input  type="button" name="btn" id="deleteBoard" value="삭제">
 	</form>
 	</div>
