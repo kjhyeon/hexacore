@@ -51,15 +51,21 @@ public class EapprCtrl1 {
 	// 문서 작성 화면으로 이동
 	@RequestMapping(value = "/goDocWriteForm.do", method = RequestMethod.POST)
 	public String DocTypePreview(DocumentTypeDTO dto, Model model) {
-		model.addAttribute("dto", dto);
+		model.addAttribute("typeDto", dto);
 		return "eappr/DocWriteForm";
 	}
 	
 	// 문서 작성
-		@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
-		public String DocDetail(DocumentDTO dto, Model model) {
-			log.info("리스트 확인 : {}", dto.getLists().get(0));
-			model.addAttribute("dto", dto);
-			return "eappr/docDetail";
-		}
+	@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
+	public String DocDetail(DocumentDTO dto, Model model) {
+		log.info("dto확인 : {}",dto);
+		boolean cnt = service.insertNewDoc(dto);
+		log.info("작성 성공여부 확인 : {}", cnt);
+		String seq = service.selectNewDoc();
+		log.info("작성된 문서의 seq 확인 : {}", seq);
+		DocumentDTO newDto = service.selectDoc(seq);
+		model.addAttribute("dto", newDto);
+		return "eappr/docDetail";
+	}
+	
 }

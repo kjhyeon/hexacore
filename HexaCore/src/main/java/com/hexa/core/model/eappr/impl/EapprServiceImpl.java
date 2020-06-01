@@ -33,6 +33,12 @@ public class EapprServiceImpl implements EapprIService{
 		log.info("selectDocType serviceImpl 실행");
 		return dao.selectDocType(type_seq);
 	}
+	
+	@Override
+	public boolean insertNewDoc(DocumentDTO dto) {
+		log.info("insertNewDoc serviceImpl 실행");
+		return dao.insertNewDoc(dto);
+	}
 
 	@Override
 	public DocumentDTO selectDoc(String seq) {
@@ -98,6 +104,12 @@ public class EapprServiceImpl implements EapprIService{
 	public boolean insertDocType(DocumentTypeDTO DTdto) {
 		log.info("insertDocType serviceImpl 실행");
 		return false;
+	}
+
+	@Override
+	public String selectNewDoc() {
+		log.info("selectNewDoc serviceImpl 실행");
+		return dao.selectNewDoc();
 	}
 
 }

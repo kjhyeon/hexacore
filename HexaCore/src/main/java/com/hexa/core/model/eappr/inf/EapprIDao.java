@@ -22,6 +22,18 @@ public interface EapprIDao {
 	 * @return 문서 양식
 	 */
 	public DocumentTypeDTO selectDocType(String type_seq);
+	
+	/**
+	 * 문서 작성
+	 * @return 성공T 실패F
+	 */
+	public boolean insertNewDoc(DocumentDTO dto);
+	
+	/**
+	 * 방금 작성한 문서의 seq 가져오기
+	 * @return seq
+	 */
+	public String selectNewDoc();
 
 	/**
 	 * 해당 문서내용 조회
