@@ -33,6 +33,22 @@
 				</c:forEach>
 			</tbody>
 		</table>
+		
+		<input type="hidden" name="index" id="index" value="${row.index }">
+		<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
+		<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
+		<div class="center">
+			<ul class="pagination">
+				<li><a href="./employeeList.do?page=0" onclick="pageFirst()">&laquo;</a></li>
+				<li><a href="./employeeList.do?page=${row.index-1}" onclick="pagePre()">&lt;</a></li>
+				<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
+					<li><a href="./employeeList.do?page=${i-1}">${i }</a></li>
+				</c:forEach>
+				<li><a href="./employeeList.do?page=${row.index+1}" >&gt;</a></li>
+				<li><a href="./employeeList.do?page=${row.lastPage-1}" >&raquo;</a></li>
+			</ul>
+		</div>
+		
 	</div>
 	
 	<%@include file="./../../footer.jsp" %>

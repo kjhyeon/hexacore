@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hexa.core.dto.EmployeeDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.mng.inf.EmployeeIDao;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 
@@ -48,15 +49,15 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	}
 
 	@Override
-	public List<EmployeeDTO> selectEmployeeList() {
+	public List<EmployeeDTO> selectEmployeeList(RowNumDTO row) {
 		log.info("EmpServiceImpl selectEmpList : {}");
-		return dao.selectEmployeeList();
+		return dao.selectEmployeeList(row);
 	}
 
 	@Override
-	public List<EmployeeDTO> selectAllEmployeeList() {
-		log.info("EmpServiceImpl selectEmpList : {}");
-		return dao.selectAllEmployeeList();
+	public int selectEmployeeListSize() {
+		log.info("EmpServiceImpl selectEmpListSize : {}");
+		return dao.selectEmployeeListSize();
 	}
 
 	@Override

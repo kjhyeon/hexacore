@@ -1,13 +1,16 @@
 package com.hexa.core.dto;
 
-public class RowNumDTO {
+public class RowNumDTO{
 
 	private int pageList; // 출력할 페이지 번호 갯수
 	private int index; // 출력할 페이지 번호
 	private int pageNum; // 출력할 페이지 시작번호
 	private int listNum; // 출력할 리스트 갯수
 	private int total; // 글 총 갯수
-
+	private int start;
+	private int last;
+	private int lastPage;
+	
 	{
 		pageList = 5;
 		index = 0;
@@ -49,7 +52,7 @@ public class RowNumDTO {
 	// 카운트
 	public int getCount() {
 		// 전체갯수 - 출력갯수 * (시작번호); 91-5(1-1)
-		int temp = total - listNum * (pageNum - 1);
+		int temp = total - listNum * (getPageNum() - 1);
 		// 전체갯수 / 출력갯수
 		int min = temp / listNum;
 
@@ -59,11 +62,11 @@ public class RowNumDTO {
 
 		int count = 0;
 		if (temp < listNum) {
-			count = pageNum;
+			count = getPageNum();
 		} else if (min <= pageList) {
-			count = min + pageNum - 1;
+			count = min + getPageNum() - 1;
 		} else {
-			count = pageList + pageNum - 1;
+			count = pageList + getPageNum() - 1;
 		}
 		return count;
 	}
@@ -85,7 +88,11 @@ public class RowNumDTO {
 	}
 
 	public int getPageNum() {
-		return pageNum;
+		if(index<pageList) {
+			return 1;
+		}else {
+			return (index/pageList)*pageList+1;
+		}
 	}
 
 	public void setPageNum(int pageNum) {
@@ -108,4 +115,11 @@ public class RowNumDTO {
 		this.total = total;
 	}
 
+	public int getLastPage() {
+		if(total%listNum==0) {
+			return total/listNum;
+		}else {
+			return (total/listNum)+1;
+		}
+	}
 }

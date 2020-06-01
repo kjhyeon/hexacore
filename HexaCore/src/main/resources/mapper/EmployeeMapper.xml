@@ -16,16 +16,12 @@
 	<update id="updateEmployee" parameterType="empDTO">
 		UPDATE EMPLOYEES
 			SET 
-				<choose>
-					<when test="empDTO.password != null">
-						PASSWORD=#{password} 
-					</when>
-					<otherwise>
-						PHONE=#{phone}, EMAIL=#{email}, E_RANK=#{e_rank}, AUTH=#{auth}, DEP0ARTMENT_ID=#{department_id},  GENDER = #{gender}, BIRTH = #{birth}, NAME = #{name},
-						POSTCODE=#{postcode}, ADDRESS=#{address], DETAILADDRESS=#{detailaddress}, STATE=#{state}, PROFILE_IMG=#{profile_img}, SIGN_IMG=#{sign_img}
-					</otherwise>
-				</choose> 
-					WHERE EMPLOYEE_NUMBER=#{employee_number}
+			<if test="password != null and password !=''">
+					PASSWORD=#{password} 
+			</if>
+					PHONE=#{phone}, EMAIL=#{email}, E_RANK=#{e_rank}, AUTH=#{auth}, DEPARTMENT_ID=#{department_id},  GENDER = #{gender}, BIRTH = #{birth}, NAME = #{name},
+					POSTCODE=#{postcode}, ADDRESS=#{address}, DETAILADDRESS=#{detailaddress}, STATE=#{state}, PROFILE_IMG=#{profile_img}, SIGN_IMG=#{sign_img}
+						WHERE EMPLOYEE_NUMBER=#{employee_number}
 	</update>
 	
 	<select id="selectChildEmployeeList" parameterType="java.lang.Integer" resultType="empDTO">
@@ -35,9 +31,21 @@
 					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM AND e.DEPARTMENT_ID = #{department_id} AND e.STATE != '-1'
 	</select>
 	
-	<select id="selectEmployeeList" resultType="empDTO">
-			SELECT EMPLOYEE_NUMBER, ID, e.NAME, PHONE, EMAIL, E_RANK, 
-			AUTH, TO_CHAR(BIRTH,'yyyy-MM-dd') BIRTH, e.DEPARTMENT_ID, TO_CHAR(JOIN_DATE,'yyyy-MM-dd') JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, e.STATE, PROFILE_IMG, SIGN_IMG, d.NAME DEPARTMENT_NAME, r.NAME E_RANK_NAME
+	<select id="selectEmployeeList"  parameterType="RowNum" resultType="empDTO">
+		SELECT * FROM 
+			(SELECT 
+				ROW_NUMBER() OVER(ORDER BY EMPLOYEE_NUMBER DESC) AS ROW_NUM, EMPLOYEE_NUMBER ,ID, e.NAME, d.NAME DEPARTMENT_NAME ,AUTH, r.NAME E_RANK_NAME, TO_CHAR(JOIN_DATE,'YYYY-MM-DD') JOIN_DATE FROM EMPLOYEES e, "RANK" r,DEPARTMENTS d 
+					WHERE e.E_RANK=r.RANK_NUM AND e.DEPARTMENT_ID=d.DEPARTMENT_ID ORDER BY ROW_NUM ASC 
+				)
+					WHERE ROW_NUM BETWEEN #{start} AND #{last}
+<!-- 			SELECT EMPLOYEE_NUMBER, ID, e.NAME, PHONE, EMAIL, E_RANK,  -->
+<!-- 			AUTH, TO_CHAR(BIRTH,'yyyy-MM-dd') BIRTH, e.DEPARTMENT_ID, TO_CHAR(JOIN_DATE,'yyyy-MM-dd') JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, e.STATE, PROFILE_IMG, SIGN_IMG, d.NAME DEPARTMENT_NAME, r.NAME E_RANK_NAME -->
+<!-- 				FROM EMPLOYEES e, DEPARTMENTS d, "RANK" r -->
+<!-- 					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM -->
+	</select>
+	
+	<select id="selectEmployeeListSize"  resultType="java.lang.Integer">
+			SELECT COUNT(*)
 				FROM EMPLOYEES e, DEPARTMENTS d, "RANK" r
 					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM
 	</select>
