@@ -31,6 +31,12 @@ public class EapprDaoImpl implements EapprIDao{
 	}
 	
 	@Override
+	public boolean insertNewDoc(DocumentDTO dto) {
+		log.info("insertNewDoc daoImpl 실행");
+		return sqlSession.insert(NS+"insertNewDoc", dto)>0?true:false;
+	}
+	
+	@Override
 	public DocumentTypeDTO selectDocType(String type_seq) {
 		log.info("selectDocType daoImpl 실행");
 		return sqlSession.selectOne(NS+"selectDocType", type_seq);
@@ -39,7 +45,7 @@ public class EapprDaoImpl implements EapprIDao{
 	@Override
 	public DocumentDTO selectDoc(String seq) {
 		log.info("selectDoc daoImpl 실행 : {}",seq);
-		return sqlSession.selectOne(NS+"selectDoc",seq);
+		return sqlSession.selectOne(NS+"selectDoc", seq);
 	}
 
 	@Override
@@ -109,6 +115,12 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("insertDocType daoImpl 실행 : {}",DTdto);
 		int n = sqlSession.insert(NS+"insertDocType",DTdto);
 		return (n>0)?true:false;
+	}
+
+	@Override
+	public String selectNewDoc() {
+		log.info("selectNewDoc daoImpl 실행");
+		return sqlSession.selectOne(NS+"selectNewDoc");
 	}
 
 }

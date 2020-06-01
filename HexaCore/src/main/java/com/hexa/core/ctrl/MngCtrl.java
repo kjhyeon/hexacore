@@ -1,5 +1,8 @@
 package com.hexa.core.ctrl;
 
+import java.io.File;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hexa.core.dto.EmployeeDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.mng.inf.DepartmentIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 
@@ -22,6 +27,8 @@ public class MngCtrl {
 	
 	@Autowired
 	private DepartmentIService dService;
+	
+	private final String attach_path = "./image";
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -54,11 +61,26 @@ public class MngCtrl {
 	}
 	
 	@RequestMapping(value="/insertEmployee.do",method=RequestMethod.POST)
-	public String EmployeeInsert(EmployeeDTO dto) {
-		log.info("Welcome EmployeeInsert {}", dto);
+	public String EmployeeInsert(EmployeeDTO dto, MultipartFile profile_file) {
+		log.info("Welcome EmployeeInsert {}/{}", dto,profile_file);
 		if(dto.getProfile_img()==null) {
 			dto.setProfile_img("");
 		}
+		
+		File indexFolder = new File(attach_path);
+		if(indexFolder.isDirectory() == false){
+			indexFolder.mkdirs();
+		}
+		
+		try {
+			String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
+			File f = new File(attach_path,saveName);
+			profile_file.transferTo(f);
+			dto.setProfile_img(saveName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		boolean isc = eService.insertEmployee(dto);
 		
 		if(isc)
@@ -86,25 +108,61 @@ public class MngCtrl {
 		System.out.println("################################3"+eService.selectRank().size());
 		return "mng/updateEmployee";
 	}
-	
 	@RequestMapping(value="/updateEmployee.do",method=RequestMethod.POST)
-	public String EmployeeUpdate(EmployeeDTO dto) {
-		log.info("Welcome EmployeeInsert {}", dto);
-//		if(dto.getProfile_img()==null) {
-//			dto.setProfile_img("");
-//		}
-		boolean isc = eService.updateEmployee(dto);
+	public String EmployeeUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
+		log.info("Welcome EmployeeInsert {}/{}/{}", dto,profile_file,sign_file);
 		
+		File indexFolder = new File(attach_path);
+		if(indexFolder.isDirectory() == false){
+			indexFolder.mkdirs();
+		}
+		if(profile_file!=null) {
+			try {
+				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
+				File f = new File(attach_path,saveName);
+				profile_file.transferTo(f);
+				dto.setProfile_img(saveName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if(sign_file!=null) {
+			try {
+				String saveName = "sign_"+UUID.randomUUID()+"_"+sign_file.getOriginalFilename();
+				File f = new File(attach_path,saveName);
+				sign_file.transferTo(f);
+				dto.setSign_img(saveName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		boolean isc = eService.updateEmployee(dto);
 		if(isc)
-			return "mng/insertEmployee";
+			return "redirect:/employeeList.do";
 		else
 			return "../../error";
 	}
 
 	@RequestMapping(value="/employeeList.do",method=RequestMethod.GET)
-	public String EmployeeList(Model model) {
+	public String EmployeeList(Model model, String page) {
 		log.info("Welcome page EmployList.do");
-		model.addAttribute("list", eService.selectEmployeeList());
+		if(page==null) {
+			page="0";
+		}
+		RowNumDTO row = new RowNumDTO();
+		row.setTotal(eService.selectEmployeeListSize());
+		row.setPageNum(3);
+		row.setListNum(10);
+		if(row.getLastPage()-1<Integer.parseInt(page)) {
+			row.setIndex(row.getLastPage()-1);
+		}else if(Integer.parseInt(page)<0) {
+			row.setIndex(0);
+		}else {
+			row.setIndex(Integer.parseInt(page));
+		}
+		model.addAttribute("list", eService.selectEmployeeList(row));
+		model.addAttribute("row", row);
 		
 		return "mng/employeeList";
 	}

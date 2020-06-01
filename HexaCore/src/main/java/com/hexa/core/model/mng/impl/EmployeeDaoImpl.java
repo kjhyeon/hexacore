@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import com.hexa.core.dto.EmployeeDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.mng.inf.EmployeeIDao;
 
 @Repository
@@ -52,15 +53,15 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	}
 
 	@Override
-	public List<EmployeeDTO> selectEmployeeList() {
+	public List<EmployeeDTO> selectEmployeeList(RowNumDTO row) {
 		log.info("EmpDaoImpl selectEmplList : {}");
-		return session.selectList(NS+"selectEmployeeList");
+		return session.selectList(NS+"selectEmployeeList",row);
 	}
 
 	@Override
-	public List<EmployeeDTO> selectAllEmployeeList() {
+	public int selectEmployeeListSize() {
 		log.info("EmpDaoImpl selectAllEmplList : {}");
-		return session.selectList(NS+"selectAllEmployeeList");
+		return (Integer)session.selectOne(NS+"selectEmployeeListSize");
 	}
 
 	@Override

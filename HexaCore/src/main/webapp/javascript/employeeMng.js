@@ -103,8 +103,11 @@
 		}else if($("#idChkFlag").val()=='false'){
 			alert("아이디 중복 체크를 해주세요");
 			$("#id").focus();
-		}else if($("#password").val().length<4){
+		}else if($("#password").val()!=undefined&&($("#password").val().length<4)){
 			alert("최소 4자 이상의 비밀번호를 입력해주세요");
+			$("#password").focus();
+		}else if($("#password2").val()!=undefined&&($("#password2").val().length<4)&&$("#password2").val()!=''){
+			alert("최소 4자 이상의 비밀번호로 수정해주세요");
 			$("#password").focus();
 		}else if($("#name").val()==''){
 			alert("이름을 입력해주세요");
