@@ -87,4 +87,10 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 		return session.update(NS+"moveEmployee",department_id)>0?true:false;
 	}
 
+	@Override
+	public String selectId(String id) {
+		log.info("EmployeeDAO selectId : {}",id);
+		return session.selectOne(NS+"selectEmpId", id);
+	}
+
 }

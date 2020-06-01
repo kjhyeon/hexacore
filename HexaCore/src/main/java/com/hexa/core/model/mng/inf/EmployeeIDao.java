@@ -25,4 +25,6 @@ public interface EmployeeIDao {
 	public EmployeeDTO selectLoginInfo(String id);
 	
 	public boolean moveEmployee(int department_id);
+	
+	public String selectId(String id);
 }

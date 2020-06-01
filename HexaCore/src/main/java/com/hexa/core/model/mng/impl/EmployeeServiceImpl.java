@@ -71,4 +71,12 @@ public class EmployeeServiceImpl implements EmployeeIService {
 		return dao.selectLoginInfo(id);
 	}
 
+	@Override
+	public String selectId(String id) {
+		log.info("EmpServiceImpl selectId : {}",id);
+		return dao.selectId(id);
+	}
+	
+	
+
 }

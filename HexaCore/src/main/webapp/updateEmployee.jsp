@@ -36,7 +36,7 @@
     
     var treeWindow;
 	function deptSearch() {
-		var treeWindow = window.open("./deptTree.do", "부서목록", "width=300,height=400");
+		var treeWindow = window.open("./testTree.do", "부서목록", "width=300,height=400");
 		
 	}
 </script>
@@ -49,8 +49,7 @@
 			<tr>
 				<th>아이디</th>
 				<td>
-					<input type="text" name="id" placeholder="아이디"> <button onclick="idChk()">중복체크</button><br>
-					<span id="idChkMsg" style="font-size: 7px;">아이디메세지</span>	
+					<span>${dto.id }</span> 
 				</td>
 			</tr>
 			<tr>
@@ -98,7 +97,29 @@
 				</td>
 			</tr>
 			<tr>
+				<th>상태</th>
+				<td>
+					<select name="state">
+						<option value="0">재직</option>
+						<option value="0">휴가</option>
+						<option value="-1">퇴사</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>권한</th>
+				<td>
+					<select name="auth">
+						<option value="A">관리자</option>
+						<option value="U">일반</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<th>프로필이미지</th><td><input type="file" name="profile_img"></td>
+			</tr>
+			<tr>
+				<th>결재 도장</th><td><input type="file" name="profile_img"></td>
 			</tr>
 		</table>
 		<input type="submit" value="등록">

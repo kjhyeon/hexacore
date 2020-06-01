@@ -22,5 +22,7 @@ public boolean insertEmployee(EmployeeDTO dto);
 	
 	public EmployeeDTO selectLoginInfo(String id);
 	
+	public String selectId(String id);
+	
 	
 }

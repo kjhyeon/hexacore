@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.model.mng.inf.DepartmentIService;
@@ -65,7 +66,45 @@ public class MngCtrl {
 		else
 			return "../../error";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/IdChk.do", method = RequestMethod.POST)
+	public String login(String id) {
+		String chkId = eService.selectId(id);
+		if(chkId!=null) {
+			return "false";
+		}
+		return "true";
+	}
+	
+	@RequestMapping(value="/updateEmployee.do",method=RequestMethod.GET)
+	public String goEmpUpdateForm() {
+		
+		return "mng/updateEmployee";
+	}
+	
+	@RequestMapping(value="/insertEmployee.do",method=RequestMethod.POST)
+	public String EmployeeUpdate(EmployeeDTO dto) {
+		log.info("Welcome EmployeeInsert {}", dto);
+//		if(dto.getProfile_img()==null) {
+//			dto.setProfile_img("");
+//		}
+		boolean isc = eService.updateEmployee(dto);
+		
+		if(isc)
+			return "mng/insertEmployee";
+		else
+			return "../../error";
+	}
 
+	@RequestMapping(value="/employeeList.do",method=RequestMethod.GET)
+	public String EmployeeList(Model model) {
+		
+		model.addAttribute("list", eService.selectEmployeeList());
+		
+		return "mng/employeeList";
+	}
+	
 	@RequestMapping(value = "/loginPage.do", method = RequestMethod.GET)
 	public String login(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout, Model model) {
