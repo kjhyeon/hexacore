@@ -161,7 +161,7 @@
 	<!-- 문서 작성(STATE 0:임시저장/1:바로상신) -->
 	<insert id="insertNewDoc" parameterType="DocumentDto">
 		INSERT INTO DOCUMENT (SEQ, AUTHOR, TITLE, CONTENT, TYPE_SEQ, STATE, REGDATE, APPR_TURN)
-			VALUES (DOCUMENT_SEQ.NEXTVAL, #{author}, #{title}, #{content}, #{type_seq}, #{state}, SYSDATE, '1')
+			VALUES (DOCUMENT_SEQ.NEXTVAL, #{id}, #{title}, #{content}, #{type_seq}, #{state}, #{regdate}, '1')
 	</insert>
 	
 	<!-- 결재자 정보 입력 -->
@@ -169,9 +169,5 @@
 		INSERT INTO APPROVAL (SEQ, ID, CHK, TURN)
 			VALUES (MAX(SELECT SEQ FROM DOCUMENT), #{id}, 'F', #{turn})
 	</insert>
-	
-	<select id="selectNewDoc" resultType="java.lang.String">
-		SELECT SEQ FROM DOCUMENT WHERE SEQ=(SELECT MAX(SEQ) FROM DOCUMENT)
-	</select>
 	
 </mapper>
