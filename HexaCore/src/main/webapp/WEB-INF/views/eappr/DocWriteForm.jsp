@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <body>
 	<form action="./DocWrite.do" method="POST">
 		결재자 정보 입력 테이블
@@ -43,12 +44,12 @@
 			<tr>
 				<td>참조자</td>
 				<td>seq:문서seq자동입력</td>
-				<td>id:<input name="lists[4].id" value="refer1"></td>
-				<td>name:<input name="lists[4].name" value="참조자1"></td>
-				<td>duty:<input name="lists[4].duty" value="결재테스트부서 사원"></td>
+				<td>id:<input name="lists[3].id" value="refer1"></td>
+				<td>name:<input name="lists[3].name" value="참조자1"></td>
+				<td>duty:<input name="lists[3].duty" value="결재테스트부서 사원"></td>
 				<td>chk:F로 자동입력</td>
 				<td>turn:</td>
-				<td>appr_kind:<input name="lists[4].appr_kind" value="참조"></td>
+				<td>appr_kind:<input name="lists[3].appr_kind" value="참조"></td>
 			</tr>
 		</table>
 		문서 정보 입력 테이블
@@ -78,7 +79,11 @@
 				<td>type_seq:</td><td><input type="text" name="type_seq" value="${typeDto.type_seq}"></td>
 			</tr>
 			<tr>
-				<td>content:</td><td><textarea name="content" rows="5" cols="50">${typeDto.content}</textarea></td>
+				<td>content:</td>
+				<td>
+					<textarea id="p_content" name="content" rows="5" cols="50">${typeDto.content}</textarea>
+					<script type="text/javascript">CKEDITOR.replace('p_content', {height: 500});</script>
+				</td>
 			</tr>
 		</table>
 		<input type="submit" value="임시저장">
