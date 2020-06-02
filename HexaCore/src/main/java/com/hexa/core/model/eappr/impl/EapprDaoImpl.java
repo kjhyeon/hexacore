@@ -129,11 +129,5 @@ public class EapprDaoImpl implements EapprIDao{
 		return sqlSession.delete(NS+"deleteDoc", seq)>0?true:false;
 	}
 
-	@Override
-	public List<DocumentDTO>  selectNeedApprDoc(String id) {
-		log.info("selectNeedApprDoc DaoImpl 실행 id : {}", id);
-		 List<DocumentDTO> lists = sqlSession.selectList(NS+"selectNeedApprDoc",id);
-		return lists;
-	}
 
 }
