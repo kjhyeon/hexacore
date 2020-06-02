@@ -9,6 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<%@include file="./../header.jsp" %>
 	<!-- 권한 -->
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth">${auth}</sec:authorize>
 	<!-- username : id  -->
@@ -19,5 +20,6 @@
 	<sec:authentication property="principal.department_name"/>
 	<!-- e_rank_name : 사원직위 -->
 	<sec:authentication property="principal.e_rank_name"/>
+<%@include file="./../footer.jsp" %>
 </body>
 </html>

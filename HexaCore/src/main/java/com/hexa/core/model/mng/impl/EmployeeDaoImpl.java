@@ -43,6 +43,10 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	@Override
 	public boolean updateEmployee(EmployeeDTO dto) {
 		log.info("EmployeeDAO updateEmployee : {}",dto);
+		if(dto.getPassword()!=null) {
+			String enPw = passwordEncoder.encode(dto.getPassword());
+			dto.setPassword(enPw);
+		}
 		return session.update(NS+"updateEmployee", dto)>0?true:false;
 	}
 
@@ -65,9 +69,9 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	}
 
 	@Override
-	public EmployeeDTO selectEmployee(int employee_number) {
-		log.info("EmployeeDAO selectEmployee : {}",employee_number);
-		return session.selectOne(NS+"selectEmployee", employee_number);
+	public EmployeeDTO selectEmployee(String id) {
+		log.info("EmployeeDAO selectEmployee : {}",id);
+		return session.selectOne(NS+"selectEmployee", id);
 	}
 
 	@Override

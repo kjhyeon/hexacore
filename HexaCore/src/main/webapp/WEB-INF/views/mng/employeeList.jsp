@@ -25,7 +25,7 @@ function gotoCreate(){
 					<tr>
 						<td>${dto.employee_number}</td>
 						<td>
-							<a href="./updateEmployee.do?employee_number=${dto.employee_number }">${dto.id}</a>
+							<a href="./updateEmployee.do?id=${dto.id }">${dto.id}</a>
 						</td>
 						<td>${dto.name}</td>
 						<td>

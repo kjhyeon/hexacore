@@ -19,7 +19,7 @@ public boolean insertEmployee(EmployeeDTO dto);
 	
 	public int selectEmployeeListSize();
 	
-	public EmployeeDTO selectEmployee(int employee_number);
+	public EmployeeDTO selectEmployee(String id);
 	
 	public EmployeeDTO selectLoginInfo(String id);
 	
