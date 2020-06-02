@@ -112,4 +112,10 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectNewDoc();
 	}
 
+	@Override
+	public boolean deleteDoc(String seq) {
+		log.info("deleteDoc serviceImpl 실행 seq : {}", seq);
+		return dao.deleteDoc(seq);
+	}
+
 }

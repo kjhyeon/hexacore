@@ -123,4 +123,10 @@ public class EapprDaoImpl implements EapprIDao{
 		return sqlSession.selectOne(NS+"selectNewDoc");
 	}
 
+	@Override
+	public boolean deleteDoc(String seq) {
+		log.info("deleteDoc DaoImpl 실행 seq : {}", seq);
+		return sqlSession.delete(NS+"deleteDoc", seq)>0?true:false;
+	}
+
 }

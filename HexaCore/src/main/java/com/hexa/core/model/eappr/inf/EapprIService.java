@@ -111,4 +111,11 @@ public interface EapprIService {
 	 * @return  True : 성공 / False 실패
 	 */
 	public boolean insertDocType(DocumentTypeDTO DTdto);
+
+	/**
+	 * 문서 삭제
+	 * @param seq
+	 * @return 성공여부
+	 */
+	public boolean deleteDoc(String seq);
 }
