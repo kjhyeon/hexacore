@@ -1,6 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hexa.core.notice.board">
+<mapper namespace="com.hexa.core.notice.freeb">
 	
+	<!-- 자유게시판 글 작성 -->
+	<insert id="insertFreeBbs" parameterType="BbsDto">
+	INSERT INTO FREE_BBS 
+		(SEQ, 		ID, 		NAME, 
+		 TITLE, 	CONTENT, 	STATE, 
+		 REGDATE, 	VIEWS, 		ROOT, 
+		 REPLY_SEQ, BBS_DEPTH)
+	  VALUES (FREE_BBS_SEQ.NEXTVAL, #{id}, 		#{name}, 	#{title}, 
+	  		  #{content}, 			0, 			SYSDATE, 	0, 
+			  (SELECT NVL(MAX(ROOT),0)+1 FROM FREE_BBS), 0, 0)
+	</insert>
+
+	<!-- 자유게시판 글 수정 -->
+	<update id="updateModifyFreeBbs" parameterType="BbsDto">
+	UPDATE FREE_BBS
+		SET TITLE=#{title}, CONTENT=#{content}
+			WHERE SEQ=#{seq}
+	</update>
 	
+	<!-- 자유 게시판 글 단일삭제 -->
+	<update id="updateDeleteFreeBbs" parameterType="java.lang.String">
+	UPDATE FREE_BBS
+		SET STATE = 1
+			WHERE STATE = 0 AND SEQ = #{seq}
+	</update>
+	
+	<!-- 자유 게시판 글 다중삭제 -->
+	<update id="updateMultiDelFreeBbs" parameterType="java.util.Map">
+ 	UPDATE FREE_BBS 
+ 		SET STATE = 1
+      		WHERE STATE = 0 AND SEQ IN 
+      		<foreach collection="seqs" item="seq" open="(" separator="," close=")">
+      			#{seq}
+      		</foreach>
+	</update>
+	
+	<!-- (유저) 자유 게시판 글 조회 -->
+	<select id="selectUserFreeBbsList" parameterType="BbsDto">
+	SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+		FROM FREE_BBS
+			WHERE STATE = 0 OR STATE = 2
+				ORDER BY ROOT DESC, REPLY_SEQ
+	</select>
+	
+	<!-- (관리자) 자유 게시판 글 조회 -->
+	<select id="selectAdminFreeBbsList" parameterType="BbsDto">
+	SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+		FROM FREE_BBS
+			ORDER BY ROOT DESC, REPLY_SEQ
+	</select>
+	
+	<!-- 자유 게시판 상세글 보기 -->
+	<select id="selectDetailFreeBbs" parameterType="java.lang.String"
+							   resultType="BbsDto"> 
+	SELECT SEQ, ID, NAME, TITLE, NVL(CONTENT, ' ') CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+		FROM FREE_BBS
+			WHERE SEQ = #{seq}
+	</select>
+	
+	<!-- 자유 게시판 조회수 증가  -->
+	<!-- 유저에만 해당하는 사항 -->
+	<update id="updateViewsBbs" parameterType="java.lang.String">
+	UPDATE FREE_BBS 
+		SET VIEWS = VIEWS+1
+			WHERE SEQ = #{seq}
+	</update>
+	
+	<!-- 자유 게시판 답글 -->
+	<insert id="insertReplyBbs" parameterType="BbsDto">
+	INSERT INTO FREE_BBS 
+		(SEQ, 		ID, 		NAME, 
+		 TITLE, 	CONTENT, 	STATE, 
+		 REGDATE, 	VIEWS, 		ROOT, 
+		 REPLY_SEQ, BBS_DEPTH)
+	  VALUES (FREE_BBS_SEQ.NEXTVAL, #{id}, 			#{name}, 
+	  		  #{title}, 			#{content}, 	0, 
+	  		  SYSDATE, 				0,
+			(SELECT ROOT FROM FREE_BBS WHERE SEQ = #{seq}),
+			(SELECT REPLY_SEQ FROM FREE_BBS WHERE SEQ = #{seq}) +1,
+			(SELECT BBS_DEPTH FROM FREE_BBS WHERE SEQ = #{seq}) +1);
+	</insert>
+	
+	<!-- 유저 자유게시판 페이징 처리 -->
+	<select id="selectUserBbsListRow" parameterMap="">
+	</select>
 </mapper>
