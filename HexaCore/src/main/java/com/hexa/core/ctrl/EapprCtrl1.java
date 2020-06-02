@@ -61,23 +61,21 @@ public class EapprCtrl1 {
 	@Transactional
 	@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
 	public String DocDetail(DocumentDTO dto, Model model) {
-		log.info("dto확인 : {}",dto);
-		boolean cnt = service.insertNewDoc(dto);
-		log.info("작성 성공여부 확인 : {}", cnt);
+		service.insertNewDoc(dto);
 		String seq = service.selectNewDoc();
-		log.info("작성된 문서의 seq 확인 : {}", seq);
 		int sseq = Integer.parseInt(seq);
-		dto.getLists().get(0).setSeq(sseq);
-		dto.getLists().get(1).setSeq(sseq);
-		dto.getLists().get(2).setSeq(sseq);
-		dto.getLists().get(3).setSeq(sseq);
-		service.insertApprRoot(dto.getLists().get(0));
-		service.insertApprRoot(dto.getLists().get(1));
-		service.insertApprRoot(dto.getLists().get(2));
-		service.insertApprRoot(dto.getLists().get(3));
+		for (int i = 0; i < dto.getLists().size(); i++) {
+			dto.getLists().get(i).setSeq(sseq);
+			service.insertApprRoot(dto.getLists().get(i));
+		}
 		DocumentDTO newDto = service.selectDoc(seq);
 		model.addAttribute("dto", newDto);
 		return "eappr/docDetail";
+	}
+	
+	@RequestMapping(value = "/goApprTree.do", method = RequestMethod.GET)
+	public String ApprTree() {
+		return "eappr/apprTree";
 	}
 	
 }

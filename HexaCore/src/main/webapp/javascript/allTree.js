@@ -46,7 +46,7 @@ window.onload = function(){
 			}
 			if(!flag){
 				var tr = "<tr onclick='selectNode(this)'> <td>"+node.li_attr['deptname']+"</td> <td>"+node.li_attr['e_rank_name']+"</td> <td>"+node.text+"</td>"
-						+"<td><input type='button' value='삭제' onclick='delEmp(this)'></td></td><td hidden='false'>"+node.id+"</td></tr></tr>";
+						+"<td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
 				$("#empTable").append(tr);
 			}
 		}
