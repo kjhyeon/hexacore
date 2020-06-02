@@ -73,8 +73,8 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 
 	@Override
 	public List<BbsDTO> adminBbsList() {
-		log.info("자유게시판 글 목록 조회(");
-		return null;
+		log.info("자유게시판 글 목록 조회(관리자) adminBbsList,\t {}");
+		return session.selectList(NS + "adminBbsList");
 	}
 
 	@Override

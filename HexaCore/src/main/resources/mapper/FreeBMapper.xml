@@ -85,7 +85,7 @@
 	</insert>
 	
 	<!-- 10. 유저 자유게시판 페이징 처리 -->
-	<select id="selectUserBbsListRow" parameterMap="RowNum"
+	<select id="selectUserBbsListRow" parameterType="RowNum"
 									  resultType="BbsDto">
 	SELECT SEQ, 		ID, =		NAME, 		TRIM(TITLE), 
 		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
@@ -108,7 +108,7 @@
 	</select>
 	
 	<!-- 11. 관리자 자유게시판 페이징 처리 -->
-	<select id="selectAdminBbsListRow" parameterMap="RowNum"
+	<select id="selectAdminBbsListRow" parameterType="RowNum"
 									  resultType="BbsDto">
 	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE), 
 		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 

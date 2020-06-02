@@ -1,6 +1,10 @@
 package com.hexa.core.test;
 
 
+
+
+import java.util.List;
+
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.model.bbs.impl.FreeBbsServiceImpl;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
@@ -14,7 +18,10 @@ public class Testmain {
 		
 		FreeBbsIService service = new FreeBbsServiceImpl();
 		
-		
+		List<BbsDTO> list = service.adminBbsList();
+		for (BbsDTO Bdto : list) {
+			System.out.println(Bdto);
+		}
 		 
 	}
 }
