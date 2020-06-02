@@ -118,4 +118,11 @@ public interface EapprIService {
 	 * @return 성공여부
 	 */
 	public boolean deleteDoc(String seq);
+	
+	/**
+	 * 결재문서함 조회
+	 * @param id
+	 * @return DocumentDTO
+	 */
+	public List<DocumentDTO> selectNeedApprDoc(String id);
 }

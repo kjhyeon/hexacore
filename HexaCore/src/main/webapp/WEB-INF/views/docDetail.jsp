@@ -28,10 +28,25 @@
 </table>
 	<!--javascript를 통한 form 전송  -->
 	<div style="text-align: center; margin-top: 10px; margin-bottom: 100px;">
-	<form name="form1" id="form1">
-		<input  type="button" name="btn" id="modifyDoc" value="수정" onclick="modifyForm(${Ddto.seq})">
-		<input  type="button" name="btn" id="deleteBoard" value="삭제">
+	<form name="formDoc" id="formDoc">
+		<input  type="button" name="btn" id="modifyDoc" value="수정">
+		<input  type="button" name="btn" id="deleteDoc" value="삭제">
+		<input  type="button" name="btn" id="apprDoc" value="상신">
+		
 	</form>
 	</div>
 </div>
+	<script type="text/javascript">
+		var btn = document.getElementsByName('btn');
+		var form = document.getElementById('formDoc');
+		onload = function() {
+			for (var i = 0; i < btn.length; i++) {
+				btn[i].onclick = function() {
+					form.action = './'+this.id+'.do?seq='+${Ddto.seq};
+					form.method = 'post';
+					form.submit();
+				}
+			}
+		}
+	</script>
 </html>
