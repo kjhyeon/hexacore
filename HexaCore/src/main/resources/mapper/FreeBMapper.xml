@@ -137,7 +137,7 @@
 	</select>
 	
 	<!-- 13. 관리자 자유게시판 글 전체 갯수 -->
-	<select id="selectUserBoardListTotal" resultType="java.lang.Integer">
+	<select id="selectAdminBoardListTotal" resultType="java.lang.Integer">
 	SELECT COUNT(*) 
 		FROM FREE_BBS
 	</select>
