@@ -118,4 +118,10 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.deleteDoc(seq);
 	}
 
+	@Override
+	public List<DocumentDTO> selectNeedApprDoc(String id) {
+		log.info("selectNeedApprDoc serviceImpl 실행 id : {}", id);
+		return dao.selectNeedApprDoc(id);
+	}
+
 }

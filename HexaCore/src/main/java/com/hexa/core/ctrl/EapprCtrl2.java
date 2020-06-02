@@ -1,9 +1,7 @@
 package com.hexa.core.ctrl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,12 @@ public class EapprCtrl2 {
 		return "eApprMain";
 	}
 	
+	@RequestMapping(value = "/docLists.do", method = RequestMethod.GET)
+	public String docLists(Model model, String id) {
+		List<DocumentDTO> lists = service.selectNeedApprDoc(id);
+		model.addAttribute("lists",lists);
+		return "docLists";
+	}
 		
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
 	public String updateDoc(Model model, String seq) {
@@ -63,23 +67,40 @@ public class EapprCtrl2 {
 //		boolean isc = service.updateDoc(Ddto);
 //		return isc?"redirect:/docDetail.do":"redirect:/docDetail.do";
 //	}
-	@RequestMapping(value="/modifyForm.do", method= RequestMethod.GET)
-	public String modifyForm(Model model,String seq) {
+	@RequestMapping(value="/modifyDoc.do", method= RequestMethod.POST)
+	public String modifyDoc(Model model,String seq) {
 		DocumentDTO Ddto = service.selectDoc(seq);
 		model.addAttribute("Ddto",Ddto);
 		return "ModifyForm";
 	}
 	
-	@RequestMapping(value="/saveDoc.do", method= RequestMethod.GET)
+	@RequestMapping(value="/saveDoc.do", method= RequestMethod.POST)
 	public String saveDoc(DocumentDTO Ddto) {
 		log.info("Ddto 확인용 로그1 : {}", Ddto);
 		Ddto.setAppr_turn(1);
-		log.info("Ddto 확인용 로그2 : {}", Ddto);
 		boolean isc = service.updateDoc(Ddto);
-		System.out.println("*****************************"+Ddto);
-		return isc?"redirect:/docDetail.do":"redirect:/docDetail.do";
+		for (int i = 0; i < Ddto.getLists().size(); i++) {
+			Ddto.getLists().get(i).setChk("F");
+			Ddto.getLists().get(i).setSeq(Ddto.getSeq());
+			if(Ddto.getLists()!=null) {
+//				service.deleteApprRoot();
+				service.insertApprRoot(Ddto.getLists().get(i));
+			}
+		}
+		return isc?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
+		//임시보관함의 디테일로 보내자
 	}
 	
+	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.POST)
+	public String deleteDoc(String seq) {
+		boolean isc = service.deleteDoc(seq);
+		return "eApprMain";//리스트로 보내자
+	}
 	
+	@RequestMapping(value="/apprDoc.do", method= RequestMethod.POST)
+	@ResponseBody
+	public String apprDoc(String seq) {
+		return null;
+	}
 	
 }

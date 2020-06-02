@@ -7,10 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.google.common.collect.Lists;
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
@@ -56,6 +58,7 @@ public class EapprCtrl1 {
 	}
 	
 	// 문서 작성
+	@Transactional
 	@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
 	public String DocDetail(DocumentDTO dto, Model model) {
 		log.info("dto확인 : {}",dto);
@@ -63,6 +66,15 @@ public class EapprCtrl1 {
 		log.info("작성 성공여부 확인 : {}", cnt);
 		String seq = service.selectNewDoc();
 		log.info("작성된 문서의 seq 확인 : {}", seq);
+		int sseq = Integer.parseInt(seq);
+		dto.getLists().get(0).setSeq(sseq);
+		dto.getLists().get(1).setSeq(sseq);
+		dto.getLists().get(2).setSeq(sseq);
+		dto.getLists().get(3).setSeq(sseq);
+		service.insertApprRoot(dto.getLists().get(0));
+		service.insertApprRoot(dto.getLists().get(1));
+		service.insertApprRoot(dto.getLists().get(2));
+		service.insertApprRoot(dto.getLists().get(3));
 		DocumentDTO newDto = service.selectDoc(seq);
 		model.addAttribute("dto", newDto);
 		return "eappr/docDetail";

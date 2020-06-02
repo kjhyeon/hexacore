@@ -1,3 +1,4 @@
+
 package com.hexa.core.model.eappr.impl;
 
 import java.util.List;
@@ -65,7 +66,7 @@ public class EapprDaoImpl implements EapprIDao{
 	@Override
 	public boolean insertApprRoot(ApprovalDTO Adto) {
 		log.info("insertApprRoot daoImpl 실행 : {}",Adto);
-		int n = sqlSession.insert(NS+"insertApprRoot,Adto");
+		int n = sqlSession.insert(NS+"insertApprRoot",Adto);
 		return (n>0)?true:false;
 	}
 
@@ -128,5 +129,13 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("deleteDoc DaoImpl 실행 seq : {}", seq);
 		return sqlSession.delete(NS+"deleteDoc", seq)>0?true:false;
 	}
+	
+	@Override
+	public List<DocumentDTO>  selectNeedApprDoc(String id) {
+		log.info("selectNeedApprDoc DaoImpl 실행 id : {}", id);
+		 List<DocumentDTO> lists = sqlSession.selectList(NS+"selectNeedApprDoc",id);
+		return lists;
+	}
+
 
 }
