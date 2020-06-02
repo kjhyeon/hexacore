@@ -2,35 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hexa.core.notice.freec">
 
-	<!-- 자유게시판 댓글 목록 조회 -->
-	<select id="selectFreeCList" parameterType="RowNum"
-							 resultType="CommentDto">
+	<!-- 1. 자유 게시판 댓글 목록 -->
+	<select id="selectFreeCommentList" resultType="CommentDto">
 	SELECT SEQ, ID, NAME, CONTENT, REGDATE, PARENT_SEQ 
 		FROM FREE_COMMENTS
-			WHERE SEQ = #{seq}
+			ORDER BY PARENT_SEQ ASC
 	</select>
-	
-	<!-- 자유게시판 댓글 작성 -->			
+
+	<!-- 2. 자유 게시판 댓글 작성 -->
 	<insert id="insertFreeComment" parameterType="CommentDto">
 		INSERT INTO FREE_COMMENTS
-			(SEQ, 		ID, 		NAME, 
-			 CONTENT, 	REGDATE, 	PARENT_SEQ)
-			VALUES(NOTICE_COMMENTS_SEQ.NEXTVAL, #{id}, #{name}, 
-				   #{content}, SYSDATE,
-		  	(SELECT NVL(MAX(#{parent_seq}),0)+1 FROM FREE_COMMENTS))
+			(SEQ, ID, NAME, CONTENT, REGDATE, PARENT_SEQ)
+		VALUES(FREE_COMMENTS_SEQ.NEXTVAL, #{id}, #{name}, #{content}, SYSDATE,
+		  	(SELECT NVL(MAX(PARENT_SEQ),0)+1 FROM FREE_COMMENTS))
 	</insert>
-	
-	<!-- 자유게시판 댓글 수정 -->
+
+	<!-- 3. 자유 게시판 댓글 수정 -->
 	<update id="updateFreeComment" parameterType="CommentDto">
 		UPDATE FREE_COMMENTS
-			SET CONTENT = #{content}
+			SET CONTENT = #{content}, REGDATE = SYSDATE
 				WHERE SEQ = #{seq}
 	</update>
 	
-	<!-- 댓글 삭제 -->
-	<delete id="deleteFreeComment" parameterType="java.lang.String">
+	<!-- 4. 자유 게시판 댓글 삭제 -->
+	<delete id="deleteFreeComment">
 		DELETE FREE_COMMENTS
 			WHERE SEQ = #{seq}
 	</delete>
-	
 </mapper>

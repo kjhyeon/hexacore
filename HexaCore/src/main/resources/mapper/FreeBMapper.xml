@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hexa.core.notice.freeb">
 	
-	<!-- 자유게시판 글 작성 -->
+	<!-- 1. 자유게시판 글 작성 -->
 	<insert id="insertFreeBbs" parameterType="BbsDto">
 	INSERT INTO FREE_BBS 
 		(SEQ, 		ID, 		NAME, 
@@ -14,21 +14,21 @@
 			  (SELECT NVL(MAX(ROOT),0)+1 FROM FREE_BBS), 0, 0)
 	</insert>
 
-	<!-- 자유게시판 글 수정 -->
+	<!-- 2. 자유게시판 글 수정 -->
 	<update id="updateModifyFreeBbs" parameterType="BbsDto">
 	UPDATE FREE_BBS
 		SET TITLE=#{title}, CONTENT=#{content}
 			WHERE SEQ=#{seq}
 	</update>
 	
-	<!-- 자유 게시판 글 단일삭제 -->
+	<!-- 3. 자유 게시판 글 단일삭제 -->
 	<update id="updateDeleteFreeBbs" parameterType="java.lang.String">
 	UPDATE FREE_BBS
 		SET STATE = 1
 			WHERE STATE = 0 AND SEQ = #{seq}
 	</update>
 	
-	<!-- 자유 게시판 글 다중삭제 -->
+	<!-- 4. 자유 게시판 글 다중삭제 -->
 	<update id="updateMultiDelFreeBbs" parameterType="java.util.Map">
  	UPDATE FREE_BBS 
  		SET STATE = 1
@@ -38,22 +38,22 @@
       		</foreach>
 	</update>
 	
-	<!-- (유저) 자유 게시판 글 조회 -->
-	<select id="selectUserFreeBbsList" parameterType="BbsDto">
+	<!-- 5. (유저) 자유 게시판 글 조회 -->
+	<select id="selectUserFreeBbsList" resultType="BbsDto">
 	SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
 		FROM FREE_BBS
 			WHERE STATE = 0 OR STATE = 2
 				ORDER BY ROOT DESC, REPLY_SEQ
 	</select>
 	
-	<!-- (관리자) 자유 게시판 글 조회 -->
-	<select id="selectAdminFreeBbsList" parameterType="BbsDto">
+	<!-- 6. (관리자) 자유 게시판 글 조회 -->
+	<select id="selectAdminFreeBbsList" resultType="BbsDto">
 	SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
 		FROM FREE_BBS
 			ORDER BY ROOT DESC, REPLY_SEQ
 	</select>
 	
-	<!-- 자유 게시판 상세글 보기 -->
+	<!-- 7. 자유 게시판 상세글 보기 -->
 	<select id="selectDetailFreeBbs" parameterType="java.lang.String"
 							   resultType="BbsDto"> 
 	SELECT SEQ, ID, NAME, TITLE, NVL(CONTENT, ' ') CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
@@ -61,7 +61,7 @@
 			WHERE SEQ = #{seq}
 	</select>
 	
-	<!-- 자유 게시판 조회수 증가  -->
+	<!-- 8. 자유 게시판 조회수 증가  -->
 	<!-- 유저에만 해당하는 사항 -->
 	<update id="updateViewsBbs" parameterType="java.lang.String">
 	UPDATE FREE_BBS 
@@ -69,7 +69,7 @@
 			WHERE SEQ = #{seq}
 	</update>
 	
-	<!-- 자유 게시판 답글 -->
+	<!-- 9. 자유 게시판 답글 -->
 	<insert id="insertReplyBbs" parameterType="BbsDto">
 	INSERT INTO FREE_BBS 
 		(SEQ, 		ID, 		NAME, 
@@ -84,7 +84,62 @@
 			(SELECT BBS_DEPTH FROM FREE_BBS WHERE SEQ = #{seq}) +1);
 	</insert>
 	
-	<!-- 유저 자유게시판 페이징 처리 -->
-	<select id="selectUserBbsListRow" parameterMap="">
+	<!-- 10. 유저 자유게시판 페이징 처리 -->
+	<select id="selectUserBbsListRow" parameterMap="RowNum"
+									  resultType="BbsDto">
+	SELECT SEQ, 		ID, =		NAME, 		TRIM(TITLE), 
+		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
+		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH
+		FROM 
+		(
+		SELECT ROWNUM RNUM, 	SEQ, 		ID, 		NAME,
+				   TRIM(TITLE), CONTENT,	STATE,		REGDATE,	
+				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH
+			FROM
+			(
+			SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+				FROM FREE_BBS
+					WHERE STATE = 0 OR STATE = 2
+						ORDER BY ROOT DESC, REPLY_SEQ 
+			)
+		)
+		WHERE
+			RNUM BETWEEN #{start} AND #{last}
 	</select>
+	
+	<!-- 11. 관리자 자유게시판 페이징 처리 -->
+	<select id="selectAdminBbsListRow" parameterMap="RowNum"
+									  resultType="BbsDto">
+	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE), 
+		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
+		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH
+		FROM 
+		(
+		SELECT ROWNUM RNUM, 	SEQ, 		ID, 		NAME,
+				   TRIM(TITLE), CONTENT,	STATE,		REGDATE,	
+				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH
+			FROM
+			(
+			SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+				FROM FREE_BBS
+					ORDER BY ROOT DESC, REPLY_SEQ 
+			)
+		)
+		WHERE
+			RNUM BETWEEN #{start} AND #{last}
+	</select>
+	
+	<!-- 12. 유저 자유게시판 글 전체 갯수 -->
+	<select id="selectUserBoardListTotal" resultType="java.lang.Integer">
+	SELECT COUNT(*) 
+		FROM FREE_BBS
+			WHERE STATE = 0 OR STATE = 2
+	</select>
+	
+	<!-- 13. 관리자 자유게시판 글 전체 갯수 -->
+	<select id="selectUserBoardListTotal" resultType="java.lang.Integer">
+	SELECT COUNT(*) 
+		FROM FREE_BBS
+	</select>
+	
 </mapper>
