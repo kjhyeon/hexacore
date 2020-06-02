@@ -1,11 +1,14 @@
 package com.hexa.core.ctrl;
 
 import java.io.File;
+import java.security.Principal;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hexa.core.dto.EmployeeDTO;
+import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.mng.inf.DepartmentIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
@@ -101,9 +105,9 @@ public class MngCtrl {
 	}
 	
 	@RequestMapping(value="/updateEmployee.do",method=RequestMethod.GET)
-	public String goEmpUpdateForm(String employee_number, Model model) {
-		log.info("Welcome goEmpUpdateForm {}", employee_number);
-		model.addAttribute("dto",eService.selectEmployee(Integer.parseInt(employee_number)));
+	public String goEmpUpdateForm(String id, Model model) {
+		log.info("Welcome goEmpUpdateForm {}", id);
+		model.addAttribute("dto",eService.selectEmployee(id));
 		model.addAttribute("ranks",eService.selectRank());
 		System.out.println("################################3"+eService.selectRank().size());
 		return "mng/updateEmployee";
@@ -186,5 +190,67 @@ public class MngCtrl {
 	public String maingo() {
 		return "main";
 	}
+	
+	@RequestMapping(value="/empInfo.do", method = RequestMethod.GET)
+	public String empInfo(SecurityContextHolder session, Model model) {
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO dto = (LoginDTO) auth.getPrincipal();
+		log.info("Welcome Page empInfo {}",dto);
+		EmployeeDTO emp = eService.selectEmployee(dto.getUsername());
+		if(emp!=null) {
+			model.addAttribute("dto",emp);
+			return "empInfo";
+		}else {
+			return "../../error";
+		}
+	}
 
+	@RequestMapping(value="/empInfoUpdate.do", method = RequestMethod.GET)
+	public String goToEmpInfoUpdate(SecurityContextHolder session, Model model) {
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO dto = (LoginDTO) auth.getPrincipal();
+		log.info("Welcome Page empInfo {}",dto);
+		EmployeeDTO emp = eService.selectEmployee(dto.getUsername());
+		if(emp!=null) {
+			model.addAttribute("dto",emp);
+			return "empInfoUpdate";
+		}else {
+			return "../../error";
+		}
+	}
+	
+	@RequestMapping(value="/empInfoUpdate.do", method = RequestMethod.POST)
+	public String empInfoUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
+		log.info("Welcome Page empInfoUpdate {}",dto);
+		File indexFolder = new File(attach_path);
+		if(indexFolder.isDirectory() == false){
+			indexFolder.mkdirs();
+		}
+		if(profile_file!=null) {
+			try {
+				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
+				File f = new File(attach_path,saveName);
+				profile_file.transferTo(f);
+				dto.setProfile_img(saveName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if(sign_file!=null) {
+			try {
+				String saveName = "sign_"+UUID.randomUUID()+"_"+sign_file.getOriginalFilename();
+				File f = new File(attach_path,saveName);
+				sign_file.transferTo(f);
+				dto.setSign_img(saveName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		boolean isc = eService.updateEmployee(dto);
+		if(isc)
+			return "redirect:/empInfo.do";
+		else
+			return "../../error";
+	}
 }

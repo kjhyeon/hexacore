@@ -17,9 +17,24 @@
 		UPDATE EMPLOYEES
 			SET 
 			<if test="password != null and password !=''">
-					PASSWORD=#{password} 
+					PASSWORD=#{password}, 
 			</if>
-					PHONE=#{phone}, EMAIL=#{email}, E_RANK=#{e_rank}, AUTH=#{auth}, DEPARTMENT_ID=#{department_id},  GENDER = #{gender}, BIRTH = #{birth}, NAME = #{name},
+			<if test="birth != null">
+					BIRTH = #{birth},
+			</if>
+			<if test="gender != null">
+					 GENDER = #{gender},
+			</if>
+			<if test="e_rank >0">
+					E_RANK = #{e_rank},
+			</if>
+			<if test="department_id != 0">
+					DEPARTMENT_ID = #{department_id},
+			</if>
+			<if test="auth != null">
+					AUTH = #{auth},
+			</if>
+				PHONE=#{phone}, EMAIL=#{email}, NAME = #{name},
 					POSTCODE=#{postcode}, ADDRESS=#{address}, DETAILADDRESS=#{detailaddress}, STATE=#{state}, PROFILE_IMG=#{profile_img}, SIGN_IMG=#{sign_img}
 						WHERE EMPLOYEE_NUMBER=#{employee_number}
 	</update>
@@ -50,11 +65,11 @@
 					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM
 	</select>
 	
-	<select id="selectEmployee" parameterType="java.lang.Integer" resultType="empDTO">
+	<select id="selectEmployee" parameterType="java.lang.String" resultType="empDTO">
 			SELECT EMPLOYEE_NUMBER, ID, PASSWORD, e.NAME, PHONE, EMAIL, E_RANK, 
 			AUTH, TO_CHAR(BIRTH,'yyyy-MM-dd') BIRTH, e.DEPARTMENT_ID, TO_CHAR(JOIN_DATE,'yyyy-MM-dd')JOIN_DATE , GENDER, POSTCODE, ADDRESS, DETAILADDRESS, e.STATE, PROFILE_IMG, SIGN_IMG, d.NAME DEPARTMENT_NAME, r.NAME E_RANK_NAME
 				FROM EMPLOYEES e, DEPARTMENTS d, "RANK" r
-					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM AND EMPLOYEE_NUMBER = #{employee_number}
+					WHERE e.DEPARTMENT_ID=d.DEPARTMENT_ID AND e.E_RANK = r.RANK_NUM AND ID = #{id}
 	</select>
 	
 	<select id="selectEmpPw" parameterType="java.lang.String" resultType="java.lang.String">

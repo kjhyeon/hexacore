@@ -19,7 +19,7 @@ public interface EmployeeIDao {
 	
 	public int selectEmployeeListSize();
 	
-	public EmployeeDTO selectEmployee(int employee_number);
+	public EmployeeDTO selectEmployee(String id);
 	
 	public String selectEmpPw(String id);
 	

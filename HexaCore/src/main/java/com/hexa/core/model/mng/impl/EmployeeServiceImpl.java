@@ -61,9 +61,9 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	}
 
 	@Override
-	public EmployeeDTO selectEmployee(int employee_number) {
-		log.info("EmpServiceImpl selectEmp : {}",employee_number);
-		return dao.selectEmployee(employee_number);
+	public EmployeeDTO selectEmployee(String id) {
+		log.info("EmpServiceImpl selectEmp : {}",id);
+		return dao.selectEmployee(id);
 	}
 
 	@Override

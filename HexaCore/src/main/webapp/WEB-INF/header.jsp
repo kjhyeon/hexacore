@@ -16,6 +16,11 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <title>TopMenu</title>
 </head>
+<script type="text/javascript">
+function empPop() {
+	var treeWindow = window.open("./empInfo.do", "사원 정보", "width=1024,height=760");
+}
+</script>
 <body>
 
 <nav class="navbar navbar-inverse">
@@ -44,7 +49,7 @@
         </div>
       </form>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> My Account</a></li>
+        <li><a onclick="empPop()"><span class="glyphicon glyphicon-user"></span> My Account</a></li>
       </ul>
     </div>
   </div>
