@@ -65,7 +65,7 @@ public class EapprDaoImpl implements EapprIDao{
 	@Override
 	public boolean insertApprRoot(ApprovalDTO Adto) {
 		log.info("insertApprRoot daoImpl 실행 : {}",Adto);
-		int n = sqlSession.insert(NS+"insertApprRoot,Adto");
+		int n = sqlSession.insert(NS+"insertApprRoot",Adto);
 		return (n>0)?true:false;
 	}
 
