@@ -12,6 +12,7 @@
 		<typeAlias type="com.hexa.core.dto.DepartmentDTO" alias="deptDto"/>
 		<typeAlias type="com.hexa.core.dto.BbsDTO" alias="BbsDto"/>
 		<typeAlias type="com.hexa.core.dto.CommentDTO" alias="CommentDto"/>
+		<typeAlias type="com.hexa.core.dto.RowNumDTO" alias="RowNum"/>
 	</typeAliases>
 	
 	<mappers>

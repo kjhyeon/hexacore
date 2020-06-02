@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hexa.core.dto.EmployeeDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.mng.inf.EmployeeIDao;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 
@@ -37,8 +38,8 @@ public class EmployeeServiceImpl implements EmployeeIService {
 
 	@Override
 	public boolean updateEmployee(EmployeeDTO dto) {
-		// TODO Auto-generated method stub
-		return false;
+		log.info("EmpServiceImpl updateEmp : {}",dto);
+		return dao.updateEmployee(dto);
 	}
 
 	@Override
@@ -48,21 +49,21 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	}
 
 	@Override
-	public List<EmployeeDTO> selectEmployeeList() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<EmployeeDTO> selectEmployeeList(RowNumDTO row) {
+		log.info("EmpServiceImpl selectEmpList : {}");
+		return dao.selectEmployeeList(row);
 	}
 
 	@Override
-	public List<EmployeeDTO> selectAllEmployeeList() {
-		// TODO Auto-generated method stub
-		return null;
+	public int selectEmployeeListSize() {
+		log.info("EmpServiceImpl selectEmpListSize : {}");
+		return dao.selectEmployeeListSize();
 	}
 
 	@Override
 	public EmployeeDTO selectEmployee(int employee_number) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("EmpServiceImpl selectEmp : {}",employee_number);
+		return dao.selectEmployee(employee_number);
 	}
 
 	@Override
@@ -75,6 +76,12 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	public String selectId(String id) {
 		log.info("EmpServiceImpl selectId : {}",id);
 		return dao.selectId(id);
+	}
+
+	@Override
+	public List<EmployeeDTO> selectRank() {
+		log.info("EmpServiceImpl selectRank : {}");
+		return dao.selectRank();
 	}
 	
 	

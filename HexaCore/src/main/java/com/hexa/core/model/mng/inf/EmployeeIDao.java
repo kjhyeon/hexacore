@@ -3,6 +3,7 @@ package com.hexa.core.model.mng.inf;
 import java.util.List;
 
 import com.hexa.core.dto.EmployeeDTO;
+import com.hexa.core.dto.RowNumDTO;
 
 public interface EmployeeIDao {
 
@@ -14,9 +15,9 @@ public interface EmployeeIDao {
 	
 	public List<EmployeeDTO> selectChildEmployeeList(int department_id);
 	
-	public List<EmployeeDTO> selectEmployeeList();
+	public List<EmployeeDTO> selectEmployeeList(RowNumDTO row);
 	
-	public List<EmployeeDTO> selectAllEmployeeList();
+	public int selectEmployeeListSize();
 	
 	public EmployeeDTO selectEmployee(int employee_number);
 	
@@ -27,4 +28,6 @@ public interface EmployeeIDao {
 	public boolean moveEmployee(int department_id);
 	
 	public String selectId(String id);
+	
+	public List<EmployeeDTO> selectRank();
 }

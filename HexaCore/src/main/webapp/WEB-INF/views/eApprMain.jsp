@@ -21,7 +21,8 @@
 <body>
  ${dto}
     <div class="well">
-        <p><a href="./updateDoc.do">업데이트</a></p>
+        <p><a href="./docDetail.do?seq=1">결재문서함</a></p>
+        <p><a href="#">상신 문서함</a></p>
         <p><a href="#">결재 문서함</a></p>
         <p><a href="#">참조 문서함</a></p>
         <p><a href="#">완료 문서함</a></p>

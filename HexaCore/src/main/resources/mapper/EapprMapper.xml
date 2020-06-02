@@ -5,7 +5,7 @@
 
 	<!-- 문서 수정을 위한 해당 문서 조회 -->
 	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto">
-	SELECT SEQ, AUTHOR, TITLE, STATE, APPR_TURN, TYPE_SEQ, CONTENT 
+	SELECT SEQ, AUTHOR, TITLE, STATE, APPR_TURN, TYPE_SEQ, CONTENT,REGDATE 
 		FROM DOCUMENT
 			WHERE SEQ = #{seq}
 	</select>
@@ -14,8 +14,8 @@
 	<update id="updateDoc" parameterType="DocumentDto">
 	UPDATE DOCUMENT
 		SET STATE=#{state}, APPR_TURN=#{appr_turn}, REGDATE=SYSDATE
-		<if test = "title!=null AND content !=null">
-		,TITLE=#{title},CONTENT=#{content}
+		<if test="content !=null and title!=null">
+		,CONTENT=#{content} ,TITLE=#{title}
 		</if>
 			WHERE SEQ=#{seq}
 	</update>
@@ -161,7 +161,7 @@
 	<!-- 문서 작성(STATE 0:임시저장/1:바로상신) -->
 	<insert id="insertNewDoc" parameterType="DocumentDto">
 		INSERT INTO DOCUMENT (SEQ, AUTHOR, TITLE, CONTENT, TYPE_SEQ, STATE, REGDATE, APPR_TURN)
-			VALUES (DOCUMENT_SEQ.NEXTVAL, #{id}, #{title}, #{content}, #{type_seq}, #{state}, #{regdate}, '1')
+			VALUES (DOCUMENT_SEQ.NEXTVAL, #{author}, #{title}, #{content}, #{type_seq}, #{state}, SYSDATE, '1')
 	</insert>
 	
 	<!-- 결재자 정보 입력 -->
@@ -169,5 +169,9 @@
 		INSERT INTO APPROVAL (SEQ, ID, CHK, TURN)
 			VALUES (MAX(SELECT SEQ FROM DOCUMENT), #{id}, 'F', #{turn})
 	</insert>
+	
+	<select id="selectNewDoc" resultType="java.lang.String">
+		SELECT SEQ FROM DOCUMENT WHERE SEQ=(SELECT MAX(SEQ) FROM DOCUMENT)
+	</select>
 	
 </mapper>
