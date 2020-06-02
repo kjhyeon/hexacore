@@ -27,6 +27,11 @@
 			</c:forEach>
 		</tbody>
 	</table>
+	<ul>
+	<c:forEach var="type" items="${list}">
+		<li><a href="./goDocTypePreview.do?type_seq=${type.type_seq}">${type.name}</a></li>
+	</c:forEach>
+</ul>
 	<input type="button" value="생성">
 	<%@include file="./../../footer.jsp" %>
 </body>
