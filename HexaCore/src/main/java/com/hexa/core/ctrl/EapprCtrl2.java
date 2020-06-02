@@ -37,6 +37,7 @@ public class EapprCtrl2 {
 		
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
 	public String updateDoc(Model model, String seq) {
+		log.info("받아온 seq 값: {}", seq);
 		DocumentDTO Ddto = service.selectDoc(seq);
 		model.addAttribute("Ddto",Ddto);
 		return "docDetail";
@@ -83,7 +84,7 @@ public class EapprCtrl2 {
 			Ddto.getLists().get(i).setChk("F");
 			Ddto.getLists().get(i).setSeq(Ddto.getSeq());
 			if(Ddto.getLists()!=null) {
-//				service.deleteApprRoot();
+//				service.deleteApprRoot(Ddto.getSeq());
 				service.insertApprRoot(Ddto.getLists().get(i));
 			}
 		}
