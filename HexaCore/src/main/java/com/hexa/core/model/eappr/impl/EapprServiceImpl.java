@@ -1,6 +1,8 @@
 package com.hexa.core.model.eappr.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,6 +160,18 @@ public class EapprServiceImpl implements EapprIService{
 	public List<DocCommentDTO> selectComment(String seq) {
 		log.info("selectComment ServiceImpl 실행");
 		return dao.selectComment(seq);
+	}
+
+	@Override
+	public int selectReportCount(String id) {
+		log.info("selectReportCount ServiceImpl 실행");
+		return dao.selectReportCount(id);
+	}
+
+	@Override
+	public int selectMyDocCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return dao.selectMyDocCount(map);
 	}
 
 }

@@ -2,6 +2,7 @@
 package com.hexa.core.model.eappr.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -172,5 +173,18 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("selectComment DaoImpl 실행");
 		return sqlSession.selectList(NS+"selectComment",seq);
 	}
+
+	@Override
+	public int selectReportCount(String id) {
+		log.info("selectReportCount DaoImpl 실행");
+		return sqlSession.selectOne(NS+"selectReportCount", id);
+	}
+
+	@Override
+	public int selectMyDocCount(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne(NS+"selectMyDocCount", map);
+	}
+
 	
 }
