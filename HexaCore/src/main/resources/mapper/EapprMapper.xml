@@ -20,7 +20,7 @@
 			WHERE SEQ=#{seq}
 	</update>
 	
-<!-- 해당문서 결재루트 체크 -->
+	<!-- 해당문서 결재루트 체크 -->
 	<select id="selectApprRoot" parameterType="ApprovalDto" resultType="ApprovalDto">
 	SELECT ID , CHK , TURN, NAME, DUTY, APPR_DATE, APPR_KIND, APPR_SIGN, SEQ
 		FROM APPROVAL 
@@ -43,13 +43,6 @@
 	VALUES(#{seq}, #{id}, #{name}, #{duty}, 'F', #{turn}, #{appr_kind})
 	</insert>
 	
-	<!-- 문서 상신/취소의 문서 상태 변경 쿼리-->
-<!-- 	<update id="updateDocState" parameterType="DocumentDto">
-	UPDATE DOCUMENT
-		SET STATE = #{state}, APPR_TURN = #{appr_turn}, REGDATE=SYSDATE
-			WHERE SEQ = #{seq}
-	</update> -->
-	
 	<!-- 파일 업로드 DB에 첨부파일 저장 하는 쿼리 작성 및 테스트 -->
 	<insert id="insertFile" parameterType="DocFileDto">
 		INSERT INTO DocFileDTO
@@ -64,20 +57,29 @@
 		WHERE SEQ= #{seq}
 	</delete>
 	
-<!-- 문서승인 -->
-<!-- 문서 결재시 결재선 업데이트 CHK T 반려시 R 업데이트-->
+	<!-- 문서 결재시 결재선 업데이트 CHK T 반려시 R 업데이트-->
 	<update id="updateApprChk" parameterType="ApprovalDto">
 	UPDATE APPROVAL
 		SET CHK =#{chk}, APPR_DATE=SYSDATE, APPR_SIGN=#{appr_sign}
 			WHERE SEQ =#{seq} AND ID = #{id}
 	</update>
-<!-- 문서 결재시 코멘트 입력 -->
+	
+	<!-- 문서 결재시 코멘트 입력 -->
 	<insert id="insertComment" parameterType="DocCommentDto">
 	INSERT INTO DOC_COMMENTS
 		(SEQ, COMMENT_SEQ, ID, NAME, CONTENT, REGDATE)
 			VALUES(#{seq}, #{comment_seq},#{id}, #{name}, #{content}, SYSDATE)
 	</insert>
-<!-- 	승인시  문서함 TURN 업데이트 -->
+
+	<!-- 코멘트 조회  -->
+	<select id="selectComment" parameterType="java.lang.String" resultType="DocCommentDto">
+	SELECT *
+		FROM DOC_COMMENTS
+			WHERE SEQ = #{seq}
+				ORDER BY COMMENT_SEQ
+	</select>
+	
+	<!-- 승인시  문서함 TURN 업데이트 -->
 	<update id="updateDocTurn" parameterType="ApprovalDto">
 	UPDATE DOCUMENT
 		SET STATE =#{state}
