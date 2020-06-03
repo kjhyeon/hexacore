@@ -154,4 +154,10 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectSignImg(id);
 	}
 
+	@Override
+	public List<DocCommentDTO> selectComment(String seq) {
+		log.info("selectComment ServiceImpl 실행");
+		return dao.selectComment(seq);
+	}
+
 }

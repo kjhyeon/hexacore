@@ -166,7 +166,11 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("selectSignImg DaoImpl 실행");
 		return sqlSession.selectOne(NS+"selectSignImg", id);
 	}
-	
-	
+
+	@Override
+	public List<DocCommentDTO> selectComment(String seq) {
+		log.info("selectComment DaoImpl 실행");
+		return sqlSession.selectList(NS+"selectComment",seq);
+	}
 	
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,12 +23,19 @@
 <sec:authentication property="principal.username" var="name"/>
 <div id="container">
 <table id="table" class="table">
-		
 		<tr><th>문서번호</th><td>${Ddto.seq}</td></tr>
-		<tr><th>아이디</th><td>${Ddto.author}</td></tr>
 		<tr><th>성함</th><td>${name}</td></tr>
 		<tr><th>제목</th><td>${Ddto.title}</td></tr>
 		<tr><th>내용</th><td>${Ddto.content}</td></tr>
+</table>
+
+<c:if test="${empty comment}">
+</c:if>
+<table id="commentTable" class="commentTable">
+<c:forEach var="Cdto" items="${comment}">
+		<tr><th>No.</th><th>성함</th><th>코멘트</th><th>결재일</th></tr>
+		<tr><td>${Cdto.name}</td><td>${Cdto.content}</td><td>${Cdto.regdate}</td><td>${Cdto.comment_seq}</td></tr>
+</c:forEach>
 </table>
 	<!--javascript를 통한 form 전송  -->
 	<div style="text-align: center; margin-top: 10px; margin-bottom: 100px;">

@@ -99,6 +99,13 @@ public interface EapprIService {
 	public boolean insertComment(DocCommentDTO DCdto);
 	
 	/**
+	 * 코멘트 조회
+	 * @param seq 해당 문서 번호
+	 * @return commentList
+	 */
+	public List<DocCommentDTO> selectComment(String seq);
+	
+	/**
 	 * 문서 상태 업데이트
 	 * @param Adto seq, state (appr_turn= 결재시사용)
 	 * @return True : 성공 / False 실패
