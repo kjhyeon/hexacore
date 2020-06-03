@@ -34,8 +34,14 @@
 			<if test="auth != null">
 					AUTH = #{auth},
 			</if>
+			<if test="profile_img!=null and profile_img!=''">
+					 PROFILE_IMG=#{profile_img},
+			</if>
+			<if test="sign_img!=null and sign_img!=''">
+					 SIGN_IMG=#{sign_img},
+			</if>
 				PHONE=#{phone}, EMAIL=#{email}, NAME = #{name},
-					POSTCODE=#{postcode}, ADDRESS=#{address}, DETAILADDRESS=#{detailaddress}, STATE=#{state}, PROFILE_IMG=#{profile_img}, SIGN_IMG=#{sign_img}
+					POSTCODE=#{postcode}, ADDRESS=#{address}, DETAILADDRESS=#{detailaddress}, STATE=#{state}
 						WHERE EMPLOYEE_NUMBER=#{employee_number}
 	</update>
 	

@@ -22,7 +22,7 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	private final String NS = "com.hexa.core.emp.";
 	
@@ -43,7 +43,7 @@ public class EmployeeDaoImpl implements EmployeeIDao{
 	@Override
 	public boolean updateEmployee(EmployeeDTO dto) {
 		log.info("EmployeeDAO updateEmployee : {}",dto);
-		if(dto.getPassword()!=null) {
+		if(dto.getPassword()!=null&&!dto.getPassword().trim().equals("")) {
 			String enPw = passwordEncoder.encode(dto.getPassword());
 			dto.setPassword(enPw);
 		}
