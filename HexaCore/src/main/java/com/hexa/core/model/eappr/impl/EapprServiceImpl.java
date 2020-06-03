@@ -124,4 +124,10 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectNeedApprDoc(id);
 	}
 
+	@Override
+	public List<DocumentDTO> selectAllDoc() {
+		log.info("selectAllDoc ServiceImpl 실행");
+		return dao.selectAllDoc();
+	}
+
 }

@@ -73,9 +73,23 @@ public class EapprCtrl1 {
 		return "eappr/docDetail";
 	}
 	
+	// 결재루트 지정 트리로 가기
 	@RequestMapping(value = "/goApprTree.do", method = RequestMethod.GET)
 	public String ApprTree() {
 		return "eappr/apprTree";
 	}
 	
+	// 문서 양식 관리 탭
+	@RequestMapping(value = "/goDocTypeMng.do", method = RequestMethod.GET)
+	public String DocTypeMng(Model model) {
+		List<DocumentTypeDTO> list = service.selectDocTypeList();
+		model.addAttribute("list", list);
+		return "eappr/docTypeMng";
+	}
+	
+	// 문서 양식 추가 화면으로 이동
+	@RequestMapping(value = "/goAddTypeForm.do", method = RequestMethod.GET)
+	public String DocTypeMng() {
+		return "eappr/addTypeForm";
+	}
 }

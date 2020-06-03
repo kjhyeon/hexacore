@@ -20,6 +20,8 @@
 	<sec:authentication property="principal.department_name"/>
 	<!-- e_rank_name : 사원직위 -->
 	<sec:authentication property="principal.e_rank_name"/>
+	<a href="./goEapprHome.do">전자결재 홈으로 가기</a>
+	<a href="./goDocTypeMng.do">문서 양식 관리로 가기</a>
 <%@include file="./../footer.jsp" %>
 </body>
 </html>

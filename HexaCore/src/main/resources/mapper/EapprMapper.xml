@@ -178,4 +178,8 @@
 		SELECT SEQ FROM DOCUMENT WHERE SEQ=(SELECT MAX(SEQ) FROM DOCUMENT)
 	</select>
 	
+	<select id="selectAllDoc" resultType="DocumentDto">
+		SELECT * FROM DOCUMENT
+	</select>
+	
 </mapper>

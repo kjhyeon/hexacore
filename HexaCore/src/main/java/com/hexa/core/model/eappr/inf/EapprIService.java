@@ -125,4 +125,10 @@ public interface EapprIService {
 	 * @return DocumentDTO
 	 */
 	public List<DocumentDTO> selectNeedApprDoc(String id);
+	
+	/**
+	 * 모든 문서 조회
+	 * @return 모든 문서
+	 */
+	public List<DocumentDTO> selectAllDoc();
 }

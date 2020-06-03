@@ -137,5 +137,10 @@ public class EapprDaoImpl implements EapprIDao{
 		return lists;
 	}
 
+	@Override
+	public List<DocumentDTO> selectAllDoc() {
+		log.info("selectAllDoc DaoImpl 실행");
+		return sqlSession.selectList(NS+"selectAllDoc");
+	}
 
 }
