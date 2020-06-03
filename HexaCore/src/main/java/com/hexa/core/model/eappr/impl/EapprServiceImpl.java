@@ -130,4 +130,28 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectAllDoc();
 	}
 
+	@Override
+	public String selectNewDocType() {
+		log.info("selectNewDocType ServiceImpl 실행");
+		return dao.selectNewDocType();
+	}
+
+	@Override
+	public boolean deleteDocType(String seq) {
+		log.info("deleteDocType ServiceImpl 실행");
+		return dao.deleteDocType(seq);
+	}
+
+	@Override
+	public boolean updateDocType(DocumentTypeDTO dto) {
+		log.info("updateDocType ServiceImpl 실행");
+		return dao.updateDocType(dto);
+	}
+
+	@Override
+	public String selectSignImg(String id) {
+		log.info("selectSignImg ServiceImpl 실행");
+		return dao.selectSignImg(id);
+	}
+
 }

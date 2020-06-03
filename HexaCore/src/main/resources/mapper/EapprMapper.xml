@@ -95,33 +95,33 @@
 	
 	<!-- 문서 양식 추가	 -->
 	<insert id="insertDocType" parameterType="DocumentTypeDto">
-	INSERT INTO DOCUMENT_TYPE (TYPE_SEQ , NAME, CONTENT, CATEGORY)
-		VALUES(TYPE_SEQ_SEQ.NEXTVAL, #{name}, #{content}, #{category})
+	INSERT INTO DOCUMENT_TYPE (TYPE_SEQ , NAME, CONTENT)
+		VALUES(TYPE_SEQ_SEQ.NEXTVAL, #{name}, #{content})
 	</insert>
 	
 	<!-- 문서 양식 리스트 출력 -->
 	<select id="selectDocTypeList" resultType="DocumentTypeDto">
-		SELECT TYPE_SEQ, NAME, CATEGORY FROM DOCUMENT_TYPE ORDER BY CATEGORY
+		SELECT TYPE_SEQ, NAME FROM DOCUMENT_TYPE
 	</select>
 	
 	<!-- 문서 양식 선택, 미리보기 출력 -->
 	<select id="selectDocType" parameterType="java.lang.String" resultType="DocumentTypeDto">
-		SELECT TYPE_SEQ, NAME, CONTENT, CATEGORY FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
+		SELECT TYPE_SEQ, NAME, CONTENT, FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
 	</select>
 	
 	<!-- 문서 양식 수정 -->
 	<update id="updateDocType" parameterType="DocumentTypeDto">
-		UPDATE DOCUMENT_TYPE SET NAME = #{name}, CONTENT = #{content}, CATEGORY = #{category}
+		UPDATE DOCUMENT_TYPE SET NAME = #{name}, CONTENT = #{content} WHERE TYPE_SEQ = #{type_seq}
 	</update>
 	
 	<!-- 문서 양식 삭제 -->
 	<delete id="deleteDocType" parameterType="java.lang.String">
-		DELETE * FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
+		DELETE FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
 	</delete>
 		
 	<!-- 문서 삭제 -->
 	<delete id="deleteDoc" parameterType="java.lang.String">
-		DELETE * FROM DOCUMENT WHERE SEQ = #{seq}
+		DELETE FROM DOCUMENT WHERE SEQ = #{seq}
 	</delete>
 	
 	<!-- 상신문서함에 있는 문서의 총 개수 -->
@@ -176,12 +176,19 @@
 			VALUES (MAX(SELECT SEQ FROM DOCUMENT), #{id}, 'F', #{turn})
 	</insert>
 	
+	<!-- 작성한 문서 SEQ 가져오기 -->
 	<select id="selectNewDoc" resultType="java.lang.String">
 		SELECT SEQ FROM DOCUMENT WHERE SEQ=(SELECT MAX(SEQ) FROM DOCUMENT)
 	</select>
 	
+	<!-- 모든 문서 조회 -->
 	<select id="selectAllDoc" resultType="DocumentDto">
 		SELECT * FROM DOCUMENT
+	</select>
+	
+	<!-- 작성한 문서 양식 SEQ 가져오기 -->
+	<select id="selectNewDocType" resultType="java.lang.String">
+		SELECT TYPE_SEQ FROM DOCUMENT_TYPE WHERE TYPE_SEQ=(SELECT MAX(TYPE_SEQ) FROM DOCUMENT_TYPE)
 	</select>
 	
 </mapper>

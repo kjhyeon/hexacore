@@ -1,6 +1,5 @@
 package com.hexa.core.ctrl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -9,11 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.google.common.collect.Lists;
-import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.model.eappr.inf.EapprIService;
@@ -88,8 +86,50 @@ public class EapprCtrl1 {
 	}
 	
 	// 문서 양식 추가 화면으로 이동
-	@RequestMapping(value = "/goAddTypeForm.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/goDocTypeWriteForm.do", method = RequestMethod.GET)
 	public String DocTypeMng() {
-		return "eappr/addTypeForm";
+		return "eappr/docTypeWriteForm";
 	}
+	
+	// 문서 양식 추가
+	@Transactional
+	@RequestMapping(value = "/writeDocType.do", method = RequestMethod.POST)
+	public String WriteDocType(DocumentTypeDTO dto, Model model) {
+		service.insertDocType(dto);
+		String seq = service.selectNewDocType();
+		DocumentTypeDTO tDto = service.selectDocType(seq);
+		model.addAttribute("dto", tDto);
+		return "eappr/docTypeDetail";
+	}
+	
+	// 문서 양식 상세보기
+	@RequestMapping(value = "/goDocTypeDetail.do", method = RequestMethod.GET)
+	public String DocTypeDetail(String seq, Model model) {
+		DocumentTypeDTO dto = service.selectDocType(seq);
+		model.addAttribute("dto", dto);
+		return "eappr/docTypeDetail";
+	}
+	
+	// 문서 양식 삭제
+	@RequestMapping(value = "/deleteDocType.do", method = RequestMethod.GET)
+	public String DeleteDocType(String seq) {
+		service.deleteDocType(seq);
+		return "redirect:/goDocTypeMng.do";
+	}
+	
+	// 문서 양식 수정 화면으로 이동
+	@RequestMapping(value = "/goDocTypeModifyForm.do", method = RequestMethod.POST)
+	public String DocTypeModifyForm(DocumentTypeDTO dto, Model model) {
+		model.addAttribute("dto", dto);
+		return "eappr/docTypeModifyForm";
+	}
+	
+	// 문서 양식 수정
+	@RequestMapping(value = "/DocTypeUpdate.do", method = RequestMethod.POST)
+	public String UpdateDocType(DocumentTypeDTO dto, Model model) {
+		service.updateDocType(dto);
+		model.addAttribute("dto", dto);
+		return "redirect:/goDocTypeDetail.do?seq="+dto.getType_seq();
+	}
+	
 }

@@ -9,17 +9,15 @@ public class DocumentTypeDTO implements Serializable{
 	private int type_seq;
 	private String name;
 	private String content;
-	private String category;
 	
 	public DocumentTypeDTO() {
 	}
 
-	public DocumentTypeDTO(int type_seq, String name, String content, String category) {
+	public DocumentTypeDTO(int type_seq, String name, String content) {
 		super();
 		this.type_seq = type_seq;
 		this.name = name;
 		this.content = content;
-		this.category = category;
 	}
 	
 	public DocumentTypeDTO(int type_seq) {
@@ -29,8 +27,7 @@ public class DocumentTypeDTO implements Serializable{
 
 	@Override
 	public String toString() {
-		return "DocumentTypeDTO [type_seq=" + type_seq + ", name=" + name + ", content=" + content + ", category=" + category
-				+ "]";
+		return "DocumentTypeDTO [type_seq=" + type_seq + ", name=" + name + ", content=" + content + "]";
 	}
 
 	public int getType_seq() {
@@ -55,14 +52,6 @@ public class DocumentTypeDTO implements Serializable{
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
 	}
 
 }
