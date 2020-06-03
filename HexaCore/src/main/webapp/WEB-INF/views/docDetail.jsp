@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,12 +18,14 @@
 
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
+<sec:authentication property="principal.username" var="name"/>
 <div id="container">
-	${Ddto}
 <table id="table" class="table">
 		
 		<tr><th>문서번호</th><td>${Ddto.seq}</td></tr>
 		<tr><th>아이디</th><td>${Ddto.author}</td></tr>
+		<tr><th>성함</th><td>${name}</td></tr>
 		<tr><th>제목</th><td>${Ddto.title}</td></tr>
 		<tr><th>내용</th><td>${Ddto.content}</td></tr>
 </table>
@@ -49,4 +52,6 @@
 			}
 		}
 	</script>
+	</sec:authorize>
+	</body>
 </html>

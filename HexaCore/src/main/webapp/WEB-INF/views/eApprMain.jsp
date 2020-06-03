@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-  <!DOCTYPE html>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Bootstrap Example</title>
@@ -19,15 +20,15 @@
   </style>
 </head>
 <body>
+<sec:authorize access="isAuthenticated()">
+<sec:authentication property="principal.username" var="id"/>
     <div class="well">
-        <p><a href="./docDetail.do?seq=1">결재문서함</a></p>
-        <p><a href="./docLists.do?id=hexa">결재 문서함</a></p>
-        <p><a href="#">결재 문서함</a></p>
-        <p><a href="#">참조 문서함</a></p>
+        <p><a href="./docLists.do?id=${id}">결재 문서함</a></p>
+        <p><a href="./docLists.do?id=${id}'&appr_kind=참조'">참조 문서함</a></p>
         <p><a href="#">완료 문서함</a></p>
         <p><a href="#">반려 문서함</a></p>
         <p><a href="#">저장 문서함</a></p>
       </div>
-
+</sec:authorize>
 </body>
 </html>
