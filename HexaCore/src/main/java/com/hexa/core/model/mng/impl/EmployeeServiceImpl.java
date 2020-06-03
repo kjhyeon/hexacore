@@ -22,7 +22,7 @@ public class EmployeeServiceImpl implements EmployeeIService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
 	public boolean insertEmployee(EmployeeDTO dto) {

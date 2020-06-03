@@ -13,8 +13,9 @@
 	<%@include file="./../../header.jsp"%>
 	<div id="container">
 	<form action="./insertEmployee.do" method="post" id ="frm" enctype="multipart/form-data">
-		<table>
+		<table class="table">
 			<tr>
+				<td rowspan="10"><img id="image" src="#" style="display :none;"></td>
 				<th>아이디</th>
 				<td>
 					<input type="text" name="id" placeholder="아이디" id="id"><br> 
@@ -70,8 +71,6 @@
 				<th>프로필이미지</th><td><input multiple="multiple" type="file" name="profile_file" onchange="a(this)"></td>
 			</tr>
 		</table>
-		<div id="right-content">
-			<img id="image" src="#" style="display :none;">
 			<script type="text/javascript">
 						function a(input) {
 							if (input.files && input.files[0]) {
@@ -87,7 +86,6 @@
 							}
 						}
 					</script>
-		</div>
 		<input type="button" value="등록" onclick="formChk()">
 	</form>
 	</div>

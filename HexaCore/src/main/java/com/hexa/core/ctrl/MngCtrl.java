@@ -32,7 +32,7 @@ public class MngCtrl {
 	@Autowired
 	private DepartmentIService dService;
 	
-	private final String attach_path = "./image";
+	private final String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile";
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -51,6 +51,11 @@ public class MngCtrl {
 		return "mng/deptMngTree";
 	}
 	
+	@RequestMapping(value="/allTreeMsg.do", method = RequestMethod.GET)
+	public String goMsgTree(){
+		return "mng/allTreeForMsg";
+	}
+	
 	@RequestMapping(value="/updateDepartment.do",method=RequestMethod.GET)
 	public String goToDeptMng() {
 		
@@ -67,22 +72,22 @@ public class MngCtrl {
 	@RequestMapping(value="/insertEmployee.do",method=RequestMethod.POST)
 	public String EmployeeInsert(EmployeeDTO dto, MultipartFile profile_file) {
 		log.info("Welcome EmployeeInsert {}/{}", dto,profile_file);
-		if(dto.getProfile_img()==null) {
-			dto.setProfile_img("");
-		}
 		
 		File indexFolder = new File(attach_path);
 		if(indexFolder.isDirectory() == false){
 			indexFolder.mkdirs();
 		}
-		
-		try {
-			String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
-			File f = new File(attach_path,saveName);
-			profile_file.transferTo(f);
-			dto.setProfile_img(saveName);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(profile_file!=null&&!profile_file.getOriginalFilename().trim().equals("")) {
+			try {
+				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
+				File f = new File(attach_path,saveName);
+				profile_file.transferTo(f);
+				dto.setProfile_img(saveName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else {
+			dto.setProfile_img("");
 		}
 		
 		boolean isc = eService.insertEmployee(dto);
@@ -120,7 +125,7 @@ public class MngCtrl {
 		if(indexFolder.isDirectory() == false){
 			indexFolder.mkdirs();
 		}
-		if(profile_file!=null) {
+		if(profile_file!=null&&!profile_file.getOriginalFilename().trim().equals("")) {
 			try {
 				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
 				File f = new File(attach_path,saveName);
@@ -130,7 +135,7 @@ public class MngCtrl {
 				e.printStackTrace();
 			}
 		}
-		if(sign_file!=null) {
+		if(sign_file!=null&&!sign_file.getOriginalFilename().trim().equals("")) {
 			try {
 				String saveName = "sign_"+UUID.randomUUID()+"_"+sign_file.getOriginalFilename();
 				File f = new File(attach_path,saveName);
@@ -221,12 +226,12 @@ public class MngCtrl {
 	
 	@RequestMapping(value="/empInfoUpdate.do", method = RequestMethod.POST)
 	public String empInfoUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
-		log.info("Welcome Page empInfoUpdate {}",dto);
+		log.info("Welcome Page empInfoUpdate {}/{}/{}",dto,profile_file.getOriginalFilename(),sign_file.getOriginalFilename());
 		File indexFolder = new File(attach_path);
 		if(indexFolder.isDirectory() == false){
 			indexFolder.mkdirs();
 		}
-		if(profile_file!=null) {
+		if(profile_file.getOriginalFilename()!=null&&!profile_file.getOriginalFilename().equals("")) {
 			try {
 				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
 				File f = new File(attach_path,saveName);
@@ -236,7 +241,7 @@ public class MngCtrl {
 				e.printStackTrace();
 			}
 		}
-		if(sign_file!=null) {
+		if(sign_file.getOriginalFilename()!=null&&!sign_file.getOriginalFilename().equals("")) {
 			try {
 				String saveName = "sign_"+UUID.randomUUID()+"_"+sign_file.getOriginalFilename();
 				File f = new File(attach_path,saveName);

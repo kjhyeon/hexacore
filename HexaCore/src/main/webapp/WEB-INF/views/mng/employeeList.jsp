@@ -14,10 +14,10 @@ function gotoCreate(){
 <body>
 	<%@include file="./../../header.jsp" %>
 	<div id="container">
-		<table>
+	<table class="table">
 			<thead>
 				<tr>
-					<td>No.</td><td>아이디</td><td>이름</td><td>상태</td><td>권한</td><td>입사일</td>
+					<td>No.</td><td>아이디</td><td>이름</td><td>부서</td><td>직위</td><td>상태</td><td>권한</td><td>입사일</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -28,6 +28,8 @@ function gotoCreate(){
 							<a href="./updateEmployee.do?id=${dto.id }">${dto.id}</a>
 						</td>
 						<td>${dto.name}</td>
+						<td>${dto.department_name}</td>
+						<td>${dto.e_rank_name}</td>
 						<td>
 							<c:choose>
 								<c:when test="${dto.state eq -1}">퇴사</c:when>
@@ -46,11 +48,11 @@ function gotoCreate(){
 				</c:forEach>
 			</tbody>
 		</table>
-		<input type="button" value="생성" onclick="gotoCreate()">
+		<input type="button" value="생성" onclick="gotoCreate()" class="btn" style="text-align : right;">
 		<input type="hidden" name="index" id="index" value="${row.index }">
 		<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
 		<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
-		<div class="center">
+		<div class="center" style="text-align: center;">
 			<ul class="pagination">
 				<li><a href="./employeeList.do?page=0" onclick="pageFirst()">&laquo;</a></li>
 				<li><a href="./employeeList.do?page=${row.index-1}" onclick="pagePre()">&lt;</a></li>

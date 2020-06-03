@@ -4,16 +4,54 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<style type="text/css">
+	#container{
+		text-align: center;
+	}
+	#left-content{
+		border: 4px solid grey;
+  		border-radius: 5px;
+		position: fixed;
+		padding : auto;
+		width : 300px;
+		height : 600px;
+		margin-left: 300px;
+		margin-right : 250px;
+		margin-top : 100px;
+	}
+	
+	#mngTree{
+	  width: 300px;
+	  height: 600px; 
+	  border : none;
+	  margin-top : 50px;
+	  margin-right: 100px;
+	 }
+	
+	#right-content{
+		border: 4px solid grey;
+  		border-radius: 5px;
+		position: fixed;
+		margin : auto;
+		margin-left : 650px;
+		padding : 100px 100px 100px 100px;
+		margin-top:100px;
+		width: 500px;
+		height: 600px;
+	}
+	
+</style>
 <title>Insert title here</title>
 </head>
 <body>
+	<%@include file="./../../header.jsp" %>
 	<div id="container">
 		<div id="left-content">
-			<iframe id="mngTree" src="./deptMngTree.do" style="width: 300px; height: 500px;">/</iframe>
+			<iframe id="mngTree" src="./deptMngTree.do">/</iframe>
 		</div>
 		<div id="right-content">
-			<span>수정영역</span>
-			<table>
+			<h1>수정영역</h1>
+			<table class="table">
 				<tr>
 					<th>부서 이름</th><td><input type="text" id="department_name" name="name"></td>
 				</tr>
@@ -45,5 +83,6 @@
 		</script>
 
 	</div>
+	<%@include file="./../../footer.jsp" %>
 </body>
 </html>

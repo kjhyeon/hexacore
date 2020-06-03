@@ -20,7 +20,7 @@ public class DepartmentDaoImpl implements DepartmentIDao {
 	@Autowired
 	private SqlSessionTemplate session;
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	private final String NS = "com.hexa.core.dept.";
 	

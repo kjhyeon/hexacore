@@ -25,7 +25,7 @@ public class DepartmentServiceImpl implements DepartmentIService {
 	@Autowired
 	private EmployeeIDao eDao;
 	
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
 	public int insertDepartment(DepartmentDTO dto) {

@@ -26,8 +26,9 @@ $(document).ready(
 	<div id="container">
 	<form action="./updateEmployee.do" method="post" id="frm" enctype="multipart/form-data">
 		<input type="hidden" value="${dto.employee_number }" name="employee_number">
-		<table>
+		<table class="table">
 			<tr>
+				<td rowspan="13"><img id="profile-image" src="./image/profile/${dto.profile_img}" ></td>
 				<th>아이디</th>
 				<td>
 					<span>${dto.id }</span> 
@@ -130,12 +131,10 @@ $(document).ready(
 				<th>프로필이미지</th><td><input multiple="multiple" type="file" name="profile_file" onchange="a(this,'profile-')"></td>
 			</tr>
 			<tr>
-				<th>결재 도장</th><td><input multiple="multiple" type="file" name="sign_file" id="sign" onchange="a(this,'sign-')"></td>
+				<td><img id="sign-image" src="./image/profile/${dto.sign_img}" ></td><th>결재 도장</th><td><input multiple="multiple" type="file" name="sign_file" id="sign" onchange="a(this,'sign-')"></td>
 			</tr>
 		</table>
 		<div id="right-content">
-			<img id="profile-image" src="file://C:/eclipse-spring/image/${dto.profile_img}" >
-			<img id="sign-image" src="C:/eclipse-spring/image/${dto.sign_img}" >
 			<script type="text/javascript">
 						function a(input,str) {
 							if (input.files && input.files[0]) {
@@ -143,17 +142,24 @@ $(document).ready(
 								reader.onload = function(e) {
 									var img = document.getElementById(str+"image");
 									img.src = e.target.result;
-									img.style.width = '120px';
-									img.style.height = "120px";
+									if(str=='sign-'){
+										img.style.width = '60px';
+										img.style.height = "60px";
+									}else{
+										img.style.height = "120px";
+										img.style.width = '120px';
+									}
+								}
 								}
 								reader.readAsDataURL(input.files[0]);
 								$(str+"#image").show();
 							}
-						}
 					</script>
 		</div>
-		<input type="button" onclick = "formChk()" value="수정">
-		<input type="reset" value="리셋">
+		<div class="btns" style="text-align: center;">
+			<input type="button" onclick = "formChk()" value="수정">
+			<input type="reset" value="리셋">
+		</div>
 	</form>
 	</div>
 	<%@include file="./../../footer.jsp" %>
