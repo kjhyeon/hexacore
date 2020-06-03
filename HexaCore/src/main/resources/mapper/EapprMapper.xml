@@ -106,7 +106,7 @@
 	
 	<!-- 문서 양식 선택, 미리보기 출력 -->
 	<select id="selectDocType" parameterType="java.lang.String" resultType="DocumentTypeDto">
-		SELECT TYPE_SEQ, NAME, CONTENT, FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
+		SELECT TYPE_SEQ, NAME, CONTENT FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
 	</select>
 	
 	<!-- 문서 양식 수정 -->
