@@ -9,7 +9,7 @@
 		text-align: center;
 	}
 	#left-content{
-		border: 4px solid grey;
+		border: 3px solid grey;
   		border-radius: 5px;
 		position: fixed;
 		padding : auto;
@@ -29,7 +29,7 @@
 	 }
 	
 	#right-content{
-		border: 4px solid grey;
+		border: 3px solid grey;
   		border-radius: 5px;
 		position: fixed;
 		margin : auto;
@@ -53,16 +53,16 @@
 			<h1>수정영역</h1>
 			<table class="table">
 				<tr>
-					<th>부서 이름</th><td><input type="text" id="department_name" name="name"></td>
+					<th>부서 이름</th><td><input class="form-control" type="text" id="department_name" name="name"></td>
 				</tr>
 				<tr>
-					<th>팩스 번호</th><td><input type="text" id="department_fax" name="faxnum"></td>
+					<th>팩스 번호</th><td><input class="form-control" type="text" id="department_fax" name="faxnum"></td>
 				</tr>
 				<tr>
-					<th>전화 번호</th><td><input type="text" id="department_phone" name="d_phone"></td>
+					<th>전화 번호</th><td><input class="form-control" type="text" id="department_phone" name="d_phone"></td>
 				</tr>
 			</table>
-			
+			<hr>
 			<input type="button" value="생성" onclick="createDept()">
 			<input type="button" value="삭제" onclick="deleteDept()">
 			<input type="button" value="수정" onclick="updateDept()">

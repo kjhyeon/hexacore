@@ -5,6 +5,15 @@
 <head>
 <meta charset="UTF-8">
 <title>사원 목록</title>
+<style type="text/css">
+	#container{
+		margin-top: 100px;
+	}
+	
+	#btns{
+		text-align: right;
+	}
+</style>
 <script type="text/javascript">
 function gotoCreate(){
 	location.href="./insertEmployee.do";
@@ -14,6 +23,8 @@ function gotoCreate(){
 <body>
 	<%@include file="./../../header.jsp" %>
 	<div id="container">
+	<h1 style="padding-left: 50px;">유저 리스트</h1>
+	<hr>
 	<table class="table">
 			<thead>
 				<tr>
@@ -48,11 +59,13 @@ function gotoCreate(){
 				</c:forEach>
 			</tbody>
 		</table>
-		<input type="button" value="생성" onclick="gotoCreate()" class="btn" style="text-align : right;">
 		<input type="hidden" name="index" id="index" value="${row.index }">
 		<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
 		<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
-		<div class="center" style="text-align: center;">
+		<div id="btns">
+			<input type="button" value="생성" onclick="gotoCreate()" class="btn">
+		</div>
+		<div class="center" style="text-align: center; position: relative;">
 			<ul class="pagination">
 				<li><a href="./employeeList.do?page=0" onclick="pageFirst()">&laquo;</a></li>
 				<li><a href="./employeeList.do?page=${row.index-1}" onclick="pagePre()">&lt;</a></li>

@@ -11,7 +11,7 @@
 <div style="margin-left:25%">
 	<div class="w3-container container">
 	<h2>사원 정보</h2>
-	<table class="table table-bordered">
+	<table class="table table-bordered" style="width: 75%">
 		<tr><td rowspan="8"><img style="height: 120px; width: 120px;" alt="" src="./image/profile/${dto.profile_img }"></td><th>아이디</th><td>${dto.id }</td></tr>
 		<tr><th>이름</th><td>${dto.name }</td></tr>
 		<tr><th>부서</th><td>${dto.department_name }</td></tr>
