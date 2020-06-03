@@ -131,4 +131,31 @@ public interface EapprIService {
 	 * @return 모든 문서
 	 */
 	public List<DocumentDTO> selectAllDoc();
+	
+	/**
+	 * 작성한 문서 양식의 SEQ 가져오기
+	 * @return seq
+	 */
+	public String selectNewDocType();
+	
+	/**
+	 * 문서 양식 삭제
+	 * @param seq
+	 * @return 성공여부
+	 */
+	public boolean deleteDocType(String seq);
+	
+	/**
+	 * 문서 양식 수정
+	 * @param dto
+	 * @return 성공여부
+	 */
+	public boolean updateDocType(DocumentTypeDTO dto);
+	
+	/**
+	 * 결재자 서명 가져오기
+	 * @param id
+	 * @return 이미지파일경로, 이름
+	 */
+	public String selectSignImg(String id);
 }

@@ -143,4 +143,30 @@ public class EapprDaoImpl implements EapprIDao{
 		return sqlSession.selectList(NS+"selectAllDoc");
 	}
 
+	@Override
+	public String selectNewDocType() {
+		log.info("selectNewDocType DaoImpl 실행");
+		return sqlSession.selectOne(NS+"selectNewDocType");
+	}
+
+	@Override
+	public boolean deleteDocType(String seq) {
+		log.info("deleteDocType DaoImpl 실행");
+		return sqlSession.delete(NS+"deleteDocType", seq)>0?true:false;
+	}
+
+	@Override
+	public boolean updateDocType(DocumentTypeDTO dto) {
+		log.info("updateDocType DaoImpl 실행");
+		return sqlSession.update(NS+"updateDocType", dto)>0?true:false;
+	}
+
+	@Override
+	public String selectSignImg(String id) {
+		log.info("selectSignImg DaoImpl 실행");
+		return sqlSession.selectOne(NS+"selectSignImg", id);
+	}
+	
+	
+	
 }
