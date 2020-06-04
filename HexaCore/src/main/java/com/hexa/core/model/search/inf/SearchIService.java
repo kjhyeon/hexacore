@@ -49,7 +49,7 @@ public interface SearchIService {
 	 * @param type 검색종류
 	 * @return
 	 */
-	public List<DocumentDTO> eDocSearch(String keyword,String type);
+	public List<DocumentDTO> eDocSearch(String keyword,String type,String id);
 	
 	/**
 	 * 자유게시판 서치

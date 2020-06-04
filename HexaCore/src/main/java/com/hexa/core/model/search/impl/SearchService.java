@@ -79,9 +79,9 @@ public class SearchService implements SearchIService{
 	}
 
 	@Override
-	public List<DocumentDTO> eDocSearch(String keyword,String type) {
+	public List<DocumentDTO> eDocSearch(String keyword,String type,String id) {
 		log.info("SearchServcie 전자문서 서치");
-		return dao.eDocSearch(keyword,type);
+		return dao.eDocSearch(keyword,type,id);
 	}
 	@Override
 	public List<BbsDTO> freeBbsSearch(String keyword,String type) {
@@ -100,23 +100,23 @@ public class SearchService implements SearchIService{
 	}
 	@Override
 	public void addDocIndex(DocumentDTO dto) {
-		log.info("SearchService 전자문서 추가");
+		log.info("SearchService 전자문서 추가 {}",dto);
 		dao.addDocIndex(dto);
 	}
 	@Override
 	public void addBbsIndex(BbsDTO dto, String type) {
-		// TODO Auto-generated method stub
-		
+		log.info("SearchService 게시판 추가 {}/{}",dto,type);
+		dao.addBbsIndex(dto, type);
 	}
 	@Override
 	public void updateDocIndex(DocumentDTO dto) {
-		log.info("SearchService 전자문서 업데이트");
+		log.info("SearchService 전자문서 업데이트 {}",dto);
 		dao.updateDocIndex(dto);
 	}
 	@Override
 	public void updateBbsIndex(BbsDTO dto, String type) {
-		// TODO Auto-generated method stub
-		
+		log.info("SearchService 게시판 업데이트 {}",dto);
+		dao.updateBbsIndex(dto, type);
 	}
 
 

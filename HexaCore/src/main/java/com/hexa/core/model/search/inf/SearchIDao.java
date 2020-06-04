@@ -18,7 +18,7 @@ public interface SearchIDao {
 	public void updateDocIndex(DocumentDTO dto);
 	public void updateBbsIndex(BbsDTO dto,String type);
 	
-	public List<DocumentDTO> eDocSearch(String keyword,String type);
+	public List<DocumentDTO> eDocSearch(String keyword,String type,String id);
 	public List<BbsDTO> freeBbsSearch(String keyword,String type);
 	public List<BbsDTO> noticeBbsSearch(String keyword,String type);
 	public List<BbsDTO> fileBbsSearch(String keyword,String type);

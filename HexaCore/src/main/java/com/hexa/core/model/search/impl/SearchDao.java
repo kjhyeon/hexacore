@@ -3,7 +3,10 @@ package com.hexa.core.model.search.impl;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -11,26 +14,31 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.NumericDocValuesField;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.queryparser.xml.builders.BooleanQueryBuilder;
+import org.apache.lucene.queryparser.xml.builders.RangeQueryBuilder;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.FuzzyQuery;
+import org.apache.lucene.search.BooleanQuery.Builder;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopFieldDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -82,7 +90,7 @@ public class SearchDao implements SearchIDao{
 
 
 	@Override
-	public List<DocumentDTO> eDocSearch(String keyword,String type) {
+	public List<DocumentDTO> eDocSearch(String keyword,String type,String id) {
 		log.info("SearchDao 전자문서 서치 {}",keyword);
 		FSDirectory directory;
 		List<DocumentDTO> list = Lists.newArrayList(); //서치 결과 담을 리스트
@@ -103,24 +111,8 @@ public class SearchDao implements SearchIDao{
 			
 			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
 			Analyzer analyzer = new StandardAnalyzer();
-			
-			MultiFieldQueryParser parser= null;
-			if(type.trim().equals("title")) {
-				String[] field = {"title"};
-				parser = new MultiFieldQueryParser(field, analyzer);
-			}else if(type.trim().equals("content")) {
-				String[] field = {"content"};
-				parser = new MultiFieldQueryParser(field, analyzer);
-			}else if(type.trim().equals("author")) {
-				String[] field = {"author"};
-				parser = new MultiFieldQueryParser(field, analyzer);
-			}else if(type.trim().equals("title/con")) {
-				String[] field = {"title","content"};
-				System.out.println("title/con");
-				parser = new MultiFieldQueryParser(field, analyzer);
-			}
-			
-			Query query = parser.parse(keyword+"*");	//찾을 키워드
+		
+			BooleanQuery query = createQuery(type, keyword,analyzer,false,id); //찾을 키워드로 쿼리 생성
 			SortField sortField = null;	// 정렬용 필드
 			boolean reverse = true;	//역정렬용 플래그
 			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
@@ -139,9 +131,22 @@ public class SearchDao implements SearchIDao{
 					DocumentDTO item = new DocumentDTO();	//담아올 객체 생성
 					item.setSeq(Integer.parseInt(doc.get("seq")));
 					item.setTitle(doc.get("title"));
-					item.setContent(doc.get("content"));
-					item.setAuthor(doc.get("name"));
+//					String con = doc.get("content").replaceAll("^<(/)?(img|label|table|thead|tbody|tfoot|tr|td|p|br|div|span|font|strong|b)(.|\\s|\\t|\\n|\\r\\n)*?>$","1");
+					String con = doc.get("content");
+					Pattern SCRIPTS = Pattern.compile("<script([^'\"]|\"[^\"]*\"|'[^']*')*?</script>",Pattern.DOTALL);
+					Matcher m = SCRIPTS.matcher(con);
+					con = m.replaceAll("");
+					if(type.trim().equals("content")&&con.length()>30) {
+						int idx = con.indexOf(keyword);
+						item.setContent("ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ");
+					}else if(con.length()>30){
+						item.setContent(con.substring(0, 30)+"ㆍㆍㆍ");
+					}else {
+						item.setContent(con);
+					}
+					item.setAuthor(doc.get("author"));
 					item.setRegdate(doc.get("regdate"));
+					item.setState(Integer.parseInt(doc.get("state")));
 					System.out.println(item.toString());
 					list.add(item);	//결과로 보낼 리스트에 담음
 				}
@@ -192,29 +197,7 @@ public class SearchDao implements SearchIDao{
 			
 			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
 			Analyzer analyzer = new StandardAnalyzer();
-//			QueryParser parser = null;
-			MultiFieldQueryParser parser= null;
-			if(type.trim().equals("title")) {
-				String[] field = {"title"};
-				parser = new MultiFieldQueryParser(field, analyzer);
-//				parser = new QueryParser("title", analyzer); //찾을 컬럼
-			}else if(type.trim().equals("content")) {
-				String[] field = {"content"};
-				parser = new MultiFieldQueryParser(field, analyzer);
-//				parser = new QueryParser("content", analyzer); //찾을 컬럼
-			}else if(type.trim().equals("author")) {
-				String[] field = {"name"};
-				parser = new MultiFieldQueryParser(field, analyzer);
-//				parser = new QueryParser("author", analyzer); //찾을 컬럼
-			}else if(type.trim().equals("title/con")) {
-				String[] field = {"title","content"};
-				System.out.println("title/con");
-				parser = new MultiFieldQueryParser(field, analyzer);
-//				parser = new QueryParser("title", analyzer); //찾을 컬럼
-			}
-			
-			Query query = parser.parse(keyword+"*");	//찾을 키워드
-			
+			BooleanQuery query = createQuery(type, keyword,analyzer,true,null); //찾을 키워드로 쿼리 생성			
 			SortField sortField = null;	// 정렬용 필드
 			boolean reverse = true;	//역정렬용 플래그
 			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
@@ -233,10 +216,20 @@ public class SearchDao implements SearchIDao{
 					BbsDTO item = new BbsDTO();	//담아올 객체 생성
 					item.setSeq(Integer.parseInt(doc.get("seq")));
 					item.setTitle(doc.get("title"));
-					item.setContent(doc.get("content"));
+//					Pattern p = Pattern.compile("^<(/)?(img|label|table|thead|tbody|tfoot|tr|td|p|br|div|span|font|strong|b)(.|\\s|\\t|\\n|\\r\\n)*?>$")
+					String con = doc.get("content").replaceAll("^<(/)?(img|label|table|thead|tbody|tfoot|tr|td|p|br|div|span|font|strong|b)(.|\\s|\\t|\\n|\\r\\n)*?>$","");
+					if(type.trim().equals("content")&&con.length()>30) {
+						int idx = con.indexOf(keyword);
+						item.setContent("ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ");
+					}else if(con.length()>30){
+						item.setContent(con.substring(0, 30)+"ㆍㆍㆍ");
+					}else {
+						item.setContent(con);
+					}
 					item.setName(doc.get("name"));
 					item.setId(doc.get("id"));
 					item.setRegdate(doc.get("regdate"));
+					item.setState(Integer.parseInt(doc.get("state")));
 					System.out.println(item.toString());
 					list.add(item);	//결과로 보낼 리스트에 담음
 				}
@@ -265,7 +258,10 @@ public class SearchDao implements SearchIDao{
 
 			//한글 형태소 분석기
 			Analyzer analyzer = new StandardAnalyzer();
-			IndexWriter writer = getWriter(true, directory, analyzer);
+
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
 			//기존 인덱스 파일 삭제
 			writer.deleteAll();
 			 
@@ -303,8 +299,10 @@ public class SearchDao implements SearchIDao{
 
 			//한글 형태소 분석기
 			Analyzer analyzer = new StandardAnalyzer();
-			IndexWriter writer = getWriter(false, directory, analyzer);
 
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
 			//저장할 데이터 목록 가져오기
 			Document doc = createDoc(dto, null, getFieldType()); // 문서 생성하고 필드명을 지정하여 그에 따른 데이터를 추가
 			
@@ -320,8 +318,28 @@ public class SearchDao implements SearchIDao{
 
 	@Override
 	public void addBbsIndex(BbsDTO dto, String type) {
-		// TODO Auto-generated method stub
-		
+		FSDirectory directory;
+		try {
+			//인덱싱된 파일을 내보낼 경로를 얻음
+			directory = FSDirectory.open(Paths.get(INDEX_PATH+"/"+type));
+
+			//한글 형태소 분석기
+			Analyzer analyzer = new StandardAnalyzer();
+
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
+			//저장할 데이터 목록 가져오기
+			Document doc = createDoc(null, dto, getFieldType()); // 문서 생성하고 필드명을 지정하여 그에 따른 데이터를 추가
+			
+			writer.addDocument(doc);
+			writer.commit();
+			writer.close();
+			analyzer.close();
+			directory.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}				
 	}
 
 	@Override
@@ -333,7 +351,9 @@ public class SearchDao implements SearchIDao{
 
 			//한글 형태소 분석기
 			Analyzer analyzer = new StandardAnalyzer();
-			IndexWriter writer = getWriter(false, directory,analyzer);
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
 
 			Document doc = createDoc(dto, null, getFieldType()); // 문서 생성하고 필드명을 지정하여 그에 따른 데이터를 추가
 			
@@ -349,8 +369,27 @@ public class SearchDao implements SearchIDao{
 
 	@Override
 	public void updateBbsIndex(BbsDTO dto, String type) {
-		// TODO Auto-generated method stub
-		
+		FSDirectory directory;
+		try {
+			//인덱싱된 파일을 내보낼 경로를 얻음
+			directory = FSDirectory.open(Paths.get(INDEX_PATH+"/"+type));
+
+			//한글 형태소 분석기
+			Analyzer analyzer = new StandardAnalyzer();
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
+
+			Document doc = createDoc(null, dto, getFieldType()); // 문서 생성하고 필드명을 지정하여 그에 따른 데이터를 추가
+			
+			writer.updateDocument(new Term("seq", String.valueOf(dto.getSeq())), doc);
+			writer.commit();
+			writer.close();
+			analyzer.close();
+			directory.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 
 	private Document createDoc(DocumentDTO docDto, BbsDTO bbsDto,FieldType fieldType) {
@@ -361,7 +400,10 @@ public class SearchDao implements SearchIDao{
 			doc.add(new Field("author", docDto.getAuthor(), fieldType));
 			doc.add(new Field("title", docDto.getTitle(), fieldType));
 			doc.add(new Field("content", docDto.getContent(), fieldType));
-			doc.add(new Field("regdate", docDto.getRegdate(), fieldType));
+			if(docDto.getRegdate()==null) {
+				docDto.setRegdate(new Date().toString());
+			}
+			doc.add(new Field("regdate", docDto.getRegdate(),fieldType));
 			doc.add(new Field("state", String.valueOf(docDto.getState()), fieldType));
 		}else if(bbsDto!=null){
 			doc.add(new NumericDocValuesField("sorted_seq", bbsDto.getSeq()));
@@ -373,7 +415,7 @@ public class SearchDao implements SearchIDao{
 			doc.add(new Field("regdate", bbsDto.getRegdate(), fieldType));
 			doc.add(new Field("state", String.valueOf(bbsDto.getState()), fieldType));
 		}
-		return null;
+		return doc;
 	}
 	
 	private FieldType getFieldType() {
@@ -384,19 +426,54 @@ public class SearchDao implements SearchIDao{
 		return fieldType;
 	}
 	
-	private IndexWriter getWriter(boolean isCreate, Directory directory, Analyzer analyzer) {
-		IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-		if(isCreate) {
-			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
-		}else {
-			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-		}
+	private BooleanQuery createQuery(String category,String keyword,Analyzer analyzer,boolean isBbs,String id) {
+		if(category==null)
+			category = "title";
+		BooleanQuery query = null;
 		try {
-			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
-			return writer;
-		} catch (IOException e) {
+			Query qq = null;
+			Query state=null;
+			if(isBbs) {
+				state = new QueryBuilder(analyzer).createBooleanQuery("state", "0");
+			}else {
+				
+				BytesRef lower = new BytesRef(Integer.toBinaryString(0));
+				BytesRef upper = new BytesRef(Integer.toBinaryString(5));
+				state = new TermRangeQuery("state", lower, upper, true, false);
+			}
+			Query idquery = new QueryBuilder(analyzer).createBooleanQuery("author",id);
+			if(category.trim().equals("title")) {
+				String[] field = {"title"};
+				MultiFieldQueryParser parser = new MultiFieldQueryParser(field, analyzer);
+				qq = parser.parse(keyword+"*");
+			}else if(category.trim().equals("content")) {
+				String[] field = {"content"};
+				MultiFieldQueryParser parser = new MultiFieldQueryParser(field, analyzer);
+				qq = parser.parse(keyword+"*");
+			}else if(category.trim().equals("author")) {
+				String field = null;
+				if(isBbs) {
+					field = "name";
+					}
+				else {
+					field = "author";
+					}
+				QueryParser parser = new QueryParser(field, analyzer);
+				qq = parser.parse(keyword+"*");
+			}else if(category.trim().equals("title/con")) {
+				String[] field = {"title","content"};
+				MultiFieldQueryParser parser = new MultiFieldQueryParser(field, analyzer);
+				qq = parser.parse(keyword+"*");
+			}
+			
+			if(isBbs) {
+				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(state, Occur.MUST).build();
+			}else {
+				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(state, Occur.MUST).add(idquery, Occur.MUST).build();
+			}
+		} catch (ParseException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return query;
 	}
 }
