@@ -101,9 +101,16 @@
 		VALUES(TYPE_SEQ_SEQ.NEXTVAL, #{name}, #{content})
 	</insert>
 	
-	<!-- 문서 양식 리스트 출력 -->
+	<!-- 문서 양식 리스트 출력 (메뉴) -->
 	<select id="selectDocTypeList" resultType="DocumentTypeDto">
 		SELECT TYPE_SEQ, NAME FROM DOCUMENT_TYPE
+	</select>
+	
+	<!-- 문서 양식 리스트 출력 (페이징) -->
+	<select id="selectDocTypeListP" parameterType="RowNum" resultType="DocumentTypeDto">
+		SELECT *
+			FROM (SELECT ROW_NUMBER() OVER(ORDER BY TYPE_SEQ DESC) AS ROW_NUM, NAME FROM DOCUMENT_TYPE ORDER BY ROW_NUM ASC)
+				WHERE ROW_NUM BETWEEN #{start} AND #{last}
 	</select>
 	
 	<!-- 문서 양식 선택, 미리보기 출력 -->
@@ -120,6 +127,11 @@
 	<delete id="deleteDocType" parameterType="java.lang.String">
 		DELETE FROM DOCUMENT_TYPE WHERE TYPE_SEQ = #{type_seq}
 	</delete>
+	
+	<!-- 문서 양식 총 개수 -->
+	<select id="selectDocTypeListSize" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM DOCUMENT_TYPE
+	</select>
 		
 	<!-- 문서 삭제 -->
 	<delete id="deleteDoc" parameterType="java.lang.String">
@@ -143,7 +155,7 @@
 	
 	<!-- 결재문서함-문서의 총 개수 -->
 	<select id="selectApprDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND (d.TURN>a.TURN)
+		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND (d.APPR_TURN>a.TURN)
 	</select>
 	
 	<!-- 결재문서함-결재해야할 문서의 개수 -->

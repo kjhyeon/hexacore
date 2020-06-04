@@ -8,6 +8,7 @@ import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
+import com.hexa.core.dto.RowNumDTO;
 
 public interface EapprIService {
 	
@@ -16,6 +17,12 @@ public interface EapprIService {
 	 * @return 문서 양식 리스트
 	 */
 	public List<DocumentTypeDTO> selectDocTypeList();
+	
+	/**
+	 * 문서 양식 리스트 출력 (페이징)
+	 * @return 문서 양식 리스트
+	 */
+	public List<DocumentTypeDTO> selectDocTypeListP(RowNumDTO row);
 
 	/**
 	 * 문서 양식 미리보기
@@ -174,6 +181,37 @@ public interface EapprIService {
 	 */
 	public int selectReportCount(String id);
 	
+	/**
+	 * 기안한 문서 상태별 문서 개수
+	 * @param map : id, state
+	 * @return 문서 개수
+	 */
 	public int selectMyDocCount(Map<String, Object> map);
 	
+	/**
+	 * 참조문서함 문서 개수
+	 * @param id
+	 * @return 문서 개수
+	 */
+	public int selectReferDocCount(String id);
+	
+	/**
+	 * 결재문서함에 있는 문서의 총 개수
+	 * @param id
+	 * @return 문서 개수
+	 */
+	public int selectApprDocCount(String id);
+	
+	/**
+	 * 결재문서함에 결재해야 할 문서의 개수
+	 * @param id
+	 * @return 문서 개수
+	 */
+	public int selectNeedApprDocCount(String id);
+	
+	/**
+	 * 문서 양식 총 개수
+	 * @return 개수
+	 */
+	public int selectDocTypeListSize();
 }

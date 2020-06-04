@@ -15,6 +15,7 @@ import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.eappr.inf.EapprIDao;
 
 @Repository
@@ -30,6 +31,12 @@ public class EapprDaoImpl implements EapprIDao{
 	public List<DocumentTypeDTO> selectDocTypeList() {
 		log.info("selectDocTypeList daoImpl 실행");
 		return sqlSession.selectList(NS+"selectDocTypeList");
+	}
+	
+	@Override
+	public List<DocumentTypeDTO> selectDocTypeListP(RowNumDTO row) {
+		log.info("selectDocTypeListP daoImpl 실행");
+		return sqlSession.selectList(NS+"selectDocTypeListP", row);
 	}
 	
 	@Override
@@ -182,9 +189,32 @@ public class EapprDaoImpl implements EapprIDao{
 
 	@Override
 	public int selectMyDocCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
+		log.info("selectMyDocCount DaoImpl 실행");
 		return sqlSession.selectOne(NS+"selectMyDocCount", map);
 	}
 
+	@Override
+	public int selectReferDocCount(String id) {
+		log.info("selectReferDocCount DaoImpl 실행");
+		return sqlSession.selectOne(NS+"selectReferDocCount", id);
+	}
+
+	@Override
+	public int selectApprDocCount(String id) {
+		log.info("selectApprDocCount DaoImpl 실행");
+		return sqlSession.selectOne(NS+"selectApprDocCount", id);
+	}
+
+	@Override
+	public int selectNeedApprDocCount(String id) {
+		log.info("selectNeedApprDocCount DaoImpl 실행");
+		return sqlSession.selectOne(NS+"selectNeedApprDocCount", id);
+	}
+
+	@Override
+	public int selectDocTypeListSize() {
+		log.info("selectDocTypeListSize DaoImpl 실행");
+		return sqlSession.selectOne(NS+"selectDocTypeListSize");
+	}
 	
 }

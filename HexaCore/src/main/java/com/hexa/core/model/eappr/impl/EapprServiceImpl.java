@@ -13,6 +13,7 @@ import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.eappr.inf.EapprIDao;
 import com.hexa.core.model.eappr.inf.EapprIService;
 
@@ -28,6 +29,12 @@ public class EapprServiceImpl implements EapprIService{
 	public List<DocumentTypeDTO> selectDocTypeList() {
 		log.info("selectDocTypeList serviceImpl 실행");
 		return dao.selectDocTypeList();
+	}
+	
+	@Override
+	public List<DocumentTypeDTO> selectDocTypeListP(RowNumDTO row) {
+		log.info("selectDocTypeListP serviceImpl 실행");
+		return dao.selectDocTypeListP(row);
 	}
 	
 	@Override
@@ -170,8 +177,32 @@ public class EapprServiceImpl implements EapprIService{
 
 	@Override
 	public int selectMyDocCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
+		log.info("selectMyDocCount ServiceImpl 실행");
 		return dao.selectMyDocCount(map);
+	}
+
+	@Override
+	public int selectReferDocCount(String id) {
+		log.info("selectReferDocCount ServiceImpl 실행");
+		return dao.selectReferDocCount(id);
+	}
+
+	@Override
+	public int selectApprDocCount(String id) {
+		log.info("selectApprDocCount ServiceImpl 실행");
+		return dao.selectApprDocCount(id);
+	}
+
+	@Override
+	public int selectNeedApprDocCount(String id) {
+		log.info("selectNeedApprDocCount ServiceImpl 실행");
+		return dao.selectNeedApprDocCount(id);
+	}
+
+	@Override
+	public int selectDocTypeListSize() {
+		log.info("selectDocTypeListSize ServiceImpl 실행");
+		return dao.selectDocTypeListSize();
 	}
 
 }

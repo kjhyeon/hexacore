@@ -14,7 +14,6 @@
 			<tr>
 				<td>문서번호</td>
 				<td>문서명</td>
-				<td>카테고리</td>
 			</tr>
 		</thead>
 		<tbody>

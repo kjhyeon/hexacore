@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.eappr.inf.EapprIService;
 import com.hexa.core.model.search.inf.SearchIService;
 
@@ -42,6 +43,13 @@ public class EapprCtrl1 {
 			int count =service.selectMyDocCount(map);
 			model.addAttribute("count"+(i+2), count);
 		}
+		int count7 = service.selectReferDocCount(userId);
+		int count8 = service.selectApprDocCount(userId);
+		int count9 = service.selectNeedApprDocCount(userId);
+		model.addAttribute("count7", count7);
+		model.addAttribute("count8", count8);
+		model.addAttribute("count9", count9);
+		
 		return "eappr/eapprHome";
 	}
 	
@@ -75,7 +83,6 @@ public class EapprCtrl1 {
 	@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
 	public String DocDetail(DocumentDTO dto, Model model) {
 		service.insertNewDoc(dto);
-		sService.addDocIndex(dto);
 		String seq = service.selectNewDoc();
 		int sseq = Integer.parseInt(seq);
 		for (int i = 0; i < dto.getLists().size(); i++) {
@@ -83,6 +90,7 @@ public class EapprCtrl1 {
 			service.insertApprRoot(dto.getLists().get(i));
 		}
 		DocumentDTO newDto = service.selectDoc(seq);
+		sService.addDocIndex(newDto);
 		model.addAttribute("dto", newDto);
 		return "eappr/docDetail";
 	}
@@ -95,9 +103,25 @@ public class EapprCtrl1 {
 	
 	// 문서 양식 관리 탭
 	@RequestMapping(value = "/goDocTypeMng.do", method = RequestMethod.GET)
-	public String DocTypeMng(Model model) {
-		List<DocumentTypeDTO> list = service.selectDocTypeList();
+	public String DocTypeMng(Model model, String page) {
+		
+		if(page==null) {
+			page="0";
+		}
+		RowNumDTO row = new RowNumDTO();
+		row.setTotal(service.selectDocTypeListSize());
+		row.setPageNum(3);
+		row.setListNum(10);
+		if(row.getLastPage()-1<Integer.parseInt(page)) {
+			row.setIndex(row.getLastPage()-1);
+		}else if(Integer.parseInt(page)<0) {
+			row.setIndex(0);
+		}else {
+			row.setIndex(Integer.parseInt(page));
+		}
+		List<DocumentTypeDTO> list = service.selectDocTypeListP(row);
 		model.addAttribute("list", list);
+		model.addAttribute("row", row);
 		return "eappr/docTypeMng";
 	}
 	
