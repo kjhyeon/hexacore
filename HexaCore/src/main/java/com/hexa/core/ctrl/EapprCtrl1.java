@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.model.eappr.inf.EapprIService;
+import com.hexa.core.model.search.inf.SearchIService;
 
 @Controller
 public class EapprCtrl1 {
 	
 	@Autowired
 	private EapprIService service;
+	@Autowired
+	private SearchIService sService;
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -72,6 +75,7 @@ public class EapprCtrl1 {
 	@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
 	public String DocDetail(DocumentDTO dto, Model model) {
 		service.insertNewDoc(dto);
+		sService.addDocIndex(dto);
 		String seq = service.selectNewDoc();
 		int sseq = Integer.parseInt(seq);
 		for (int i = 0; i < dto.getLists().size(); i++) {
