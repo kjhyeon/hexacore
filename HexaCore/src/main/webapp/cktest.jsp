@@ -18,7 +18,7 @@
                  });
 </script>
 
-<input type="submit" value="제출">
+<input type="submit" value="수정">
 </form>
 
 </body>

@@ -25,7 +25,7 @@
 	<update id="updateDeleteFreeBbs" parameterType="java.lang.String">
 	UPDATE FREE_BBS
 		SET STATE = 1
-			WHERE STATE = 0 AND SEQ = #{seq}
+			WHERE STATE = 0 OR STATE = 2 AND SEQ = #{seq}
 	</update>
 	
 	<!-- 4. 자유 게시판 글 다중삭제 -->
@@ -40,7 +40,7 @@
 	
 	<!-- 5. (유저) 자유 게시판 글 조회 -->
 	<select id="selectUserFreeBbsList" resultType="BbsDto">
-	SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+	SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
 		FROM FREE_BBS
 			WHERE STATE = 0 OR STATE = 2
 				ORDER BY ROOT DESC, REPLY_SEQ
@@ -48,14 +48,14 @@
 	
 	<!-- 6. (관리자) 자유 게시판 글 조회 -->
 	<select id="selectAdminFreeBbsList" resultType="BbsDto">
-	SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+	SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
 		FROM FREE_BBS
 			ORDER BY ROOT DESC, REPLY_SEQ
 	</select>
 	
 	<!-- 7. 자유 게시판 상세글 보기 -->
 	<select id="selectDetailFreeBbs" parameterType="java.lang.String"
-							   resultType="BbsDto"> 
+							   		 resultType="BbsDto"> 
 	SELECT SEQ, ID, NAME, TITLE, NVL(CONTENT, ' ') CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
 		FROM FREE_BBS
 			WHERE SEQ = #{seq}
@@ -140,6 +140,11 @@
 	<select id="selectAdminBoardListTotal" resultType="java.lang.Integer">
 	SELECT COUNT(*) 
 		FROM FREE_BBS
+	</select>
+	
+	<!-- 14. seq최대값 가져오기(검색엔진 + 자기가 쓴글 상세보기) -->
+	<select id="selectNewBbs" resultType="java.lang.String">
+		SELECT SEQ FROM FREE_BBS WHERE SEQ=(SELECT MAX(SEQ) FROM FREE_BBS)
 	</select>
 	
 </mapper>
