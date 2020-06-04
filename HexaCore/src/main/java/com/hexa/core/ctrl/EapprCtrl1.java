@@ -1,6 +1,9 @@
 package com.hexa.core.ctrl;
 
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,25 +11,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.model.eappr.inf.EapprIService;
+import com.hexa.core.model.search.inf.SearchIService;
 
 @Controller
 public class EapprCtrl1 {
 	
 	@Autowired
 	private EapprIService service;
+	@Autowired
+	private SearchIService sService;
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	// 전자결재 홈 화면으로 이동
 	@RequestMapping(value = "/goEapprHome.do", method = RequestMethod.GET)
-	public String EapprHome() {
+	public String EapprHome(Principal scInfo, Model model) {
+		String userId = scInfo.getName();
+		int count1 = service.selectReportCount(userId);
+		model.addAttribute("count1", count1);
+		for (int i = 0; i < 5; i++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("id", userId);
+			map.put("state", i);
+			int count =service.selectMyDocCount(map);
+			model.addAttribute("count"+(i+2), count);
+		}
 		return "eappr/eapprHome";
 	}
 	
@@ -60,6 +75,7 @@ public class EapprCtrl1 {
 	@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
 	public String DocDetail(DocumentDTO dto, Model model) {
 		service.insertNewDoc(dto);
+		sService.addDocIndex(dto);
 		String seq = service.selectNewDoc();
 		int sseq = Integer.parseInt(seq);
 		for (int i = 0; i < dto.getLists().size(); i++) {

@@ -8,9 +8,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <title>TopMenu</title>
 </head>
 <script type="text/javascript">
@@ -19,7 +20,7 @@ function empPop() {
 }
 </script>
 <body>
-
+	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
 	<nav class="navbar navbar-inverse">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -31,13 +32,15 @@ function empPop() {
 			</div>
 <!-- 			<div class="collapse navbar-collapse" id="myNavbar"> -->
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
-					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">3<span class="caret"></span></a>
+					<li class="active"><a href="./result.do">Home</a></li>
+					<c:if test="${auth eq true }">
+					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">관리<span class="caret"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="./employeeList.do">1</a></li>
-							<li><a href="./updateDepartment.do">2</a></li>
+							<li><a href="./employeeList.do">유저 관리</a></li>
+							<li><a href="./updateDepartment.do">부서 관리</a></li>
 						</ul>
 					</li>
+					</c:if>
 				</ul>
 				<form class="navbar-form navbar-right" role="search">
 					<div class="form-group input-group">

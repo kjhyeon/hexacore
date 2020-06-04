@@ -20,7 +20,7 @@ public class SearchCtrl {
 	
 	@RequestMapping(value="/testBbsSearch.do", method = RequestMethod.GET)
 	public String searchTest(String keyword, Model model,String type) {
-		log.info("WelcomePage TestBbsSearch : {}",keyword);
+		log.info("WelcomePage TestBbsSearch : {}/{}",keyword,type);
 		if(type==null) {
 			type="title";
 		}

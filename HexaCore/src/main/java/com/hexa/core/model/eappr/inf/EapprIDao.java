@@ -1,6 +1,7 @@
 package com.hexa.core.model.eappr.inf;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
@@ -165,4 +166,13 @@ public interface EapprIDao {
 	 * @return 이미지파일경로, 이름
 	 */
 	public String selectSignImg(String id);
+	
+	/**
+	 * 상신문서함의 문서 개수
+	 * @param id
+	 * @return 상신문서함의 문서 개수 
+	 */
+	public int selectReportCount(String id);
+	
+	public int selectMyDocCount(Map<String, Object> map);
 }

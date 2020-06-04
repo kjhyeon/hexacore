@@ -132,7 +132,7 @@
 	</select>
 	
 	<!-- 문서의 개수 (0:임시저장함/1:상신문서함-결재대기중문서/2:상신문서함-결재중문서/3:결재완료함/4:반려문서함) -->
-	<select id="selectMyDocCount" parameterType="DocumentDto" resultType="java.lang.Integer">
+	<select id="selectMyDocCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = #{state}
 	</select>
 	

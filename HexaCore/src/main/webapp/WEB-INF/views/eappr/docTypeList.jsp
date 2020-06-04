@@ -22,7 +22,6 @@
 				<tr>
 					<td>${type.type_seq }</td>
 					<td>${type.name }</td>
-					<td>${type.category }</td>
 				</tr>
 			</c:forEach>
 		</tbody>

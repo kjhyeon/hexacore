@@ -67,21 +67,23 @@ function formChk(){
 	<input type="hidden" name ="employee_number" value="${dto.employee_number }">
 	<input type="hidden" name ="name" value="${dto.name }">
 	<input type="hidden" name ="state" value="${dto.state }">
-	<table class="table table-bordered">
+	<table class="table table-bordered" style="width:75%">
 		<tr><td rowspan="10"><img alt="" src="./image/profile/${dto.profile_img }" id="profile-image"></td><th>아이디</th><td>${dto.id }</td></tr>
-		<tr><th>비밀번호</th><td><input type="password" name="password" id="password" maxlength="20"></td></tr>
-		<tr><th>비밀번호 확인</th><td><input type="password" id="password2" maxlength="20"></td></tr>
+		<tr><th>비밀번호</th><td><input class="form-control" type="password" name="password" id="password" maxlength="20"></td></tr>
+		<tr><th>비밀번호 확인</th><td><input class="form-control" type="password" id="password2" maxlength="20"></td></tr>
 		<tr><th>이름</th><td>${dto.name }</td></tr>
 		<tr><th>부서</th><td>${dto.department_name }</td></tr>
 		<tr><th>직위</th><td>${dto.e_rank_name }</td></tr>
-		<tr><th>번호</th><td><input type="text" name="phone" id="phone" value=${dto.phone }></td></tr>
-		<tr><th>이메일</th><td><input type="text" name="email" id="email" value="${dto.email }"></td></tr>
+		<tr><th>번호</th><td><input class="form-control" type="text" name="phone" id="phone" value=${dto.phone }></td></tr>
+		<tr><th>이메일</th><td><input class="form-control" type="text" name="email" id="email" value="${dto.email }"></td></tr>
 		<tr><th>주소</th>
 			<td>
-				<input type="text" name="postcode" id="postcode" placeholder="우편번호" readonly="readonly" value="${dto.postcode }">
-				<input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
-				<input type="text" name="address" id="address" placeholder="주소" readonly="readonly" value="${dto.address }"><br>
-				<input type="text" name="detailaddress" id="detailAddress" placeholder="상세주소" value ="${dto.detailaddress }">
+				<div style="text-align: left;">
+						<input class="form-control" type="text" name="postcode" id="postcode" placeholder="우편번호" readonly="readonly" style="width: 30%; display: inline;" value="${dto.postcode }">
+						<input class="btn" type="button" onclick="execDaumPostcode()" value="우편번호 찾기" style="position: relative; display: inline"><br>
+					</div>
+					<input class="form-control" type="text" name="address" id="address" placeholder="주소" readonly="readonly" value="${dto.address }" }>
+					<input class="form-control" type="text" name="detailaddress" id="detailAddress" placeholder="상세주소" value="${dto.detailaddress }">
 			</td>
 		</tr>
 		<tr><th>프로필 이미지</th><td><input multiple="multiple" type="file" name="profile_file" id="profile_file" onchange="a(this,'profile-')"></td></tr>
