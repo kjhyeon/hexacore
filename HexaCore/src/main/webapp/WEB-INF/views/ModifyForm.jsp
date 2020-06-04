@@ -102,7 +102,7 @@
 			</tr>
 			<tr>
 				<td>title:</td>
-				<td><input type="text" name="title"></td>
+				<td><input type="text" name="title">${Ddto.title}</td>
 			</tr>
 			<tr>
 				<td>content:</td>

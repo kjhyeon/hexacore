@@ -1,6 +1,5 @@
 package com.hexa.core.ctrl;
 
-import java.security.Principal;
 import java.util.List;
 
 import org.json.simple.JSONObject;
@@ -9,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -19,15 +20,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.model.eappr.inf.EapprIService;
+import com.hexa.core.model.mng.inf.EmployeeIService;
 
 @Controller
 public class EapprCtrl2 {
 	
 	@Autowired
 	private EapprIService service;
-	
+	@Autowired
+	private EmployeeIService EService;
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	
@@ -50,15 +56,22 @@ public class EapprCtrl2 {
 		List<DocCommentDTO> lists = service.selectComment(seq);
 		model.addAttribute("comment",lists);
 		model.addAttribute("Ddto",Ddto);
+		log.info("*************Ddto 값: {}", Ddto);
 		return "docDetail";
 	}	
 	
 
-	@RequestMapping(value="/modifyDoc.do", method= RequestMethod.POST)
-	public String modifyDoc(Model model,String seq) {
+	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST)
+	public String modifyDoc(Model model,String seq,String id) {
 		DocumentDTO Ddto = service.selectDoc(seq);
 		model.addAttribute("Ddto",Ddto);
 		return "ModifyForm";
+	}
+	
+	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.POST)
+	public String deleteDoc(String seq) {
+		boolean isc = service.deleteDoc(seq);
+		return "docLists.do";//리스트로 보내자
 	}
 	
 	@RequestMapping(value="/saveDoc.do", method= RequestMethod.POST)
@@ -76,12 +89,6 @@ public class EapprCtrl2 {
 		}
 		return isc?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 		//임시보관함의 디테일로 보내자11
-	}
-	
-	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.POST)
-	public String deleteDoc(String seq) {
-		boolean isc = service.deleteDoc(seq);
-		return "eApprMain";//리스트로 보내자
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -103,6 +110,21 @@ public class EapprCtrl2 {
 		log.info("Welcome modifyForm 결과, {}",json.toString());
 		return json.toString();
 	}
+
+	@ResponseBody
+	@RequestMapping(value="/checkPassword", method=RequestMethod.POST)
+	public String checkPassword(String password , SecurityContextHolder session) {
+		log.info("password{}",password);
+		Authentication auth = session.getContext().getAuthentication();
+	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
+		EmployeeDTO EDto =  EService.selectLoginInfo(dto.getUsername());
+		if(passwordEncoder.matches(password, EDto.getPassword())) {
+			return "true";
+		}else {
+			return "false";
+		}
+		
+	}
 	
 	@Transactional
 	@RequestMapping(value="/confirmDoc.do", method= RequestMethod.POST)
@@ -114,7 +136,7 @@ public class EapprCtrl2 {
 	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		DCdto.setName(dto.getName());
 		Adto.setName(dto.getName());
-		Adto.setAppr_sign("도장");
+		Adto.setAppr_sign(service.selectSignImg(dto.getUsername()));
 		DCdto.setComment_seq(Adto.getTurn());
 		
 		int appr_turn = Ddto.getAppr_turn();
@@ -127,9 +149,9 @@ public class EapprCtrl2 {
 					Ddto.setState(3);
 					Adto.setAppr_kind("승인");
 				}
-				boolean isc = service.updateDoc(Ddto);//appr_turn 수정 / state 수정
-				boolean isc2 = service.updateApprChk(Adto);//chk 업데이트 사인 업데이트
-				boolean isc3 = service.insertComment(DCdto);//코멘트 입력
+				service.updateDoc(Ddto);//appr_turn 수정 / state 수정
+				service.updateApprChk(Adto);//chk 업데이트 사인 업데이트
+				service.insertComment(DCdto);//코멘트 입력
 				
 			}else if(Adto.getChk().equalsIgnoreCase("R")){
 				Adto.setAppr_kind("반려");
@@ -137,10 +159,11 @@ public class EapprCtrl2 {
 				log.info("confirm Test2R{}",Adto);
 				log.info("confirm Test2R{}",Ddto);
 				log.info("confirm Test2R{}",DCdto);
-				boolean isc = service.updateDoc(Ddto);
-				boolean isc2 = service.updateApprChk(Adto);
-				boolean isc3 = service.insertComment(DCdto);//코멘트 입력
+				service.updateDoc(Ddto);
+				service.updateApprChk(Adto);
+				service.insertComment(DCdto);//코멘트 입력
 			}
 		return "redirect:/docLists.do?id="+Adto.getId();
 	}
+	
 }
