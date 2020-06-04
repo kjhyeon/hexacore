@@ -48,6 +48,11 @@ public class SearchService implements SearchIService{
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
+	private static final String DOC = "eDoc";
+	private static final String FREE = "freeBbs";
+	private static final String NOTICE = "noticeBbs";
+	private static final String FILE = "fileBbs";
+	
 	@Autowired
 	private SearchIDao dao;
 	
@@ -65,7 +70,6 @@ public class SearchService implements SearchIService{
 	@Override
 	public void noticeBbsIndex() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -93,6 +97,26 @@ public class SearchService implements SearchIService{
 	public List<BbsDTO> fileBbsSearch(String keyword,String type) {
 		log.info("SearchService 파일게시판 서치");
 		return dao.fileBbsSearch(keyword,type);
+	}
+	@Override
+	public void addDocIndex(DocumentDTO dto) {
+		log.info("SearchService 전자문서 추가");
+		dao.addDocIndex(dto);
+	}
+	@Override
+	public void addBbsIndex(BbsDTO dto, String type) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void updateDocIndex(DocumentDTO dto) {
+		log.info("SearchService 전자문서 업데이트");
+		dao.updateDocIndex(dto);
+	}
+	@Override
+	public void updateBbsIndex(BbsDTO dto, String type) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
