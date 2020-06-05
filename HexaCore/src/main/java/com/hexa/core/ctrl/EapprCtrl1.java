@@ -145,6 +145,7 @@ public class EapprCtrl1 {
 	// 문서 양식 상세보기
 	@RequestMapping(value = "/goDocTypeDetail.do", method = RequestMethod.GET)
 	public String DocTypeDetail(String seq, Model model) {
+		log.info("##########################seq 확인 : {}", seq);
 		DocumentTypeDTO dto = service.selectDocType(seq);
 		model.addAttribute("dto", dto);
 		return "eappr/docTypeDetail";
