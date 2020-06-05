@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.RowNumDTO;
 
 public interface SearchIService {
 
@@ -54,7 +55,7 @@ public interface SearchIService {
 	 * @param type 검색종류
 	 * @return
 	 */
-	public List<DocumentDTO> eDocSearch(String keyword,String type,String id);
+	public List<DocumentDTO> eDocSearch(String keyword,String type,String id,RowNumDTO row);
 	
 	/**
 	 * 자유게시판 서치
@@ -62,7 +63,7 @@ public interface SearchIService {
 	 * @param type 검색종류
 	 * @return
 	 */
-	public List<BbsDTO> freeBbsSearch(String keyword,String type);
+	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row);
 	
 	/**
 	 * 공지게시판 서치
@@ -70,7 +71,7 @@ public interface SearchIService {
 	 * @param type 검색종류
 	 * @return
 	 */
-	public List<BbsDTO> noticeBbsSearch(String keyword,String type);
+	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row);
 	
 	/**
 	 * 파일게시판 서치
@@ -78,5 +79,5 @@ public interface SearchIService {
 	 * @param type 검색종류
 	 * @return
 	 */
-	public List<BbsDTO> fileBbsSearch(String keyword,String type);
+	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row);
 }

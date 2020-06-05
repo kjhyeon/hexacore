@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.RowNumDTO;
 
 public interface SearchIDao {
 
@@ -18,8 +19,8 @@ public interface SearchIDao {
 	public void updateDocIndex(DocumentDTO dto);
 	public void updateBbsIndex(BbsDTO dto,String type);
 	
-	public List<DocumentDTO> eDocSearch(String keyword,String type,String id);
-	public List<BbsDTO> freeBbsSearch(String keyword,String type);
-	public List<BbsDTO> noticeBbsSearch(String keyword,String type);
-	public List<BbsDTO> fileBbsSearch(String keyword,String type);
+	public List<DocumentDTO> eDocSearch(String keyword,String type,String id,RowNumDTO row);
+	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row);
+	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row);
+	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row);
 }
