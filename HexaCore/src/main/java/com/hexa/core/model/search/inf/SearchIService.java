@@ -7,6 +7,11 @@ import com.hexa.core.dto.DocumentDTO;
 
 public interface SearchIService {
 
+	static final String DOC = "eDoc";
+	static final String FREE = "freeBbs";
+	static final String NOTICE = "noticeBbs";
+	static final String FILE = "fileBbs";
+	
 	public void eDocIndex();
 	public void freeBbsIndex();
 	public void noticeBbsIndex();
