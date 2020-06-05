@@ -147,55 +147,55 @@ public class EapprServiceImpl implements EapprIService{
 
 	@Override
 	public boolean deleteDocType(String seq) {
-		log.info("deleteDocType ServiceImpl 실행");
+		log.info("deleteDocType ServiceImpl 실행 : {}",seq);
 		return dao.deleteDocType(seq);
 	}
 
 	@Override
 	public boolean updateDocType(DocumentTypeDTO dto) {
-		log.info("updateDocType ServiceImpl 실행");
+		log.info("updateDocType ServiceImpl 실행 : {}",dto);
 		return dao.updateDocType(dto);
 	}
 
 	@Override
 	public String selectSignImg(String id) {
-		log.info("selectSignImg ServiceImpl 실행");
+		log.info("selectSignImg ServiceImpl 실행 : {}",id);
 		return dao.selectSignImg(id);
 	}
 
 	@Override
 	public List<DocCommentDTO> selectComment(String seq) {
-		log.info("selectComment ServiceImpl 실행");
+		log.info("selectComment ServiceImpl 실행 : {}",seq);
 		return dao.selectComment(seq);
 	}
 
 	@Override
 	public int selectReportCount(String id) {
-		log.info("selectReportCount ServiceImpl 실행");
+		log.info("selectReportCount ServiceImpl 실행 : {}",id);
 		return dao.selectReportCount(id);
 	}
 
 	@Override
 	public int selectMyDocCount(Map<String, Object> map) {
-		log.info("selectMyDocCount ServiceImpl 실행");
+		log.info("selectMyDocCount ServiceImpl 실행 : {}",map);
 		return dao.selectMyDocCount(map);
 	}
 
 	@Override
 	public int selectReferDocCount(String id) {
-		log.info("selectReferDocCount ServiceImpl 실행");
+		log.info("selectReferDocCount ServiceImpl 실행 : {}",id);
 		return dao.selectReferDocCount(id);
 	}
 
 	@Override
 	public int selectApprDocCount(String id) {
-		log.info("selectApprDocCount ServiceImpl 실행");
+		log.info("selectApprDocCount ServiceImpl 실행 : {}",id);
 		return dao.selectApprDocCount(id);
 	}
 
 	@Override
 	public int selectNeedApprDocCount(String id) {
-		log.info("selectNeedApprDocCount ServiceImpl 실행");
+		log.info("selectNeedApprDocCount ServiceImpl 실행 : {}",id);
 		return dao.selectNeedApprDocCount(id);
 	}
 
@@ -203,6 +203,18 @@ public class EapprServiceImpl implements EapprIService{
 	public int selectDocTypeListSize() {
 		log.info("selectDocTypeListSize ServiceImpl 실행");
 		return dao.selectDocTypeListSize();
+	}
+
+	@Override
+	public List<DocumentDTO> searchDoc(String word) {
+		log.info("searchDoc ServiceImpl 실행 : {}",word);
+		return dao.searchDoc(word);
+	}
+
+	@Override
+	public List<DocumentDTO> selectApprMyDoc(Map<String, Object> map) {
+		log.info("selectApprMyDoc ServiceImpl 실행 : {}",map);
+		return dao.selectApprMyDoc(map);
 	}
 
 }

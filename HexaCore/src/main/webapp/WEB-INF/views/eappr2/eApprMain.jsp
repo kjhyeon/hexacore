@@ -25,11 +25,10 @@
     <div class="well">
         <p><a href="#">상신문서함</a></p>
         <p><a href="#">결재 문서함</a></p>
-        <p><a href="./docLists.do?id=${id}">결재필요문서</a></p>
-        <p><a href="#">결재중문서</a></p>
+        <p><a href="./docLists.do?number=결재필요">결재필요문서</a></p>
+        <p><a href="./docLists.do?number=결재중">결재중문서</a></p>
         <p><a href="#">결재반려문서</a></p>
-        
-        <p><a href="./docLists.do?id=${id}'&appr_kind=참조'">참조 문서함</a></p>
+        <p><a href="#">참조 문서함</a></p>
         <p><a href="#">완료 문서함</a></p>
         <p><a href="#">반려 문서함</a></p>
         <p><a href="#">저장 문서함</a></p>

@@ -7,15 +7,12 @@
 <head>
 <meta charset="UTF-8">
 <title>TEST용</title>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link type="text/css" rel="stylesheet" href="./css/sweetalert.css">
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
 <script type="text/javascript" src="./js/sweetalert.js"></script>
 </head>
 <body>
-
+<%@include file="./../../header.jsp" %>
 <div id="container">
 <table id="table" class="table">
 		<tr><th>문서번호</th><td>${Ddto.seq}</td></tr>
@@ -36,12 +33,12 @@
 	<div>
 	
 	<form name="formDoc" id="formDoc">
-	<c:if test="${name eq Ddto.author}">
+	<c:if test="${name eq Ddto.author && Ddto.state eq '0' || '1' }">
 		<input  type="button" id="modifyDoc" value="수정" onclick="modifyFormDoc('${Ddto.seq}')">
 		<input  type="button" id="upApprDoc" value="상신" onclick="upApprDoc()">
 		<input  type="button" id="deleteDoc" value="삭제" onclick="deleteDocc(${Ddto.seq})">
 	</c:if>
-	<c:if test="${name ne Ddto.author}">
+	<c:if test="${name ne Ddto.author && turn != '0' && turn eq Ddto.appr_turn}">
 		<input  type="button" value="결재" data-toggle="modal" data-target="#apprDoc" data-backdrop='static' data-keyboard='false' onclick="apprDoc('${Ddto.seq}','${Ddto.appr_turn}')">
 	</c:if>
 	</form>

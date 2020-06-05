@@ -45,12 +45,15 @@ public class EapprCtrl2 {
 	}
 	
 	@RequestMapping(value = "/docLists.do", method = RequestMethod.GET)
-	public String docLists(Model model, String id, String page) {
+	public String docLists(Model model,SecurityContextHolder session, String page,String number) {
+		 Authentication auth = session.getContext().getAuthentication();
+		 LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
+		    String id = Ldto.getUsername();
 		if(page==null) {
 			page="0";
 		}
 		RowNumDTO row = new RowNumDTO();
-		row.setTotal(service.selectApprDocCount(id));
+		row.setTotal(service.selectNeedApprDocCount(id));
 		row.setPageNum(3);
 		row.setListNum(10);
 		if(row.getLastPage()-1<Integer.parseInt(page)) {
@@ -64,20 +67,40 @@ public class EapprCtrl2 {
 		map.put("id", id);
 		map.put("start",row.getStart());
 		map.put("last",row.getLast());
-		List<DocumentDTO> lists = service.selectNeedApprDoc(map);
-		
+		List<DocumentDTO> lists =null;
+		if(number.equalsIgnoreCase("결재필요")) {
+		lists = service.selectNeedApprDoc(map);
+		}else if(number.equalsIgnoreCase("결재중")) {
+		lists = service.selectApprMyDoc(map);
+		}
 		model.addAttribute("lists",lists);
 		model.addAttribute("row", row);
 		return "eappr2/docConfirmLists";
 	}
 		
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
-	public String updateDoc(Model model, String seq) {
-		log.info("받아온 seq 값: {}", seq);
+	public String updateDoc(Model model,SecurityContextHolder session,/*String seq*/ApprovalDTO Adto) {
+		log.info("받아온 seq 값: {}", Adto.getSeq());
+		String seq = Integer.toString(Adto.getSeq());
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
+		String id = Ldto.getUsername();
 		DocumentDTO Ddto = service.selectDoc(seq);
+		Adto.setId(id);
+		List<ApprovalDTO> listsa = service.selectApprRoot(Adto);
+		int turn = 0;
+		log.info("********{}",listsa.size());
+		if(listsa!=null && listsa.size()!=0) {
+			turn = listsa.get(0).getTurn();
+			model.addAttribute("turn",turn);
+		}
+		log.info("********악!!!{}",turn);
+		log.info("********악!!!{}",Adto);
+		log.info("********악!!!{}",listsa);
 		List<DocCommentDTO> lists = service.selectComment(seq);
 		model.addAttribute("comment",lists);
 		model.addAttribute("Ddto",Ddto);
+		model.addAttribute("name",id);
 		log.info("*************Ddto 값: {}", Ddto);
 		return "eappr2/docDetail";
 	}	

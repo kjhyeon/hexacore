@@ -88,7 +88,7 @@
 		</if>
 			WHERE SEQ =#{seq}
 	</update>
-	<!-- 결재함 문서 리스트 조회 -->
+	<!-- 결재해야되는 문서 리스트 조회 -->
 	<select id="selectNeedApprDoc" parameterType="java.util.Map" resultType="DocumentDto">
 		SELECT * FROM 
 			(SELECT 
@@ -97,6 +97,34 @@
 							ORDER BY ROW_NUM ASC 
 				 	)
 			WHERE ROW_NUM BETWEEN #{start} AND #{last}
+	</select>
+	
+	<!-- 본인이 결재루트에 포함되어있는 결재중인 문서 -->
+	<select id="selectApprMyDoc" parameterType="java.util.Map" resultType="DocumentDto">
+		SELECT * FROM 			
+			(SELECT 
+				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.title, d.content, d.state, d.regdate, d.author, d.seq, d.appr_turn, id
+					FROM DOCUMENT d ,APPROVAL a 
+						WHERE a.ID='appr1' AND d.STATE BETWEEN 1 AND 2 AND a.SEQ=d.SEQ AND a.TURN>=d.APPR_TURN
+							ORDER BY ROW_NUM ASC)
+			WHERE ROW_NUM BETWEEN #{start} AND #{last}
+	</select>
+	
+	<select id="searchDoc" parameterType="java.util.Map" resultType="DocumentDto">
+	SELECT TITLE, AUTHOR , CONTENT 
+		FROM DOCUMENT d
+			
+			<trim prefix="where" prefixOverrides="OR">
+				<if test="title!= null">
+					TITLE LIKE '#{title}%'
+				</if>
+				<if test="content!=null">
+					OR CONTENT LIKE '#{content}%'
+				</if>
+				<if test="author!=null">
+					OR AUTHOR LIKE '#{author}%'
+				</if>
+			</trim>
 	</select>
 	
 	<!-- 문서 양식 추가	 -->
@@ -208,5 +236,7 @@
 	<select id="selectNewDocType" resultType="java.lang.String">
 		SELECT TYPE_SEQ FROM DOCUMENT_TYPE WHERE TYPE_SEQ=(SELECT MAX(TYPE_SEQ) FROM DOCUMENT_TYPE)
 	</select>
+	
+
 	
 </mapper>

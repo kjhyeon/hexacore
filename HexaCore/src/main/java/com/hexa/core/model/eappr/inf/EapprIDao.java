@@ -215,4 +215,17 @@ public interface EapprIDao {
 	 */
 	public int selectDocTypeListSize();
 	
+	/**
+	 * 문서 검색기능
+	 * @param word
+	 * @return 검색된 문서
+	 */
+	public List<DocumentDTO> searchDoc(String word);
+	
+	/**
+	 * 결재루트에 본인이 포함되어있는 문서 조회
+	 * @param map 
+	 * @return list
+	 */
+	public List<DocumentDTO> selectApprMyDoc(Map<String, Object> map);
 }

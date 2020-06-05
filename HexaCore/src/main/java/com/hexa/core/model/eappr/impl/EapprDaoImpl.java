@@ -216,5 +216,17 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("selectDocTypeListSize DaoImpl 실행");
 		return sqlSession.selectOne(NS+"selectDocTypeListSize");
 	}
+
+	@Override
+	public List<DocumentDTO> searchDoc(String word) {
+		log.info("searchDoc DaoImpl 실행");
+		return null;
+	}
+
+	@Override
+	public List<DocumentDTO> selectApprMyDoc(Map<String, Object> map) {
+		log.info("searchDoc DaoImpl 실행 : {}",map);
+		return sqlSession.selectList(NS+"selectApprMyDoc",map);
+	}
 	
 }

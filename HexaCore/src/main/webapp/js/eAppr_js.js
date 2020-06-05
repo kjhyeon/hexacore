@@ -30,8 +30,8 @@ function apprDoc(val,val3){
 	         html += "<div id='result'>   ";
 	         html += "</div>   ";
 	         html += "<div class='modal-footer'>";
-	         html += "<input class='btn btn-success' type='button' value='승인' onclick='passwordChk()'>";
-	         html += "<input class='btn btn-primary' type='button' value='반려' onclick='reject()'>";
+	         html += "<input class='btn btn-success' id='confirmD' type='button' value='승인' onclick='passwordChk(\"confirm\")'>";
+	         html += "<input class='btn btn-primary' id='refjectD' type='button' value='반려' onclick='passwordChk(\"reject\")'>";
 	         html += "<button class='btn btn-default' data-dismiss='modal'>닫기</button>";
 	         html += "</div>";
 	         
@@ -43,7 +43,7 @@ function apprDoc(val,val3){
 	   });
 	}
 	
-function passwordChk() {
+function passwordChk(asdf) {
 	var password = document.getElementById("password").value;
 	 $.ajax({
 	      url:"./checkPassword.do",
@@ -51,11 +51,14 @@ function passwordChk() {
 	      data:"password="+password,
 	      success:function(msg){
 	     	 if(msg=="true"){
-	     	 confirm();
+	     		 if(asdf=='confirm'){
+	     			 confirm();
+	     		 }else{
+	     			 reject();
+	     		 }
 	     	 }else{
 	     		$("#result").css("color","red");
 	     		$("#result").html("<p>비밀번호를 확인해주세요.</p>");
-	     		return false;
 	     	 }
 	      },
 	      error:function(){
@@ -68,6 +71,7 @@ function saveDoc(){
 	}
 
 function confirm(){
+	
 	$("#apprDocUp").attr("action",'./confirmDoc.do?chk=T');
 	$("#apprDocUp").attr("method","post");
 	$("#apprDocUp").submit();
