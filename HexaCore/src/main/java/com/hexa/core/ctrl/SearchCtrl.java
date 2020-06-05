@@ -1,9 +1,12 @@
 package com.hexa.core.ctrl;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +32,7 @@ public class SearchCtrl {
 		if(type==null) {
 			type="title";
 		}
-		model.addAttribute("list",service.eDocSearch(keyword,type,dto.getUsername()));
+//		model.addAttribute("list",service.eDocSearch(keyword,type,dto.getUsername()));
 		
 		return "searchTest";
 	}
@@ -38,6 +41,7 @@ public class SearchCtrl {
 	public String searchTest() {
 		log.info("WelcomePage TestBbsIndex ");
 		service.eDocIndex();
+		service.freeBbsIndex();
 		return null;
 	}
 	
@@ -49,9 +53,14 @@ public class SearchCtrl {
 		if(type==null) {
 			type="title";
 		}
-		model.addAttribute("eDocList",service.eDocSearch(keyword,type,dto.getUsername()));
+		Collection<GrantedAuthority> a = dto.getAuthorities();
+		for (GrantedAuthority auths : a) {
+			System.out.println(auths.getAuthority());
+		}
+		
+		model.addAttribute("eDocList",service.eDocSearch(keyword,type,dto.getUsername(),null));
 //		model.addAttribute("noticeBbsList", service.noticeBbsSearch(keyword, type));
-//		model.addAttribute("freeBbsList", service.freeBbsSearch(keyword, type));
+		model.addAttribute("freeBbsList", service.freeBbsSearch(keyword, type,null));
 //		model.addAttribute("fileBbsList", service.fileBbsSearch(keyword, type));
 		return "search/searchResult";
 	}

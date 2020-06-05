@@ -9,12 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.NumericDocValuesField;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -35,6 +37,9 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopFieldDocs;
 import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
+import org.apache.lucene.search.highlight.TokenGroup;
+import org.apache.lucene.search.highlight.TokenSources;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
@@ -46,6 +51,7 @@ import org.springframework.stereotype.Repository;
 import com.google.common.collect.Lists;
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.search.inf.SearchIDao;
 
 @Repository
@@ -90,10 +96,15 @@ public class SearchDao implements SearchIDao{
 
 
 	@Override
-	public List<DocumentDTO> eDocSearch(String keyword,String type,String id) {
+	public List<DocumentDTO> eDocSearch(String keyword,String type,String id,RowNumDTO row) {
 		log.info("SearchDao 전자문서 서치 {}",keyword);
 		FSDirectory directory;
 		List<DocumentDTO> list = Lists.newArrayList(); //서치 결과 담을 리스트
+		if(row==null) {
+			row = new RowNumDTO();
+			row.setListNum(5);
+			row.setIndex(0);
+		}
 		try {
 			String indexPath = INDEX_PATH+"/eDoc";
 			File indexFolder = new File(indexPath);
@@ -117,38 +128,42 @@ public class SearchDao implements SearchIDao{
 			boolean reverse = true;	//역정렬용 플래그
 			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
 			Sort sort = new Sort(sortField);
-			if(true)
+			Document doc = new Document();	//찾아온 결과를 읽어올 문서
+			int total = searcher.count(query);
+			TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
+			System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+			System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+			row.setTotal(total);
+			System.out.println(row.getStart() + " ~ " + row.getLast());
+			for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서를 페ㅇ징처리
 			{
-				Document doc = new Document();	//찾아온 결과를 읽어올 문서
-				TopFieldDocs results = searcher.search(query,10,sort);	//해당하는 결과 상위 5개를 가져옴
-				System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
-				System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
-				
-//				SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class=\"searcher_key\">", "</span>");
-				for(int i = 0; i < results.scoreDocs.length; i++)	//읽어온 문서들 갯수만큼 반복
-				{
-					doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
-					DocumentDTO item = new DocumentDTO();	//담아올 객체 생성
-					item.setSeq(Integer.parseInt(doc.get("seq")));
-					item.setTitle(doc.get("title"));
-//					String con = doc.get("content").replaceAll("^<(/)?(img|label|table|thead|tbody|tfoot|tr|td|p|br|div|span|font|strong|b)(.|\\s|\\t|\\n|\\r\\n)*?>$","1");
-					String con = doc.get("content");
-					Pattern SCRIPTS = Pattern.compile("<script([^'\"]|\"[^\"]*\"|'[^']*')*?</script>",Pattern.DOTALL);
-					Matcher m = SCRIPTS.matcher(con);
-					con = m.replaceAll("");
-					if(type.trim().equals("content")&&con.length()>30) {
-						int idx = con.indexOf(keyword);
-						item.setContent("ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ");
-					}else if(con.length()>30){
-						item.setContent(con.substring(0, 30)+"ㆍㆍㆍ");
+				doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
+				DocumentDTO item = new DocumentDTO();	//담아올 객체 생성
+				item.setSeq(Integer.parseInt(doc.get("seq")));
+				String title = doc.get("title");
+				String con = doc.get("content");
+				Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
+				Matcher m = SCRIPTS.matcher(con);
+				con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
+				item.setTitle(title);
+				if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
+					int idx = con.indexOf(keyword);
+					if(idx-15>0) {
+						con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
 					}else {
-						item.setContent(con);
+						con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
 					}
-					item.setAuthor(doc.get("author"));
-					item.setRegdate(doc.get("regdate"));
-					item.setState(Integer.parseInt(doc.get("state")));
-					System.out.println(item.toString());
-					list.add(item);	//결과로 보낼 리스트에 담음
+				}else if(con.length()>30){
+					con = con.substring(0, 30)+"ㆍㆍㆍ";
+				}
+				item.setContent(con);
+				item.setAuthor(doc.get("author"));
+				item.setRegdate(doc.get("regdate"));
+				item.setState(Integer.parseInt(doc.get("state")));
+				System.out.println(item.toString());
+				list.add(item);	//결과로 보낼 리스트에 담음
+				if(total-1==i) {
+					break;
 				}
 			}
 			reader.close();
@@ -162,24 +177,29 @@ public class SearchDao implements SearchIDao{
 	}
 
 	@Override
-	public List<BbsDTO> freeBbsSearch(String keyword,String type) {
-		return bbsSearch("freeBbs", keyword, type);
+	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row) {
+		return bbsSearch("freeBbs", keyword, type,row);
 	}
 
 	@Override
-	public List<BbsDTO> noticeBbsSearch(String keyword,String type) {
-		return bbsSearch("noticeBbs", keyword, type);
+	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row) {
+		return bbsSearch("noticeBbs", keyword, type,row);
 	}
 
 	@Override
-	public List<BbsDTO> fileBbsSearch(String keyword,String type) {
-		return bbsSearch("fileBbs", keyword, type);
+	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row) {
+		return bbsSearch("fileBbs", keyword, type,row);
 	}
 
-	public List<BbsDTO> bbsSearch(String kind,String keyword,String type){
+	public List<BbsDTO> bbsSearch(String kind,String keyword,String type,RowNumDTO row){
 		log.info("SearchDao 게시판 서치 {}",keyword);
 		FSDirectory directory;
 		List<BbsDTO> list = Lists.newArrayList(); //서치 결과 담을 리스트
+		if(row==null) {
+			row = new RowNumDTO();
+			row.setListNum(5);
+			row.setIndex(0);
+		}
 		try {
 			String indexPath = INDEX_PATH+"/"+kind;
 			File indexFolder = new File(indexPath);
@@ -199,41 +219,58 @@ public class SearchDao implements SearchIDao{
 			Analyzer analyzer = new StandardAnalyzer();
 			BooleanQuery query = createQuery(type, keyword,analyzer,true,null); //찾을 키워드로 쿼리 생성			
 			SortField sortField = null;	// 정렬용 필드
+			SortField sortField2 = null;	// 정렬용 필드
 			boolean reverse = true;	//역정렬용 플래그
-			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
-			Sort sort = new Sort(sortField);
-			if(true)
+			sortField = new SortField("sorted_root", SortField.Type.INT, reverse);
+			sortField2 = new SortField("sorted_reply_seq", SortField.Type.INT, !reverse);
+			Sort sort = new Sort(sortField,sortField2);
+
+			Document doc = new Document();	//찾아온 결과를 읽어올 문서
+			int total = searcher.count(query);
+			row.setTotal(total);
+			TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과를 갯수만큼 가져옴
+			System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+			System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+			System.out.println(row.getStart() + " ~ " + row.getLast());
+			SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class=\"searcher_key\">", "</span>");
+			for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서들 갯수만큼 반복
 			{
-				Document doc = new Document();	//찾아온 결과를 읽어올 문서
-				TopFieldDocs results = searcher.search(query,6,sort);	//해당하는 결과 상위 5개를 가져옴
-				System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
-				System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
-				
-//				SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class=\"searcher_key\">", "</span>");
-				for(int i = 0; i < results.scoreDocs.length; i++)	//읽어온 문서들 갯수만큼 반복
-				{
-					doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
-					BbsDTO item = new BbsDTO();	//담아올 객체 생성
-					item.setSeq(Integer.parseInt(doc.get("seq")));
-					item.setTitle(doc.get("title"));
-//					Pattern p = Pattern.compile("^<(/)?(img|label|table|thead|tbody|tfoot|tr|td|p|br|div|span|font|strong|b)(.|\\s|\\t|\\n|\\r\\n)*?>$")
-					String con = doc.get("content").replaceAll("^<(/)?(img|label|table|thead|tbody|tfoot|tr|td|p|br|div|span|font|strong|b)(.|\\s|\\t|\\n|\\r\\n)*?>$","");
-					if(type.trim().equals("content")&&con.length()>30) {
-						int idx = con.indexOf(keyword);
-						item.setContent("ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ");
-					}else if(con.length()>30){
-						item.setContent(con.substring(0, 30)+"ㆍㆍㆍ");
+
+				doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
+				BbsDTO item = new BbsDTO();	//담아올 객체 생성
+				String title = doc.get("title");
+				String con = doc.get("content");
+				Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
+				Matcher m = SCRIPTS.matcher(con);
+				con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
+				if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
+					int idx = con.indexOf(keyword);
+					if(idx-15>0) {
+						con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
 					}else {
-						item.setContent(con);
+						con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
 					}
-					item.setName(doc.get("name"));
-					item.setId(doc.get("id"));
-					item.setRegdate(doc.get("regdate"));
-					item.setState(Integer.parseInt(doc.get("state")));
-					System.out.println(item.toString());
-					list.add(item);	//결과로 보낼 리스트에 담음
+				}else if(con.length()>30){
+					con = con.substring(0, 30)+"ㆍㆍㆍ";
+				}
+				item.setSeq(Integer.parseInt(doc.get("seq")));
+				item.setTitle(title);
+				item.setContent(con);
+				item.setName(doc.get("name"));
+				item.setId(doc.get("id"));
+				item.setRegdate(doc.get("regdate"));
+				item.setState(Integer.parseInt(doc.get("state")));
+				item.setRoot(Integer.parseInt(doc.get("root")));
+				item.setReply_seq(Integer.parseInt(doc.get("reply_seq")));
+				item.setBbs_depth(Integer.parseInt(doc.get("bbs_depth")));
+				item.setViews(Integer.parseInt(doc.get("views")));
+				System.out.println(item.toString());
+				list.add(item);	//결과로 보낼 리스트에 담음
+				if(total-1==i) {
+					break;
 				}
 			}
+
 			reader.close();
 			analyzer.close();   
 			return list;
@@ -406,13 +443,18 @@ public class SearchDao implements SearchIDao{
 			doc.add(new Field("regdate", docDto.getRegdate(),fieldType));
 			doc.add(new Field("state", String.valueOf(docDto.getState()), fieldType));
 		}else if(bbsDto!=null){
-			doc.add(new NumericDocValuesField("sorted_seq", bbsDto.getSeq()));
+			doc.add(new NumericDocValuesField("sorted_root", bbsDto.getRoot()));
+			doc.add(new NumericDocValuesField("sorted_reply_seq", bbsDto.getReply_seq()));
 			doc.add(new Field("seq", String.valueOf(bbsDto.getSeq()), fieldType));
 			doc.add(new Field("id", bbsDto.getId(), fieldType));
 			doc.add(new Field("name", bbsDto.getName(), fieldType));
 			doc.add(new Field("title", bbsDto.getTitle(), fieldType));
 			doc.add(new Field("content", bbsDto.getContent(), fieldType));
 			doc.add(new Field("regdate", bbsDto.getRegdate(), fieldType));
+			doc.add(new Field("root", String.valueOf(bbsDto.getRoot()), fieldType));
+			doc.add(new Field("reply_seq", String.valueOf(bbsDto.getReply_seq()), fieldType));
+			doc.add(new Field("bbs_depth", String.valueOf(bbsDto.getBbs_depth()), fieldType));
+			doc.add(new Field("views", String.valueOf(bbsDto.getViews()), fieldType));
 			doc.add(new Field("state", String.valueOf(bbsDto.getState()), fieldType));
 		}
 		return doc;
@@ -433,6 +475,7 @@ public class SearchDao implements SearchIDao{
 		try {
 			Query qq = null;
 			Query state=null;
+			Query idquery = null;
 			if(isBbs) {
 				state = new QueryBuilder(analyzer).createBooleanQuery("state", "0");
 			}else {
@@ -440,8 +483,8 @@ public class SearchDao implements SearchIDao{
 				BytesRef lower = new BytesRef(Integer.toBinaryString(0));
 				BytesRef upper = new BytesRef(Integer.toBinaryString(5));
 				state = new TermRangeQuery("state", lower, upper, true, false);
+				idquery = new QueryBuilder(analyzer).createBooleanQuery("author",id);
 			}
-			Query idquery = new QueryBuilder(analyzer).createBooleanQuery("author",id);
 			if(category.trim().equals("title")) {
 				String[] field = {"title"};
 				MultiFieldQueryParser parser = new MultiFieldQueryParser(field, analyzer);
