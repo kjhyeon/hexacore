@@ -139,7 +139,7 @@ public interface EapprIDao {
 	 * @param id
 	 * @return DocumentDTO
 	 */
-	public List<DocumentDTO> selectNeedApprDoc(String id);
+	public List<DocumentDTO> selectNeedApprDoc(Map<String, Object> map);
 	
 	/**
 	 * 모든 문서 조회

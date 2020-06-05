@@ -139,9 +139,9 @@ public class EapprDaoImpl implements EapprIDao{
 	}
 	
 	@Override
-	public List<DocumentDTO>  selectNeedApprDoc(String id) {
-		log.info("selectNeedApprDoc DaoImpl 실행 id : {}", id);
-		 List<DocumentDTO> lists = sqlSession.selectList(NS+"selectNeedApprDoc",id);
+	public List<DocumentDTO>  selectNeedApprDoc(Map<String, Object> map) {
+		log.info("selectNeedApprDoc DaoImpl 실행 map : {}", map);
+		 List<DocumentDTO> lists = sqlSession.selectList(NS+"selectNeedApprDoc",map);
 		return lists;
 	}
 

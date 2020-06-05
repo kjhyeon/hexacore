@@ -29,7 +29,6 @@
 	</div>
 </section>
 <form action="#"  method="post">
-			
 	<table>
 		<tr>
 			<th>문서번호</th>
@@ -53,18 +52,32 @@
 			 			<td><a href="./docDetail.do?seq=${dto.seq}">${dto.content}</a></td>
 			 			<td>${dto.regdate}</td>
 			 			<td>
-			 				<input  type="button" value="결재" data-toggle="modal" data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}')">
+			 				<input  type="button" value="결재" data-backdrop='static' data-keyboard='false' data-toggle="modal" data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}')">
 			 			</td>
 			 		</tr>
 			 </c:forEach>
 	</table>
+	<input type="hidden" name="index" id="index" value="${row.index }">
+	<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
+	<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
+		<div class="center" style="text-align: center; position: relative;">
+			<ul class="pagination">
+				<li><a href="./docLists.do?page=0" onclick="pageFirst()">&laquo;</a></li>
+				<li><a href="./docLists.do?page=${row.index-1}" onclick="pagePre()">&lt;</a></li>
+				<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
+					<li><a href="./docLists.do?page=${i-1}">${i }</a></li>
+				</c:forEach>
+				<li><a href="./docLists.do?page=${row.index+1}" >&gt;</a></li>
+				<li><a href="./docLists.do?page=${row.lastPage-1}" >&raquo;</a></li>
+			</ul>
+		</div>
 </form>
 	<div id="apprDoc" class="modal fade" role="dialog">
 		  <div class="modal-dialog">
 		    <!-- Modal content-->
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <button type="button" class="close" data-dismiss="modal" data-toggle='modal' >&times;</button>
 		        <h4 class="modal-title">결재</h4>
 		      </div>
 		      <div class="modal-body">

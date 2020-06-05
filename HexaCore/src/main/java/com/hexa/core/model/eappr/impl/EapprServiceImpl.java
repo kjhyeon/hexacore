@@ -128,9 +128,9 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public List<DocumentDTO> selectNeedApprDoc(String id) {
-		log.info("selectNeedApprDoc serviceImpl 실행 id : {}", id);
-		return dao.selectNeedApprDoc(id);
+	public List<DocumentDTO> selectNeedApprDoc(Map<String, Object> map) {
+		log.info("selectNeedApprDoc serviceImpl 실행 id : {}", map);
+		return dao.selectNeedApprDoc(map);
 	}
 
 	@Override

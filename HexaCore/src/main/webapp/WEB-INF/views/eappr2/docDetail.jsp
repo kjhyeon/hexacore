@@ -15,8 +15,6 @@
 <script type="text/javascript" src="./js/sweetalert.js"></script>
 </head>
 <body>
-<sec:authorize access="isAuthenticated()">
-<sec:authentication property="principal.username" var="name"/>
 
 <div id="container">
 <table id="table" class="table">
@@ -39,12 +37,12 @@
 	
 	<form name="formDoc" id="formDoc">
 	<c:if test="${name eq Ddto.author}">
-		<input  type="button" id="modifyDoc" value="수정" onclick="modifyFormDoc('${Ddto.seq}','${name}')">
+		<input  type="button" id="modifyDoc" value="수정" onclick="modifyFormDoc('${Ddto.seq}')">
 		<input  type="button" id="upApprDoc" value="상신" onclick="upApprDoc()">
 		<input  type="button" id="deleteDoc" value="삭제" onclick="deleteDocc(${Ddto.seq})">
 	</c:if>
 	<c:if test="${name ne Ddto.author}">
-		<input  type="button" value="결재" data-toggle="modal" data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}')">
+		<input  type="button" value="결재" data-toggle="modal" data-target="#apprDoc" data-backdrop='static' data-keyboard='false' onclick="apprDoc('${Ddto.seq}','${Ddto.appr_turn}')">
 	</c:if>
 	</form>
 	</div>
@@ -64,6 +62,5 @@
 		    </div>
 		 </div>
 	</div>
-	</sec:authorize>
 	</body>
 </html>

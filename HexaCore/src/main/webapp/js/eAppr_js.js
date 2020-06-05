@@ -1,11 +1,6 @@
-function saveDoc(){
-location.href='./saveDoc.do?seq='+$(".seq").val()+'&title='+$(".title").val()+'&content='+$(".content").val()+'&author='+$(".author").val();
-}
-
 function apprDoc(val,val3){
-	alert(val+"+"+val3);
-		ajaxapprDoc(val,val3);
-	   $("#apprDocUp").modal();
+	ajaxapprDoc(val,val3);
+	$("#apprDocUp").modal();
 	}
 
 	var ajaxapprDoc = function(val,val3) {
@@ -32,11 +27,14 @@ function apprDoc(val,val3){
 	         html += "<label for='pw'>비밀번호 입력</label>";
 	         html += "<input type='password' class='form-control' id='password' name='password' required='required'> ";
 	         html += "</div>   ";
+	         html += "<div id='result'>   ";
+	         html += "</div>   ";
 	         html += "<div class='modal-footer'>";
 	         html += "<input class='btn btn-success' type='button' value='승인' onclick='passwordChk()'>";
 	         html += "<input class='btn btn-primary' type='button' value='반려' onclick='reject()'>";
 	         html += "<button class='btn btn-default' data-dismiss='modal'>닫기</button>";
 	         html += "</div>";
+	         
 	         $("#apprDocUp").html(html);
 	      },
 	      error : function(){
@@ -55,15 +53,20 @@ function passwordChk() {
 	     	 if(msg=="true"){
 	     	 confirm();
 	     	 }else{
-	     		$("#password").append("<p>비밀번호가 틀렸습니다.</p>");
+	     		$("#result").css("color","red");
+	     		$("#result").html("<p>비밀번호를 확인해주세요.</p>");
+	     		return false;
 	     	 }
 	      },
 	      error:function(){
-	         swal("로그인","로그인에 문제가 있습니다.");
+	         swal("비밀번호 체크 오류","비밀번호체크에 문제가 있습니다.");
 	      }
 	   });
 }
-	
+function saveDoc(){
+	location.href='./saveDoc.do?seq='+$(".seq").val()+'&title='+$(".title").val()+'&content='+$(".content").val()+'&author='+$(".author").val();
+	}
+
 function confirm(){
 	$("#apprDocUp").attr("action",'./confirmDoc.do?chk=T');
 	$("#apprDocUp").attr("method","post");
@@ -76,30 +79,21 @@ function reject(){
 	$("#apprDocUp").submit();
 }
 
-function modifyFormDoc(val,val2){
-	$("#formDoc").attr("action",'./modifyFormDoc.do?seq='+val+'&id='+val2);
+function modifyFormDoc(val){
+	$("#formDoc").attr("action",'./modifyFormDoc.do?seq='+val);
 	$("#formDoc").attr("method","post");
 	$("#formDoc").submit();
 }
 
 function deleteDocc(val){
-	alert(val);
-	$("#formDoc").attr("action",'./deleteDoc.do?seq='+val+'&id='+val2);
+	$("#formDoc").attr("action",'./deleteDoc.do?seq='+val);
 	$("#formDoc").attr("method","post");
 	$("#formDoc").submit();
 }
 
 function upApprDoc(){
-	alert("상신");
-}
-function update(){
-	   var frm = document.getElementById("DocModify");
-	   frm.action ="./modify.do";
-	   var title=$("#title").val();
-	   if(title=''){
-	      swal("글수정 화면","");
-	   }else{
-	      frm.submit();
-	   }
+	$("#formDoc").attr("action",'./upApprDoc.do?state=1');
+	$("#formDoc").attr("method","post");
+	$("#formDoc").submit();
 }
 

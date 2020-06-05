@@ -1,6 +1,8 @@
 package com.hexa.core.ctrl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -22,6 +23,7 @@ import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.eappr.inf.EapprIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 
@@ -39,14 +41,34 @@ public class EapprCtrl2 {
 	
 	@RequestMapping(value = "/eApprMain.do", method = RequestMethod.GET)
 	public String MainTest(Model model) {
-		return "eApprMain";
+		return "eappr2/eApprMain";
 	}
 	
 	@RequestMapping(value = "/docLists.do", method = RequestMethod.GET)
-	public String docLists(Model model, String id) {
-		List<DocumentDTO> lists = service.selectNeedApprDoc(id);
+	public String docLists(Model model, String id, String page) {
+		if(page==null) {
+			page="0";
+		}
+		RowNumDTO row = new RowNumDTO();
+		row.setTotal(service.selectApprDocCount(id));
+		row.setPageNum(3);
+		row.setListNum(10);
+		if(row.getLastPage()-1<Integer.parseInt(page)) {
+			row.setIndex(row.getLastPage()-1);
+		}else if(Integer.parseInt(page)<0) {
+			row.setIndex(0);
+		}else {
+			row.setIndex(Integer.parseInt(page));
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("start",row.getStart());
+		map.put("last",row.getLast());
+		List<DocumentDTO> lists = service.selectNeedApprDoc(map);
+		
 		model.addAttribute("lists",lists);
-		return "docLists";
+		model.addAttribute("row", row);
+		return "eappr2/docConfirmLists";
 	}
 		
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
@@ -57,20 +79,23 @@ public class EapprCtrl2 {
 		model.addAttribute("comment",lists);
 		model.addAttribute("Ddto",Ddto);
 		log.info("*************Ddto 값: {}", Ddto);
-		return "docDetail";
+		return "eappr2/docDetail";
 	}	
 	
 
 	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST)
-	public String modifyDoc(Model model,String seq,String id) {
+	public String modifyDoc(Model model,String seq,SecurityContextHolder session) {
+		Authentication auth = session.getContext().getAuthentication();
+	    LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
+	    String id = Ldto.getUsername();
 		DocumentDTO Ddto = service.selectDoc(seq);
 		model.addAttribute("Ddto",Ddto);
-		return "ModifyForm";
+		return "eappr2/ModifyForm";
 	}
 	
 	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.POST)
 	public String deleteDoc(String seq) {
-		boolean isc = service.deleteDoc(seq);
+		service.deleteDoc(seq);
 		return "docLists.do";//리스트로 보내자
 	}
 	
@@ -138,7 +163,6 @@ public class EapprCtrl2 {
 		Adto.setName(dto.getName());
 		Adto.setAppr_sign(service.selectSignImg(dto.getUsername()));
 		DCdto.setComment_seq(Adto.getTurn());
-		
 		int appr_turn = Ddto.getAppr_turn();
 			if(Adto.getChk().equalsIgnoreCase("T")) {//승인일경우
 				if(Adto.getTurn()<3) {
@@ -165,5 +189,4 @@ public class EapprCtrl2 {
 			}
 		return "redirect:/docLists.do?id="+Adto.getId();
 	}
-	
 }
