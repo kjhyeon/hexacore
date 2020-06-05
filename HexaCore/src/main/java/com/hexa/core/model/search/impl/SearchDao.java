@@ -181,15 +181,15 @@ public class SearchDao implements SearchIDao{
 		FSDirectory directory;
 		List<BbsDTO> list = Lists.newArrayList(); //서치 결과 담을 리스트
 		try {
-			String indexPath = INDEX_PATH+kind;
+			String indexPath = INDEX_PATH+"/"+kind;
 			File indexFolder = new File(indexPath);
 			if(indexFolder.isDirectory() == false){ //폴더가 있는지 탐색해서 없을경우
-				log.info("Lucene Search : NOT FOUND FOLDER {}",INDEX_PATH);
+				log.info("Lucene Search : NOT FOUND FOLDER {}",indexPath);
 				return null;
 			}
 			System.out.println(indexFolder.list().length); 
 			if(indexFolder.list().length == 0){ //폴더 내 파일이 없을경우
-				log.info("Lucene Search : NOT FOUND FILE IN {}",INDEX_PATH);
+				log.info("Lucene Search : NOT FOUND FILE IN {}",indexPath);
 				return null;
 			}
 			directory = FSDirectory.open(Paths.get(indexPath)); //경로에 있는 폴더를 연다

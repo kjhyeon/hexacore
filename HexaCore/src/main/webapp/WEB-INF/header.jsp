@@ -40,12 +40,20 @@ function empPop() {
 							<li><a href="./updateDepartment.do">부서 관리</a></li>
 						</ul>
 					</li>
-					<li><a href="./testBbsIndex.do">인덱싱</a></li>
+					<li><a href="./totalIndex.do">인덱싱</a></li>
 					</c:if>
 				</ul>
-				<form class="navbar-form navbar-right" role="search" action="./testBbsSearch.do" method="get">
+				<form class="navbar-form navbar-right" role="search" action="./totalSearch.do" method="get">
 					<div class="form-group input-group">
-						<input type="text" class="form-control" placeholder="Search.." name="keyword">
+						<span class="input-group-btn">
+						<select name="type" class="form-control" >
+							<option value="title/con">제목+내용</option>
+							<option value="title">제목</option>
+							<option value="content">내용</option>
+							<option value="author">글쓴이</option>
+						</select>
+						</span>
+						<input type="text" class="form-control" placeholder="Search.." name="keyword" style="position: relative; float: right;">
 						<span class="input-group-btn">
 							<button class="btn btn-default" type="button">
 								<span class="glyphicon glyphicon-search"></span>

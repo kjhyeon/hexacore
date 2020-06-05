@@ -40,4 +40,29 @@ public class SearchCtrl {
 		service.eDocIndex();
 		return null;
 	}
+	
+	@RequestMapping(value="/totalSearch.do", method = RequestMethod.GET)
+	public String Totalsearch(String keyword, Model model, String type, SecurityContextHolder session) {
+		log.info("WelcomePage TotalSearch : {}/{}",keyword,type);
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO dto = (LoginDTO) auth.getPrincipal();
+		if(type==null) {
+			type="title";
+		}
+		model.addAttribute("eDocList",service.eDocSearch(keyword,type,dto.getUsername()));
+//		model.addAttribute("noticeBbsList", service.noticeBbsSearch(keyword, type));
+//		model.addAttribute("freeBbsList", service.freeBbsSearch(keyword, type));
+//		model.addAttribute("fileBbsList", service.fileBbsSearch(keyword, type));
+		return "search/searchResult";
+	}
+	
+	@RequestMapping(value="/totalIndex.do", method = RequestMethod.GET)
+	public String totalIndex() {
+		log.info("WelcomePage totalIndex ");
+		service.eDocIndex();
+		service.freeBbsIndex();
+		service.noticeBbsIndex();
+		service.fileBbsIndex();
+		return null;
+	}
 }

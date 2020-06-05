@@ -28,75 +28,81 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	}
 
 	@Override
-	public boolean modifyFreeBbs(BbsDTO dto) {
-		log.info("자유게시판 글 수정 modifyFreeBbs,\t {}", dto);
-		return dao.modifyFreeBbs(dto);
+	public int updateModifyFreeBbs(BbsDTO dto) {
+		log.info("자유게시판 글 수정 updateModifyFreeBbs,\t {}", dto);
+		return dao.updateModifyFreeBbs(dto);
 	}
 
 	@Override
-	public boolean oneDelFreeBbs(String seq) {
-		log.info("자유게시판 글 단일삭제 oneDelFreeBbs,\t {}", seq);
-		return dao.oneDelFreeBbs(seq);
+	public int updateDeleteFreeBbs(String seq) {
+		log.info("자유게시판 글 단일삭제 updateDeleteFreeBbs,\t {}", seq);
+		return dao.updateDeleteFreeBbs(seq);
 	}
 
 	@Override
-	public boolean multiDelFreeBbs(Map<String, String[]> map) {
-		log.info("자유게시판 글 다중삭제 multiDelFreeBbs,\t {}", map);
-		return dao.multiDelFreeBbs(map);
+	public boolean updateMultiDelFreeBbs(Map<String, String[]> map) {
+		log.info("자유게시판 글 다중삭제 updateMultiDelFreeBbs,\t {}", map);
+		return dao.updateMultiDelFreeBbs(map);
 	}
 
 	@Override
-	public BbsDTO detailFreeBbs(BbsDTO dto) {
-		log.info("자유게시판 상세글 보기 detailFreeBbs,\t {}", dto);
-		return dao.detailFreeBbs(dto);
+	public BbsDTO selectDetailFreeBbs(String seq) {
+		log.info("자유게시판 상세글 보기 selectDetailFreeBbs,\t {}", seq);
+		return dao.selectDetailFreeBbs(seq);
 	}
 
 	@Override
-	public boolean upViews(String seq) {
-		log.info("자유게시판 조회수 증가 upViews,\t {}", seq);
-		return dao.upViews(seq);
+	public boolean updateViewsBbs(String seq) {
+		log.info("자유게시판 조회수 증가 updateViewsBbs,\t {}", seq);
+		return dao.updateViewsBbs(seq);
 	}
 
 	@Override
-	public boolean replyFreeBbs(BbsDTO dto) {
-		log.info("자유게시판 답글 달기  replyFreeBbs,\t {}", dto);
-		return dao.replyFreeBbs(dto);
+	public boolean insertReplyBbs(BbsDTO dto) {
+		log.info("자유게시판 답글 달기  insertReplyBbs,\t {}", dto);
+		return dao.insertReplyBbs(dto);
 	}
 
 	@Override
-	public List<BbsDTO> userBbsList() {
-		log.info("자유게시판 글 목록 조회(유저) userBbsList,\t {}");
-		return dao.userBbsList();
+	public List<BbsDTO> selectUserFreeBbsList() {
+		log.info("자유게시판 글 목록 조회(유저) selectUserFreeBbsList,\t {}");
+		return dao.selectUserFreeBbsList();
 	}
 
 	@Override
-	public List<BbsDTO> adminBbsList() {
-		log.info("자유게시판 글 목록 조회(관리자) adminBbsList,\t {}");
-		return dao.adminBbsList();
+	public List<BbsDTO> selectAdminFreeBbsList() {
+		log.info("자유게시판 글 목록 조회(관리자) selectAdminFreeBbsList,\t {}");
+		return dao.selectAdminFreeBbsList();
 	}
 
 	@Override
-	public List<BbsDTO> userPageListRow(RowNumDTO rdto) {
-		log.info("자유게시판 페이징 처리(유저) userPageListRow,\t {}", rdto);
-		return dao.userPageListRow(rdto);
+	public List<BbsDTO> selectUserBbsListRow(RowNumDTO rdto) {
+		log.info("자유게시판 페이징 처리(유저) selectUserBbsListRow,\t {}", rdto);
+		return dao.selectUserBbsListRow(rdto);
 	}
 
 	@Override
-	public List<BbsDTO> adminPageListRow(RowNumDTO rdto) {
-		log.info("자유게시판 페이징 처리(유저) adminPageListRow,\t {}", rdto);
-		return dao.adminPageListRow(rdto);
+	public List<BbsDTO> selectAdminBbsListRow(RowNumDTO rdto) {
+		log.info("자유게시판 페이징 처리(유저) selectAdminBbsListRow,\t {}", rdto);
+		return dao.selectAdminBbsListRow(rdto);
 	}
 
 	@Override
-	public int userBbsTotalList() {
-		log.info("게시글 전체 갯수(유저) userBbsTotalList,\t {}");
-		return dao.userBbsTotalList();
+	public int selectUserBoardListTotal() {
+		log.info("게시글 전체 갯수(유저) selectUserBoardListTotal,\t {}");
+		return dao.selectUserBoardListTotal();
 	}
 
 	@Override
-	public int adminBbsTotalList() {
-		log.info("게시글 전체 갯수(유저) adminBbsTotalList,\t {}");
-		return dao.adminBbsTotalList();
+	public int selectAdminBoardListTotal() {
+		log.info("게시글 전체 갯수(유저) selectAdminBoardListTotal,\t {}");
+		return dao.selectAdminBoardListTotal();
+	}
+
+	@Override
+	public String selectNewBbs(String seq) {
+		log.info("게시글 seq최대값 selectNewBbs,\t {}",seq);
+		return dao.selectNewBbs(seq);
 	}
 
 }

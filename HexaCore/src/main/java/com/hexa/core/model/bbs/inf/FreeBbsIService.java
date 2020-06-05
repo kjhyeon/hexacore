@@ -12,42 +12,45 @@ public interface FreeBbsIService {
 	public boolean insertFreeBbs(BbsDTO dto);
 	
 	// 2. 자유게시판 글 수정
-	public boolean modifyFreeBbs(BbsDTO dto);
+	public int updateModifyFreeBbs(BbsDTO dto);
 	
 	// 3. 자유게시판 글 단일삭제
-	public boolean oneDelFreeBbs(String seq);
+	public int updateDeleteFreeBbs(String seq);
 	
 	// 4. 자유게시판 글 다중삭제
-	public boolean multiDelFreeBbs(Map<String, String[]> map);
+	public boolean updateMultiDelFreeBbs(Map<String, String[]> map);
 	
 	// 5. 자유게시판 상세글 보기
-	public BbsDTO detailFreeBbs(BbsDTO dto);
+	public BbsDTO selectDetailFreeBbs(String seq);
 	
 	// 6. 자유게시판 조회수 증가
-	public boolean upViews(String seq);
+	public boolean updateViewsBbs(String seq);
 	
 	// 7. 자유게시판 답글 달기
-	public boolean replyFreeBbs(BbsDTO dto);
+	public boolean insertReplyBbs(BbsDTO dto);
+	
+	// ** seq 최대값 갱신 + 자기가 쓴 글 조회
+	public String selectNewBbs(String seq);
 	
 	// ============================================================
 	
 	// 8. 자유게시판 글 목록 조회(유저)
-	public List<BbsDTO> userBbsList();
+	public List<BbsDTO> selectUserFreeBbsList();
 	
 	// 9. 자유게시판 글 목록 조회(관리자)
-	public List<BbsDTO> adminBbsList();
+	public List<BbsDTO> selectAdminFreeBbsList();
 	
 	// 10. 자유게시판 페이징 처리(유저)
-	public List<BbsDTO> userPageListRow(RowNumDTO rdto);
+	public List<BbsDTO> selectUserBbsListRow(RowNumDTO rdto);
 	
 	// 11. 자유게시판 페이징 처리(관리자)
-	public List<BbsDTO> adminPageListRow(RowNumDTO rdto);
+	public List<BbsDTO> selectAdminBbsListRow(RowNumDTO rdto);
 	
 	// 12. 게시글 전체 갯수(유저)
-	public int userBbsTotalList();
+	public int selectUserBoardListTotal();
 	
 	// 13. 게시글 전체 갯수(관리자)
-	public int adminBbsTotalList();
+	public int selectAdminBoardListTotal();
 	
 	
 }

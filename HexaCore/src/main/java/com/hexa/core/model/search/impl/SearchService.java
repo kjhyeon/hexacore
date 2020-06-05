@@ -47,11 +47,6 @@ public class SearchService implements SearchIService{
 	private FreeBbsIService frService;
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-
-	private static final String DOC = "eDoc";
-	private static final String FREE = "freeBbs";
-	private static final String NOTICE = "noticeBbs";
-	private static final String FILE = "fileBbs";
 	
 	@Autowired
 	private SearchIDao dao;
@@ -64,8 +59,8 @@ public class SearchService implements SearchIService{
 	@Override
 	public void freeBbsIndex() {
 		log.info("SearchService 인덱싱 작업 시작");
-		dao.freeBbsIndex(frService.adminBbsList());
-	}
+		dao.freeBbsIndex(frService.selectAdminFreeBbsList());
+	}  
 
 	@Override
 	public void noticeBbsIndex() {
