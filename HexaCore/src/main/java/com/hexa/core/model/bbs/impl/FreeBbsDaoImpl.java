@@ -63,13 +63,14 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 	@Override
 	public boolean insertReplyBbs(BbsDTO dto) {
 		log.info("자유게시판 답글작성 insertReplyBbs,\t {}", dto);
-		return false;
+		int n = session.insert(NS + "insertReplyBbs", dto);
+		return (n>0)?true:false;
 	}
 
 	@Override
 	public List<BbsDTO> selectUserFreeBbsList() {
 		log.info("자유게시판 글 목록조회(유저) selectUserFreeBbsList,\t {}");
-		return null;
+		return session.selectList(NS + "selectUserFreeBbsList");
 	}
 
 	@Override

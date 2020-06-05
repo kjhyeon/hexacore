@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.w3c.dom.ls.LSInput;
 
 import com.hexa.core.dto.BbsDTO;
+import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
 import com.hexa.core.model.search.inf.SearchIService;
@@ -37,16 +38,25 @@ public class FreeBbsCtrl {
 	@Autowired
 	private SearchIService sService;
 	
-	// 자유게시판 목록 조회
+	// 자유게시판 (관리자)목록 조회
 	@RequestMapping(value = "/bbsMain.do", method = RequestMethod.GET)
-	public String bbsMain(Model model) {
+	public String bbsMain(Model model,boolean auth_check, BbsDTO dto, SecurityContextHolder session) {
 		log.info("Welcome List 목록조회, {}", new Date());
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
+		log.info("●●●●●●●●●● auth_check{}", auth_check);
 		
-		List<BbsDTO> lists = service.selectAdminFreeBbsList();
-		model.addAttribute("lists", lists);
-		
+		if(auth_check == false) {
+			List<BbsDTO> lists = service.selectUserFreeBbsList();
+			model.addAttribute("lists", lists);
+		}else {	
+			List<BbsDTO> lists = service.selectAdminFreeBbsList();
+			model.addAttribute("lists", lists);
+		}
 		return "bbsMain";
 	}
+	
+	
 	
 	// 자유게시판 새 글 작성.GET
 	@RequestMapping(value = "/freeBbsInsert.do", method = RequestMethod.GET)
@@ -137,8 +147,9 @@ public class FreeBbsCtrl {
 		}
 	}
 	
+	// 자유게시판 글 다중삭제
 	@RequestMapping(value = "/multiDel.do", method = RequestMethod.POST)
-	public String MultiDel(String[] chkVal) {
+	public String updateMultiDelFreeBbs(String[] chkVal) {
 		log.info("Welcome 글 다중삭제 ,\t {}", Arrays.toString(chkVal));
 		boolean isc = false;
 		Map<String, String[]> map = new HashMap<String, String[]>();
@@ -148,6 +159,10 @@ public class FreeBbsCtrl {
 		return isc?"redirect:/bbsMain.do":"redirect:/logout.do";
 	}
 	
+	
+	public String insertReplyBbs(BbsDTO dto) {
+		return null;
+	}
 	
 }
 

@@ -48,9 +48,10 @@
 	${lists}
 	<div class="container">
 	<form action="./multiDel.do" method="POST" id="List" name="List" onsubmit="return chkbox()">
+	<input type="hidden" name="auth_check" value="${auth}">
 	  <table class="table table-bordered">
       		<tr>
-      			<c:if test="${auth eq true }">
+      			<c:if test="${auth eq true}">
 	        		<th>
     	    			<input type="checkbox" name="chkVal" onclick="checkAll(this.checked)">
         			</th>
@@ -59,7 +60,9 @@
         		<th>아이디</th>
         		<th>제목</th>
         		<th>조회수</th>
-        		<th>글상태</th>
+        		<c:if test="${auth eq true}">
+        			<th>글상태</th>
+        		</c:if>
         		<th>작성일</th>
       		</tr>
       <c:forEach var="dto" items="${lists}" varStatus="vr">
@@ -73,7 +76,9 @@
       			<td>${dto.id}</td>
       			<td><a href="bbsDetail.do?seq=${dto.seq}">${dto.title}</a></td>
       			<td>${dto.views}</td>
-      			<td>${dto.state}</td>
+      			<c:if test="${auth eq true}">
+ 	    	 		<td>${dto.state}</td>
+      			</c:if>
       			<td>${dto.regdate}</td>
       		</tr>
       </c:forEach>
