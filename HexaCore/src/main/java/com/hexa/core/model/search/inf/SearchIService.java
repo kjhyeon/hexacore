@@ -80,4 +80,10 @@ public interface SearchIService {
 	 * @return
 	 */
 	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row);
+	
+	public int eDocTotal(String keyword,String type);
+	public int freeBbsTotal(String keyword,String type);
+	public int fileBbsTotal(String keyword,String type);
+	public int noticeBbsTotal(String keyword,String type);
+	
 }

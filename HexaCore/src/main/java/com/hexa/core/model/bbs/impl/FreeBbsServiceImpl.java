@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.RowNumDTO;
@@ -58,9 +59,12 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	}
 
 	@Override
-	public boolean insertReplyBbs(BbsDTO dto) {
-		log.info("자유게시판 답글 달기  insertReplyBbs,\t {}", dto);
-		return dao.insertReplyBbs(dto);
+	@Transactional
+	public boolean ReplyBbs(BbsDTO dto) {
+		log.info("자유게시판 답글 달기  ReplyBbs,\t {}", dto);
+		boolean iscU = dao.updateReplyBbs(dto);
+		boolean iscI = dao.insertReplyBbs(dto);
+		return (iscU&&iscI)?true:false;
 	}
 
 	@Override
@@ -100,9 +104,9 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	}
 
 	@Override
-	public String selectNewBbs(String seq) {
-		log.info("게시글 seq최대값 selectNewBbs,\t {}",seq);
-		return dao.selectNewBbs(seq);
+	public String selectNewBbs() {
+		log.info("게시글 seq최대값 selectNewBbs");
+		return dao.selectNewBbs();
 	}
 
 }

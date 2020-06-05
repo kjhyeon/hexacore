@@ -41,11 +41,19 @@
 			return false;
 		 }
 	}
+	
+	function goPage(page){
+		var location = "./bbsMain.do?page="+page; 
+		if($("#keyword").val().trim()!=''){
+			location += "&keyword="+$("#keyword").val()+"&type="+$("#type").val();			
+		}
+		alert(location);
+		document.location.href=location;
+	}
 </script>
 <body>
 	<%@include file="/WEB-INF/header.jsp"%>
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
-	${lists}
 	<div class="container">
 	<form action="./multiDel.do" method="POST" id="List" name="List" onsubmit="return chkbox()">
 	<input type="hidden" name="auth_check" value="${auth}">
@@ -72,7 +80,7 @@
     	  				<input type="checkbox" name="chkVal" value="${dto.seq}">
       				</td>
       			</c:if>
-      			<td>${vr.count}</td>
+      			<td>${dto.seq}</td>
       			<td>${dto.id}</td>
       			<td><a href="bbsDetail.do?seq=${dto.seq}">${dto.title}</a></td>
       			<td>${dto.views}</td>
@@ -88,6 +96,37 @@
       		<input type="submit" class="btn btn-default" id="multidel" value="글 다중 삭제" onclick="multiDelete()">
    		</c:if>
       </form>
+      <div class="form-group input-group">
+			<span class="input-group-btn"> 
+				<select name="type" class="form-control" id="type">
+					<option value="title/con">제목+내용</option>
+					<option value="title">제목</option>
+					<option value="content">내용</option>
+					<option value="author">글쓴이</option>
+			</select>
+			</span> 
+				<input type="text" class="form-control" placeholder="Search.." name="keyword"
+				style="position: relative; float: right;" id="keyword"> 
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" onclick="goPage(0)">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
+			</span>
+		</div>
+      <input type="hidden" name="index" id="index" value="${row.index }">
+		<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
+		<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
+      <div class="center" style="text-align: center; position: relative;">
+			<ul class="pagination">
+				<li><a href="#" onclick="return goPage(${0});">&laquo;</a></li>
+				<li><a href="#" onclick="return goPage(${row.index-1});">&lt;</a></li>
+				<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
+					<li><a href="#" onclick="goPage(${i-1})">${i }</a></li>
+				</c:forEach>
+				<li><a href="#" onclick="return goPage(${row.index+1});" >&gt;</a></li>
+				<li><a href="#" onclick="return goPage(${row.lastPage-1});" >&raquo;</a></li>
+			</ul>
+		</div>
 	</div>
 	
 </body>

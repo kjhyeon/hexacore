@@ -23,4 +23,9 @@ public interface SearchIDao {
 	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row);
 	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row);
 	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row);
+	
+	public int eDocTotal(String keyword,String type);
+	public int freeBbsTotal(String keyword,String type);
+	public int fileBbsTotal(String keyword,String type);
+	public int noticeBbsTotal(String keyword,String type);
 }
