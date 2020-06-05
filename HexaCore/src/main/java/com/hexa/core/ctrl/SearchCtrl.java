@@ -57,7 +57,8 @@ public class SearchCtrl {
 		for (GrantedAuthority auths : a) {
 			System.out.println(auths.getAuthority());
 		}
-		
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("type",type);
 		model.addAttribute("eDocList",service.eDocSearch(keyword,type,dto.getUsername(),null));
 //		model.addAttribute("noticeBbsList", service.noticeBbsSearch(keyword, type));
 		model.addAttribute("freeBbsList", service.freeBbsSearch(keyword, type,null));

@@ -50,6 +50,7 @@
 		alert(location);
 		document.location.href=location;
 	}
+	
 </script>
 <body>
 	<%@include file="/WEB-INF/header.jsp"%>
@@ -106,7 +107,7 @@
 			</select>
 			</span> 
 				<input type="text" class="form-control" placeholder="Search.." name="keyword"
-				style="position: relative; float: right;" id="keyword"> 
+				style="position: relative; float: right;" id="keyword" value="${keyword }"> 
 			<span class="input-group-btn">
 				<button class="btn btn-default" type="button" onclick="goPage(0)">
 					<span class="glyphicon glyphicon-search"></span>
@@ -128,7 +129,20 @@
 			</ul>
 		</div>
 	</div>
-	
+	<script type="text/javascript">
+
+	$(document).ready(
+			function() {
+				var op = $("select[id=type]>option");
+				for (var i = 0; i < op.length; i++) {
+					if(op.eq(i).val() == '${type}')
+					{
+						op.eq(i).attr("selected",true);
+					}
+				}
+			}
+		)
+	</script>
 </body>
 	<%@include file="/WEB-INF/footer.jsp" %>
 </html>

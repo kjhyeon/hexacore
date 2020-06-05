@@ -57,6 +57,8 @@ public class FreeBbsCtrl {
 		RowNumDTO row = new RowNumDTO();
 		if(keyword!=null&&!keyword.equals("")) {
 			row.setTotal(sService.freeBbsTotal(keyword, type));
+			model.addAttribute("keyword",keyword);
+			model.addAttribute("type",type);
 		}else if(auth_check.trim().equalsIgnoreCase("role_admin")){
 			row.setTotal(service.selectAdminBoardListTotal());
 		}else {

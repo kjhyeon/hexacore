@@ -130,40 +130,42 @@ public class SearchDao implements SearchIDao{
 			Sort sort = new Sort(sortField);
 			Document doc = new Document();	//찾아온 결과를 읽어올 문서
 			int total = searcher.count(query);
-			TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
-			System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
-			System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
-			row.setTotal(total);
-			System.out.println(row.getStart() + " ~ " + row.getLast());
-			for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서를 페ㅇ징처리
-			{
-				doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
-				DocumentDTO item = new DocumentDTO();	//담아올 객체 생성
-				item.setSeq(Integer.parseInt(doc.get("seq")));
-				String title = doc.get("title");
-				String con = doc.get("content");
-				Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
-				Matcher m = SCRIPTS.matcher(con);
-				con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
-				item.setTitle(title);
-				if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
-					int idx = con.indexOf(keyword);
-					if(idx-15>0) {
-						con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
-					}else {
-						con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+			if(total>0) {
+				TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
+				System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+				System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+				row.setTotal(total);
+				System.out.println(row.getStart() + " ~ " + row.getLast());
+				for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서를 페ㅇ징처리
+				{
+					doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
+					DocumentDTO item = new DocumentDTO();	//담아올 객체 생성
+					item.setSeq(Integer.parseInt(doc.get("seq")));
+					String title = doc.get("title");
+					String con = doc.get("content");
+					Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
+					Matcher m = SCRIPTS.matcher(con);
+					con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
+					item.setTitle(title);
+					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
+						int idx = con.indexOf(keyword);
+						if(idx-15>0) {
+							con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
+						}else {
+							con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+						}
+					}else if(con.length()>30){
+						con = con.substring(0, 30)+"ㆍㆍㆍ";
 					}
-				}else if(con.length()>30){
-					con = con.substring(0, 30)+"ㆍㆍㆍ";
-				}
-				item.setContent(con);
-				item.setAuthor(doc.get("author"));
-				item.setRegdate(doc.get("regdate"));
-				item.setState(Integer.parseInt(doc.get("state")));
-				System.out.println(item.toString());
-				list.add(item);	//결과로 보낼 리스트에 담음
-				if(total-1==i) {
-					break;
+					item.setContent(con);
+					item.setAuthor(doc.get("author"));
+					item.setRegdate(doc.get("regdate"));
+					item.setState(Integer.parseInt(doc.get("state")));
+					System.out.println(item.toString());
+					list.add(item);	//결과로 보낼 리스트에 담음
+					if(total-1==i) {
+						break;
+					}
 				}
 			}
 			reader.close();
@@ -228,49 +230,50 @@ public class SearchDao implements SearchIDao{
 			Document doc = new Document();	//찾아온 결과를 읽어올 문서
 			int total = searcher.count(query);
 			row.setTotal(total);
-			TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과를 갯수만큼 가져옴
-			System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
-			System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
-			System.out.println(row.getStart() + " ~ " + row.getLast());
-			SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class=\"searcher_key\">", "</span>");
-			for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서들 갯수만큼 반복
-			{
+			if(total>0) {
+				TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과를 갯수만큼 가져옴
+				System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+				System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+				System.out.println(row.getStart() + " ~ " + row.getLast());
+				SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class=\"searcher_key\">", "</span>");
+				for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서들 갯수만큼 반복
+				{
 
-				doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
-				BbsDTO item = new BbsDTO();	//담아올 객체 생성
-				String title = doc.get("title");
-				String con = doc.get("content");
-				Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
-				Matcher m = SCRIPTS.matcher(con);
-				con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
-				if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
-					int idx = con.indexOf(keyword);
-					if(idx-15>0) {
-						con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
-					}else {
-						con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+					doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
+					BbsDTO item = new BbsDTO();	//담아올 객체 생성
+					String title = doc.get("title");
+					String con = doc.get("content");
+					Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
+					Matcher m = SCRIPTS.matcher(con);
+					con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
+					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
+						int idx = con.indexOf(keyword);
+						if(idx-15>0) {
+							con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
+						}else {
+							con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+						}
+					}else if(con.length()>30){
+						con = con.substring(0, 30)+"ㆍㆍㆍ";
 					}
-				}else if(con.length()>30){
-					con = con.substring(0, 30)+"ㆍㆍㆍ";
-				}
-				item.setSeq(Integer.parseInt(doc.get("seq")));
-				item.setTitle(title);
-				item.setContent(con);
-				item.setName(doc.get("name"));
-				item.setId(doc.get("id"));
-				item.setRegdate(doc.get("regdate"));
-				item.setState(Integer.parseInt(doc.get("state")));
-				item.setRoot(Integer.parseInt(doc.get("root")));
-				item.setReply_seq(Integer.parseInt(doc.get("reply_seq")));
-				item.setBbs_depth(Integer.parseInt(doc.get("bbs_depth")));
-				item.setViews(Integer.parseInt(doc.get("views")));
-				System.out.println(item.toString());
-				list.add(item);	//결과로 보낼 리스트에 담음
-				if(total-1==i) {
-					break;
+					item.setSeq(Integer.parseInt(doc.get("seq")));
+					item.setTitle(title);
+					item.setContent(con);
+					item.setName(doc.get("name"));
+					item.setId(doc.get("id"));
+					item.setRegdate(doc.get("regdate"));
+					item.setState(Integer.parseInt(doc.get("state")));
+					item.setRoot(Integer.parseInt(doc.get("root")));
+					item.setReply_seq(Integer.parseInt(doc.get("reply_seq")));
+					item.setBbs_depth(Integer.parseInt(doc.get("bbs_depth")));
+					item.setViews(Integer.parseInt(doc.get("views")));
+					System.out.println(item.toString());
+					list.add(item);	//결과로 보낼 리스트에 담음
+					if(total-1==i) {
+						break;
+					}
 				}
 			}
-
 			reader.close();
 			analyzer.close();   
 			return list;
@@ -496,7 +499,7 @@ public class SearchDao implements SearchIDao{
 			}else if(category.trim().equals("author")) {
 				String field = null;
 				if(isBbs) {
-					field = "name";
+					field = "id";
 					}
 				else {
 					field = "author";
