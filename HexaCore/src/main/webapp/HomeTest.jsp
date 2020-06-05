@@ -33,8 +33,12 @@ header {
 	right: 0;
 	text-align: center;
 	height: 100px;
-	background-color: #2e7d32;
-	border: 1px solid #60ad5e;
+background: #232526;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+	
 	color: white;
 	font-size: 2em;
 }
@@ -46,8 +50,12 @@ header {
 	height: 100%;
 	padding-top: 100px;
 	padding-bottom: 100px;
-	background-color: #005005;
-	border: 1px solid #60ad5e;
+background: #232526;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to top, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to top, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+	
 }
 
 .menu, .menu01 {
@@ -60,7 +68,7 @@ header {
 	font-size: 1.5em;
 }
 .menu:hover, .menu01:hover {
-	background-color: #60ad5e;
+	background-color: #414345;
 	cursor: pointer;
 }
 
@@ -70,7 +78,10 @@ footer {
 	left: 0;
 	right: 0;
 	height: 100px;
-	background-color: #2e7d32;
+background: #232526;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 	color: white;
 }
 
@@ -86,9 +97,9 @@ footer {
 
 .subside {
 	position: fixed;
-	background-color: #60ad5e;
+	background-color: #414345;
 	height: 70%;
-	top: 101px;
+	top: 100px;
 	left: 15%;
 	display: none;
 	z-index: 2;
