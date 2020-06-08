@@ -26,7 +26,7 @@ import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.eappr.inf.EapprIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
-
+@SuppressWarnings("static-access")
 @Controller
 public class EapprCtrl2 {
 	
@@ -63,6 +63,9 @@ public class EapprCtrl2 {
 		}else {
 			row.setIndex(Integer.parseInt(page));
 		}
+		ApprovalDTO Adto = new ApprovalDTO();
+		Adto.setId(Ldto.getUsername());
+		List<ApprovalDTO> ALists = service.selectApprRoot(Adto);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		map.put("start",row.getStart());
@@ -70,9 +73,12 @@ public class EapprCtrl2 {
 		List<DocumentDTO> lists =null;
 		if(number.equalsIgnoreCase("결재필요")) {
 		lists = service.selectNeedApprDoc(map);
+		log.info("****{}",lists);
 		}else if(number.equalsIgnoreCase("결재중")) {
 		lists = service.selectApprMyDoc(map);
+		log.info("****{}",lists);
 		}
+		model.addAttribute("Adto",Adto);
 		model.addAttribute("lists",lists);
 		model.addAttribute("row", row);
 		return "eappr2/docConfirmLists";
@@ -113,7 +119,8 @@ public class EapprCtrl2 {
 	    String id = Ldto.getUsername();
 		DocumentDTO Ddto = service.selectDoc(seq);
 		model.addAttribute("Ddto",Ddto);
-		return "eappr2/ModifyForm";
+		log.info("Ddto check{}", Ddto);
+		return "eappr2/modifyForm";
 	}
 	
 	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.POST)
@@ -127,12 +134,14 @@ public class EapprCtrl2 {
 		log.info("Ddto 확인용 로그1 : {}", Ddto);
 		Ddto.setAppr_turn(1);
 		boolean isc = service.updateDoc(Ddto);
-		for (int i = 0; i < Ddto.getLists().size(); i++) {
-			Ddto.getLists().get(i).setChk("F");
-			Ddto.getLists().get(i).setSeq(Ddto.getSeq());
-			if(Ddto.getLists()!=null) {
-//				service.deleteApprRoot(Ddto.getSeq());
-				service.insertApprRoot(Ddto.getLists().get(i));
+		log.info("****check DdtoList{}",Ddto.getLists());
+		
+		if(Ddto.getLists()!=null) {
+			for (int i = 0; i < Ddto.getLists().size(); i++) {
+				Ddto.getLists().get(i).setChk("F");
+				Ddto.getLists().get(i).setSeq(Ddto.getSeq());
+					service.deleteApprRoot(Integer.toString(Ddto.getSeq()));
+					service.insertApprRoot(Ddto.getLists().get(i));
 			}
 		}
 		return isc?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
@@ -163,6 +172,7 @@ public class EapprCtrl2 {
 	@RequestMapping(value="/checkPassword", method=RequestMethod.POST)
 	public String checkPassword(String password , SecurityContextHolder session) {
 		log.info("password{}",password);
+		
 		Authentication auth = session.getContext().getAuthentication();
 	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		EmployeeDTO EDto =  EService.selectLoginInfo(dto.getUsername());

@@ -6,12 +6,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<script type="text/javascript" src="./js/eAppr_js.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 	function apprSearch(){
 		var treeWindow = window.open("./goApprTree.do", "결재루트 선택", "width=600, height=800");
@@ -45,20 +40,20 @@
 	
 	function report(){
 			$("#docu").append("<tr><td><input type='hidden' name='state' value='1'></td></tr>");
-			$("#insertdoc").attr("action", "./DocWrite.do");
-			document.insertdoc.submit();	
+			$("#modifyDoc").attr("action", "./DocWrite.do");
+			document.modifyDoc.submit();	
 	}
 	
-	function savedoc(){
+	function saveUpdoc(){
 		$("#docu").append("<tr><td><input type='hidden' name='state' value='0'></td></tr>");
-		$("#insertdoc").attr("action", "./DocWrite.do");
-		document.insertdoc.submit();
+		$("#modifyDoc").attr("action", "./saveDoc.do");
+		document.modifyDoc.submit();
 	}
 	function cancelwrite(){
 		if(confirm("문서 작성을 취소하시겠습니까?\n(작성한 내용은 저장되지 않습니다.)") == true){
-			$("#insertdoc").attr("action", "./goEapprHome.do");
-			$("#insertdoc").attr("method", "get");
-			document.insertdoc.submit();
+			$("#modifyDoc").attr("action", "./goEapprHome.do");
+			$("#modifyDoc").attr("method", "get");
+			document.modifyDoc.submit();
 		}else{
 			return;
 		}
@@ -66,9 +61,9 @@
 	
 	function reselecttype(){
 		if(confirm("문서 양식을 재선택하시겠습니까?\n(작성한 내용은 저장되지 않습니다.)") == true){
-			$("#insertdoc").attr("action", "./goDocTypeList.do");
-			$("#insertdoc").attr("method", "get");
-			document.insertdoc.submit();
+			$("#modifyDoc").attr("action", "./goDocTypeList.do");
+			$("#modifyDoc").attr("method", "get");
+			document.modifyDoc.submit();
 		}else{
 			return;
 		}
@@ -84,39 +79,38 @@
 	
 </script>
 <body>
-	<form id="insertdoc" name="insertdoc" method="POST">
+<%@include file="./../../header.jsp"%>
+	<form id="modifyDoc" name="modifyDoc" method="POST">
 		<input type="button" onclick="apprSearch()" value="결재선 선택">
 		<table id="approval">
 		</table>
 		<table id="docu">
 			<tr>
-				<td>문서양식 이름:</td>
-				<td>${typeDto.name}</td>
+				<td>문서번호</td>
+				<td><input type="text" name="seq" value="${Ddto.seq}"></td>
 			</tr>
 			<tr>
 				<td>기안자:</td>
 				<td>
-					<sec:authorize access="isAuthenticated()"><sec:authentication property="principal.username" var="drafter"/>
-					<input type="text" name="author" value="${drafter}"></sec:authorize>
+					<input type="text" name="author" value="${Ddto.author}">
 				</td>
 			</tr>
 			<tr>
 				<td>title:</td>
-				<td><input type="text" name="title">${Ddto.title}</td>
+				<td><input type="text" name="title" value="${Ddto.title}"></td>
 			</tr>
 			<tr>
 				<td>content:</td>
 				<td>
-					<textarea id="p_content" name="content" rows="5" cols="50">${typeDto.content}</textarea>
+					<textarea id="p_content" name="content" rows="5" cols="50">${Ddto.content}</textarea>
 					<script type="text/javascript">CKEDITOR.replace('p_content', {height: 500});</script>
 				</td>
 			</tr>
 		</table>
-		<input type="hidden" name="type_seq" value="${typeDto.type_seq}">
 		<input type="button" value="작성 취소" onclick="cancelwrite()">
 		<input type="button" value="양식 재선택" onclick="reselecttype()">
 		<input type="button" value="초기화" onclick="resetDoc()">
-		<input type="button" value="임시저장" onclick="savedoc()">
+		<input type="button" value="임시저장" onclick="saveUpdoc()">
 		<input type="button" value="바로상신" onclick="report()">
 	</form>
 </body>

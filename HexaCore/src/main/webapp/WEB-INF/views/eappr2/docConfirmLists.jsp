@@ -17,6 +17,7 @@
 <body>
 	<%@include file="./../../header.jsp"%>
 	<div id="container">
+	<div>
 		<form class="navbar-form navbar-right" role="search"
 			action="./totalSearch.do" method="get">
 			<div class="form-group input-group">
@@ -36,8 +37,9 @@
 				</span>
 			</div>
 		</form>
+		</div>
 		<form action="#" method="post">
-			<table>
+			<table  class="table table-bordered" style="width: 75%">
 				<tr>
 					<th>문서번호</th>
 					<th>기안자</th>
@@ -59,11 +61,20 @@
 						<td>${dto.title}</td>
 						<td><a href="./docDetail.do?seq=${dto.seq}">${dto.content}</a></td>
 						<td>${dto.regdate}</td>
-<%-- 						<c:if test="${name ne Ddto.author && turn != '0' && turn eq Ddto.appr_turn}"> --%>
-						<td><input type="button" value="결재" data-backdrop='static'
-							data-keyboard='false' data-toggle="modal" data-target="#apprDoc"
-							onclick="apprDoc('${dto.seq}','${dto.appr_turn}')"></td>
-<%-- 						</c:if> --%>
+						<c:choose>
+ 						<c:when test="${name ne Ddto.author && (Ddto.appr_turn != '0') && (Adto.turn eq Ddto.appr_turn)}"> 
+							<td><input type="button" value="결재" data-backdrop='static'	data-keyboard='false' data-toggle="modal" data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}')"></td>
+						</c:when> 
+						<c:when test="${Ddto.appr_turn ne Adto.turn}">
+							<td>결재중</td>
+						</c:when>
+						<c:when test="${Ddto.state eq '4'}">
+							<td>반려</td>
+						</c:when>
+						<c:otherwise>
+							<td>승인</td>
+						</c:otherwise>
+						</c:choose>
 					</tr>
 				</c:forEach>
 			</table>

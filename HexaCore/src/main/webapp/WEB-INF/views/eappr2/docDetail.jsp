@@ -31,12 +31,13 @@
 </c:forEach>
 </table>
 	<div>
-	
 	<form name="formDoc" id="formDoc">
-	<c:if test="${name eq Ddto.author && Ddto.state eq '0' || '1' }">
+			<c:if test="${name eq Ddto.author && (Ddto.state eq '0' || Ddto.state eq '1') && (Ddto.appr_turn ne '2')}">
 		<input  type="button" id="modifyDoc" value="수정" onclick="modifyFormDoc('${Ddto.seq}')">
-		<input  type="button" id="upApprDoc" value="상신" onclick="upApprDoc()">
 		<input  type="button" id="deleteDoc" value="삭제" onclick="deleteDocc(${Ddto.seq})">
+		<c:if test="${Ddto.state eq '0'}">
+		<input  type="button" id="upApprDoc" value="상신" onclick="upApprDoc()">
+		</c:if>
 	</c:if>
 	<c:if test="${name ne Ddto.author && turn != '0' && turn eq Ddto.appr_turn}">
 		<input  type="button" value="결재" data-toggle="modal" data-target="#apprDoc" data-backdrop='static' data-keyboard='false' onclick="apprDoc('${Ddto.seq}','${Ddto.appr_turn}')">
