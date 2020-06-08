@@ -193,7 +193,7 @@ public class MngCtrl {
 
 	@RequestMapping(value = "/result.do", method = RequestMethod.GET)
 	public String maingo() {
-		return "main";
+		return "home";
 	}
 	
 	@RequestMapping(value="/empInfo.do", method = RequestMethod.GET)
@@ -257,5 +257,10 @@ public class MngCtrl {
 			return "redirect:/empInfo.do";
 		else
 			return "../../error";
+	}
+	
+	@RequestMapping(value="/mngMain.do")
+	public String mngMain() {
+		return "mng/mngSideBar";
 	}
 }
