@@ -180,14 +180,7 @@ $(function(){
 		</header>
 		<div class="container">
 			<div class="content">
-				<p>내용</p>
-				<p>내용</p>
-				<p>내용</p>
-				<p>내용</p>
-				<p>내용</p>
-				<p>내용</p>
-				<p>내용</p>
-				<p>내용</p>
+				<iframe style="height: 800px; width: 600px;" src="./goMyDocList.do?state=0"></iframe>
 			</div>
 		</div>
 		<footer><div class="footer"></div></footer>

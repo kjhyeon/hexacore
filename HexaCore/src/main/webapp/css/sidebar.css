@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+.sidebar {
+	position: fixed;
+	left: 0;
+	width: 10%;
+	height: 100%;
+	padding-top: 100px;
+	padding-bottom: 100px;
+	background: #232526;
+	z-index: 1;
+}
+
+.subside {
+	position: fixed;
+	background-color: #414345;
+	height: 70%;
+	top: 100px;
+	left: 10%;
+	display: none;
+	z-index: 2;
+}
+
+.menu, .menu01, .submenu {
+	position: relative;
+	height: 100px;
+	line-height: 100px;
+	width: 100%;
+	text-align: center;
+	color: white;
+	font-size: 1em;
+}
+.menu:hover, .menu01:hover, .submenu:hover {
+	background-color: #414345;
+	cursor: pointer;
+}
+
+.submenu{
+	height: 50px;
+	line-height: 50px;
+	font-size: 0.5em;
+	display: none;
+}
+
+.subside > p {
+	display: none;
+}
+
+.content {
+	left: 10%;
+	width: 88%;
+}

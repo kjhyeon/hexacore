@@ -35,13 +35,13 @@
 	</form>
 	<div class="center" style="text-align: center; position: relative;">
 			<ul class="pagination">
-				<li><a href="./goMyDocList.do?page=0" onclick="pageFirst()">&laquo;</a></li>
-				<li><a href="./goMyDocList.do?page=${row.index-1}" onclick="pagePre()">&lt;</a></li>
+				<li><a href="./goMyDocList.do?page=0&state=${state}" onclick="pageFirst()">&laquo;</a></li>
+				<li><a href="./goMyDocList.do?page=${row.index-1}&state=${state}" onclick="pagePre()">&lt;</a></li>
 				<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
-					<li><a href="./goMyDocList.do?page=${i-1}">${i }</a></li>
+					<li><a href="./goMyDocList.do?page=${i-1}&state=${state}">${i }</a></li>
 				</c:forEach>
-				<li><a href="./goMyDocList.do?page=${row.index+1}" >&gt;</a></li>
-				<li><a href="./goMyDocList.do?page=${row.lastPage-1}" >&raquo;</a></li>
+				<li><a href="./goMyDocList.do?page=${row.index+1}&state=${state}" >&gt;</a></li>
+				<li><a href="./goMyDocList.do?page=${row.lastPage-1}&state=${state}" >&raquo;</a></li>
 			</ul>
 		</div>
 	<%@include file="./../../footer.jsp" %>
