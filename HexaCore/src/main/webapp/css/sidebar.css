@@ -21,7 +21,7 @@
 	z-index: 2;
 }
 
-.menu, .menu01 {
+.menu, .menu01, .submenu {
 	position: relative;
 	height: 100px;
 	line-height: 100px;
@@ -30,11 +30,23 @@
 	color: white;
 	font-size: 1em;
 }
-.menu:hover, .menu01:hover {
+.menu:hover, .menu01:hover, .submenu:hover {
 	background-color: #414345;
 	cursor: pointer;
 }
 
+.submenu{
+	height: 50px;
+	line-height: 50px;
+	font-size: 0.5em;
+	display: none;
+}
+
 .subside > p {
 	display: none;
+}
+
+.content {
+	left: 10%;
+	width: 88%;
 }
