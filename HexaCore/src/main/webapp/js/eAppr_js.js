@@ -1,14 +1,14 @@
-function apprDoc(val,val3){
-	ajaxapprDoc(val,val3);
+function apprDoc(val1,val2,val3,number){
+	ajaxapprDoc(val1,val2,val3,number);
 	$("#apprDocUp").modal();
 	}
 
-	var ajaxapprDoc = function(val,val3) {
+	var ajaxapprDoc = function(val1,val2,val3,number) {
 	   $.ajax({
 	      url : "./apprDoc.do",
 	      type:"post",
 	      dataType:"json",
-	      data:{"seq":val,"appr_turn":val3},
+	      data:{"seq":val1,"appr_turn":val2,"a_turn":val3,"number":number},
 	      success:function(msg){
 	         var html="";
 	         html += "<div class='form-group'>                   ";
@@ -30,8 +30,8 @@ function apprDoc(val,val3){
 	         html += "<div id='result'>   ";
 	         html += "</div>   ";
 	         html += "<div class='modal-footer'>";
-	         html += "<input class='btn btn-success' id='confirmD' type='button' value='승인' onclick='passwordChk(\"confirm\")'>";
-	         html += "<input class='btn btn-primary' id='refjectD' type='button' value='반려' onclick='passwordChk(\"reject\")'>";
+	         html += "<input class='btn btn-success' id='confirmD' type='button' value='승인' onclick='passwordChk(\"confirm\","+msg.a_turn+","+msg.number+")'>";
+	         html += "<input class='btn btn-primary' id='refjectD' type='button' value='반려' onclick='passwordChk(\"reject\","+msg.a_turn+","+msg.number+")'>";
 	         html += "<button class='btn btn-default' data-dismiss='modal'>닫기</button>";
 	         html += "</div>";
 	         
@@ -43,18 +43,18 @@ function apprDoc(val,val3){
 	   });
 	}
 	
-function passwordChk(asdf) {
+function passwordChk(conf, a_turn, number) {
 	var password = document.getElementById("password").value;
 	 $.ajax({
 	      url:"./checkPassword.do",
 	      type:"post",
-	      data:"password="+password,
+	      data:{"password":password},
 	      success:function(msg){
 	     	 if(msg=="true"){
-	     		 if(asdf=='confirm'){
-	     			 confirm();
+	     		 if(conf=='confirm'){
+	     			 confirm(a_turn, number);
 	     		 }else{
-	     			 reject();
+	     			 reject(a_turn, number);
 	     		 }
 	     	 }else{
 	     		$("#result").css("color","red");
@@ -70,15 +70,15 @@ function saveDoc(){
 	location.href='./saveDoc.do?seq='+$(".seq").val()+'&title='+$(".title").val()+'&content='+$(".content").val()+'&author='+$(".author").val();
 	}
 
-function confirm(){
+function confirm(a_turn,number){
 	
-	$("#apprDocUp").attr("action",'./confirmDoc.do?chk=T');
+	$("#apprDocUp").attr("action",'./confirmDoc.do?chk=T&number='+number);
 	$("#apprDocUp").attr("method","post");
 	$("#apprDocUp").submit();
 }
 
-function reject(){
-	$("#apprDocUp").attr("action",'./confirmDoc.do?chk=R');
+function reject(a_turn,number){
+	$("#apprDocUp").attr("action",'./confirmDoc.do?chk=R&number='+number);
 	$("#apprDocUp").attr("method","post");
 	$("#apprDocUp").submit();
 }
