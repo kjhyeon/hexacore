@@ -13,6 +13,7 @@
 		<typeAlias type="com.hexa.core.dto.BbsDTO" alias="BbsDto"/>
 		<typeAlias type="com.hexa.core.dto.CommentDTO" alias="CommentDto"/>
 		<typeAlias type="com.hexa.core.dto.RowNumDTO" alias="RowNum"/>
+		<typeAlias type="com.hexa.core.dto.FileDto" alias="FileDto"/>
 	</typeAliases>
 	
 	<mappers>

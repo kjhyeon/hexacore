@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hexa.core.dto.BbsDTO;
+import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
 
 public interface FreeBbsIService {
@@ -52,6 +53,6 @@ public interface FreeBbsIService {
 	// 13. 게시글 전체 갯수(관리자)
 	public int selectAdminBoardListTotal();
 	
-	
+	// =============================================================
 	
 }

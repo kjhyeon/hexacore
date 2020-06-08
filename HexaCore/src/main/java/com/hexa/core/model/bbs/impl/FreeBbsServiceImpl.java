@@ -109,4 +109,7 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 		return dao.selectNewBbs();
 	}
 
+	
+	
+
 }

@@ -150,4 +150,25 @@
 		SELECT SEQ FROM FREE_BBS WHERE SEQ=(SELECT MAX(SEQ) FROM FREE_BBS)
 	</select>
 	
+	
+	<!-- 15. 파일 추가 -->
+	<insert id="insertFile" parameterType="FileDto">
+	INSERT INTO HEXA.FILES
+		(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE, CATEGORY)
+			VALUES(#{name}, #{seq}, #{f_path}, #{ori_name}, #{f_size}, #{category})
+	</insert>
+	
+	<!-- 16. 파일 삭제 -->
+	<delete id="deleteFile" parameterType="java.lang.String">
+	DELETE FILES 
+		WHERE SEQ = #{seq}
+	</delete>
+	
+	<!-- 17. 파일 조회 -->
+	<select id="selectFile" parameterType="java.lang.String">
+	SELECT NAME ,F_SIZE 
+		FROM FILES 
+			WHERE SEQ=#{seq}
+	</select>
+	
 </mapper>

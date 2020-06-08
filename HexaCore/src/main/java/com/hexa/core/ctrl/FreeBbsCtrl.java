@@ -133,18 +133,22 @@ public class FreeBbsCtrl {
 	
 	// 자유게시판 새 글 작성.POST
 	@RequestMapping(value = "/freeBbsInsert.do", method = RequestMethod.POST)
-	public String insertfreeBbs(String seq, BbsDTO dto, Model model,SecurityContextHolder session,MultipartFile filename) {
-		log.info("Welcome insert 글 작성완료, {}/{}", dto,filename);
+	public String insertfreeBbs(String seq, BbsDTO dto, Model model,SecurityContextHolder session, MultipartFile filename) {
+		log.info("Welcome insert 글 작성완료, {}/{}", dto, filename);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		dto.setId(Ldto.getUsername());
-		dto.setName(Ldto.getName());
+		dto.setName(Ldto.getName());	
 		
 		boolean isc = false;
 		isc = service.insertFreeBbs(dto);
+		
 		if(filename!=null&&!filename.isEmpty()) {
 			saveFile(filename);
+//			service.insertFile(seq);
 		}
+		
+		
 		if(isc) {
 			BbsDTO result = service.selectDetailFreeBbs(service.selectNewBbs());
 			model.addAttribute("seq",result);
@@ -200,14 +204,16 @@ public class FreeBbsCtrl {
 	
 	// 자유게시판 글 수정.POST
 	@RequestMapping(value = "/bbsDetail.do", method = RequestMethod.POST)
-	public String updateModifyFreeBbs(BbsDTO dto, String seq) {
+	public String updateModifyFreeBbs(BbsDTO dto, Model model, MultipartFile filename) {
 		log.info("Welcome 글 수정 값 보내기, {}", dto);
 		
 		int n = service.updateModifyFreeBbs(dto);
+		dto = service.selectDetailFreeBbs(String.valueOf(dto.getSeq()));
 		
 		if (n>0) {
 			sService.updateBbsIndex(dto, "freeBbs");
-			return "redirect:/bbsDetail.do?seq="+seq;
+			model.addAttribute("seq",dto);
+			return "Bbs/bbsDetail";
 		}else {
 			return "redirect:/bbsMain.do";
 		}

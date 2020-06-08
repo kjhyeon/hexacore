@@ -52,5 +52,6 @@ public interface FreeBbsIDao {
 		
 		// 13. 게시글 전체 갯수(관리자)
 		public int selectAdminBoardListTotal();
+
 	
 }

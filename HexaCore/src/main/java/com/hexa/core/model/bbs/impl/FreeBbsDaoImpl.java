@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hexa.core.dto.BbsDTO;
+import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeBbsIDao;
 
@@ -115,7 +116,5 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 		log.info("게시글 seq 최대값 selectNewBbs");
 		return session.selectOne(NS + "selectNewBbs");
 	}
-
-	
 
 }
