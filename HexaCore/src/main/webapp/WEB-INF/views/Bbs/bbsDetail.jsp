@@ -31,6 +31,7 @@
 	
 	<div class="container">
 		<form action="./del.do" method="post">
+		<input type="hidden" name="auth_check" value="${auth}">
   		<table class="table table-bordered">
     		<thead>
       			<tr>
@@ -53,6 +54,12 @@
       			<tr>
         			<td>조회수</td>
         			<td>${seq.views}</td>
+     		 	</tr>
+     		 	<tr>
+     		 		<td>파일</td>
+     		 		<td>
+     		 			${saveFileName}
+     		 		</td>
      		 	</tr>
       			<tr>
         			<td>글내용</td>

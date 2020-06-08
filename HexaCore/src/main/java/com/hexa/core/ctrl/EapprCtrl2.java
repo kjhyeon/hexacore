@@ -44,7 +44,7 @@ public class EapprCtrl2 {
 		return "eappr2/eApprMain";
 	}
 	
-	@RequestMapping(value = "/docLists.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/docLists.do", method = RequestMethod.GET,produces = "applicaton/text; charset=UTF-8;")
 	public String docLists(Model model,SecurityContextHolder session, String page,String number) {
 		 Authentication auth = session.getContext().getAuthentication();
 		 LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
@@ -63,29 +63,27 @@ public class EapprCtrl2 {
 		}else {
 			row.setIndex(Integer.parseInt(page));
 		}
-		ApprovalDTO Adto = new ApprovalDTO();
-		Adto.setId(Ldto.getUsername());
-		List<ApprovalDTO> ALists = service.selectApprRoot(Adto);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		map.put("start",row.getStart());
 		map.put("last",row.getLast());
 		List<DocumentDTO> lists =null;
-		if(number.equalsIgnoreCase("결재필요")) {
+		if(number.equalsIgnoreCase("1")) {
 		lists = service.selectNeedApprDoc(map);
 		log.info("****{}",lists);
-		}else if(number.equalsIgnoreCase("결재중")) {
+		}else if(number.equalsIgnoreCase("2")) {
 		lists = service.selectApprMyDoc(map);
 		log.info("****{}",lists);
 		}
-		model.addAttribute("Adto",Adto);
 		model.addAttribute("lists",lists);
 		model.addAttribute("row", row);
+		model.addAttribute("id",id);
+		model.addAttribute("number",number);
 		return "eappr2/docConfirmLists";
 	}
 		
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
-	public String updateDoc(Model model,SecurityContextHolder session,/*String seq*/ApprovalDTO Adto) {
+	public String updateDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto) {
 		log.info("받아온 seq 값: {}", Adto.getSeq());
 		String seq = Integer.toString(Adto.getSeq());
 		Authentication auth = session.getContext().getAuthentication();
@@ -151,7 +149,7 @@ public class EapprCtrl2 {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/apprDoc.do", method= RequestMethod.POST ,produces = "applicaton/text; charset=UTF-8;")
 	@ResponseBody
-	public String apprDoc(ApprovalDTO Adto, int appr_turn,SecurityContextHolder session) {
+	public String apprDoc(ApprovalDTO Adto, int appr_turn, int a_turn ,String number, SecurityContextHolder session) {
 		JSONObject json = new JSONObject();
 		log.info("***********************************{}",Adto);
 		Authentication auth = session.getContext().getAuthentication();
@@ -164,7 +162,9 @@ public class EapprCtrl2 {
 		json.put("name", lists.get(0).getName());
 		json.put("turn", lists.get(0).getTurn());
 		json.put("appr_turn",appr_turn);
-		log.info("Welcome modifyForm 결과, {}",json.toString());
+		json.put("a_turn",a_turn);
+		json.put("number",number);
+		log.info("Welcome apprDoc 결과, {}",json.toString());
 		return json.toString();
 	}
 
@@ -186,7 +186,7 @@ public class EapprCtrl2 {
 	
 	@Transactional
 	@RequestMapping(value="/confirmDoc.do", method= RequestMethod.POST)
-	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto, SecurityContextHolder session) {
+	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto,String number,SecurityContextHolder session) {
 		log.info("confirm Test{}",Adto);
 		log.info("confirm Test{}",Ddto);
 		log.info("confirm Test{}",DCdto);
@@ -220,6 +220,6 @@ public class EapprCtrl2 {
 				service.updateApprChk(Adto);
 				service.insertComment(DCdto);//코멘트 입력
 			}
-		return "redirect:/docLists.do?id="+Adto.getId();
+		return "redirect:/docLists.do?number="+number;
 	}
 }

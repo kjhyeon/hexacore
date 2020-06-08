@@ -16,12 +16,13 @@ public class DocumentDTO implements Serializable{
 	private int type_seq;
 	private String content;
 	private List<ApprovalDTO> lists;
+	private int a_turn;
 	
 	public DocumentDTO() {
 	}
-	
+
 	public DocumentDTO(int seq, String author, String title, int state, String regdate, int appr_turn, int type_seq,
-			String content, List<ApprovalDTO> lists) {
+			String content, List<ApprovalDTO> lists, int a_turn) {
 		super();
 		this.seq = seq;
 		this.author = author;
@@ -32,13 +33,14 @@ public class DocumentDTO implements Serializable{
 		this.type_seq = type_seq;
 		this.content = content;
 		this.lists = lists;
+		this.a_turn = a_turn;
 	}
 
 	@Override
 	public String toString() {
 		return "DocumentDTO [seq=" + seq + ", author=" + author + ", title=" + title + ", state=" + state + ", regdate="
 				+ regdate + ", appr_turn=" + appr_turn + ", type_seq=" + type_seq + ", content=" + content + ", lists="
-				+ lists + "]";
+				+ lists + ", a_turn=" + a_turn + "]";
 	}
 
 	public int getSeq() {
@@ -113,4 +115,12 @@ public class DocumentDTO implements Serializable{
 		this.lists = lists;
 	}
 
+	public int getA_turn() {
+		return a_turn;
+	}
+
+	public void setA_turn(int a_turn) {
+		this.a_turn = a_turn;
+	}
+ 
 }

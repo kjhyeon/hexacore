@@ -12,6 +12,9 @@
 		alert("작성완료");
 		location.href="/bbsMain.do";
 	}
+	function writeCancle(){
+		alert("작성취소");
+	}
 </script>
 <body>
 <%@include file="/WEB-INF/header.jsp"%>
@@ -19,7 +22,7 @@
 	${Ldto}
 		
 	<div class="container">
-		<form action="#" method="post" id="writeForm" name="writeForm">
+		<form action="#" method="post" id="writeForm" name="writeForm" enctype="multipart/form-data">
   		<table class="table table-bordered">
     		<thead>
       			<tr>
@@ -42,6 +45,12 @@
         			</td>
       			</tr>
       			<tr>
+      				<td>파일</td>
+      				<td>
+      					<input multiple="multiple" type="file" name="filename">
+      				</td>
+      			</tr>
+      			<tr>
         			<td>글내용</td>
         			<td>
 						<textarea id="content" name="content"></textarea>
@@ -62,7 +71,9 @@
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
 	        <button class="btn btn-default" onclick="writeComplete()">작성완료</button>
-	        <button class="btn btn-default" onclick="">취소</button>
+	        <a href="./bbsMain.do">
+		        <input type="button" class="btn btn-default" value="작성취소" onclick="writeCancle()">
+	        </a>
 	      </div>
 	    </div>
 	    </form>

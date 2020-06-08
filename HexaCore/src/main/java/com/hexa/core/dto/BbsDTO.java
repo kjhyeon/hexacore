@@ -2,7 +2,7 @@ package com.hexa.core.dto;
 
 import java.io.Serializable;
 
-public class BbsDTO implements Serializable{
+public class BbsDTO implements Serializable {
 
 	private static final long serialVersionUID = 5525630636364245766L;
 	private int seq;
@@ -16,13 +16,16 @@ public class BbsDTO implements Serializable{
 	private int root;
 	private int reply_seq;
 	private int bbs_depth;
+	private int f_count;
+	private int c_count;
 
 	public BbsDTO() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public BbsDTO(int seq, String id, String name, String title, String content, int state, String regdate, int views,
-			int root, int reply_seq, int bbs_depth) {
+			int root, int reply_seq, int bbs_depth, int f_count, int c_count) {
 		super();
 		this.seq = seq;
 		this.id = id;
@@ -35,13 +38,15 @@ public class BbsDTO implements Serializable{
 		this.root = root;
 		this.reply_seq = reply_seq;
 		this.bbs_depth = bbs_depth;
+		this.f_count = f_count;
+		this.c_count = c_count;
 	}
 
 	@Override
 	public String toString() {
 		return "BbsDTO [seq=" + seq + ", id=" + id + ", name=" + name + ", title=" + title + ", content=" + content
 				+ ", state=" + state + ", regdate=" + regdate + ", views=" + views + ", root=" + root + ", reply_seq="
-				+ reply_seq + ", bbs_depth=" + bbs_depth + "]";
+				+ reply_seq + ", bbs_depth=" + bbs_depth + ", f_count=" + f_count + ", c_count=" + c_count + "]";
 	}
 
 	public int getSeq() {
@@ -130,6 +135,22 @@ public class BbsDTO implements Serializable{
 
 	public void setBbs_depth(int bbs_depth) {
 		this.bbs_depth = bbs_depth;
+	}
+
+	public int getF_count() {
+		return f_count;
+	}
+
+	public void setF_count(int f_count) {
+		this.f_count = f_count;
+	}
+
+	public int getC_count() {
+		return c_count;
+	}
+
+	public void setC_count(int c_count) {
+		this.c_count = c_count;
 	}
 
 }
