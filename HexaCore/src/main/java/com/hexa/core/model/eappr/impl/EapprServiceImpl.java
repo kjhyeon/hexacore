@@ -217,4 +217,10 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectApprMyDoc(map);
 	}
 
+	@Override
+	public List<DocumentDTO> selectMyDocList(Map<String, Object> map) {
+		log.info("selectMyDoc ServiceImpl 실행 : {}",map);
+		return dao.selectMyDocList(map);
+	}
+
 }

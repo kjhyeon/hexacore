@@ -228,4 +228,11 @@ public interface EapprIService {
 	 * @return list
 	 */
 	public List<DocumentDTO> selectApprMyDoc(Map<String, Object> map);
+	
+	/**
+	 * 상신문서함의 문서 조회
+	 * @param map
+	 * @return 문서 리스트
+	 */
+	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
 }

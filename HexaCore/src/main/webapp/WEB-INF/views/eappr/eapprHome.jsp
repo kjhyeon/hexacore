@@ -55,7 +55,11 @@
 <%@include file="./../../header.jsp" %>
 	<div class="sidemenu">
 		<a href="./goDocTypeList.do">문서 작성</a><br>
-		<a href="">상신문서함</a><br>
+		<a href="./goMyDocList.do?state=0">임시저장함</a><br>
+		<a href="./goMyDocList.do?state=1">결재대기문서함</a><br>
+		<a href="./goMyDocList.do?state=2">결재중문서함</a><br>
+		<a href="./goMyDocList.do?state=3">결재완료문서함</a><br>
+		<a href="./goMyDocList.do?state=4">반려문서함</a><br>
 		<a href="">결재문서함</a><br>
 		<a href="">참조문서함</a><br>
 		<a href="">완료문서함</a><br>

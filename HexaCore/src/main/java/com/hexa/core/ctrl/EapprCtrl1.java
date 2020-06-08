@@ -173,4 +173,36 @@ public class EapprCtrl1 {
 		return "redirect:/goDocTypeDetail.do?seq="+dto.getType_seq();
 	}
 	
+	// 상신문서함 목록으로 이동
+	@RequestMapping(value = "/goMyDocList.do", method = RequestMethod.GET)
+	public String MyDocList(Principal userId, int state, String page, Model model) {
+		log.info("####################3아이디 확인 {}",userId);
+		log.info("####################3아이디 확인 {}",state);
+		log.info("####################3아이디 확인 {}",page);
+		if(page==null) {
+			page="0";
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", userId.getName());
+		map.put("state", state);
+		int count = service.selectMyDocCount(map);
+		RowNumDTO row = new RowNumDTO();
+		row.setTotal(count);
+		row.setPageNum(3);
+		row.setListNum(10);
+		if(row.getLastPage()-1<Integer.parseInt(page)) {
+			row.setIndex(row.getLastPage()-1);
+		}else if(Integer.parseInt(page)<0) {
+			row.setIndex(0);
+		}else {
+			row.setIndex(Integer.parseInt(page));
+		}
+		map.put("start", row.getStart());
+		map.put("last", row.getLast());
+		List<DocumentDTO> list = service.selectMyDocList(map);
+		model.addAttribute("list", list);
+		model.addAttribute("row", row);
+		return "eappr/myDocList";
+	}
+	
 }
