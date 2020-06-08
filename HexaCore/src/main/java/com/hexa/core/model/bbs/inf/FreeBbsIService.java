@@ -54,5 +54,10 @@ public interface FreeBbsIService {
 	public int selectAdminBoardListTotal();
 	
 	// =============================================================
-	
+	// 14. 파일 조회
+	public List<FileDTO> selectFile(String seq);
+	// 15. 파일 추가
+	public boolean insertFile(String seq);
+	// 16. 파일 삭제
+	public boolean deleteFile(String seq);
 }

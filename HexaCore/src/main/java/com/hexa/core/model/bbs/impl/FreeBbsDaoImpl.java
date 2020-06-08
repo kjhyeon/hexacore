@@ -117,4 +117,24 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 		return session.selectOne(NS + "selectNewBbs");
 	}
 
+	@Override
+	public List<FileDTO> selectFile(String seq) {
+		log.info("파일 조회 selectFile,\t {}", seq);
+		return session.selectList(NS + "selectFile", seq);
+	}
+
+	@Override
+	public boolean insertFile(String seq) {
+		log.info("파일 추가 insertFile,\t {}", seq);
+		int n = session.insert(NS + "insertFile", seq);
+		return (n>0)?true:false;
+	}
+
+	@Override
+	public boolean deleteFile(String seq) {
+		log.info("파일 삭제 deleteFile,\t {}", seq);
+		int n = session.delete(NS + "deleteFile", seq);
+		return (n>0)?true:false;
+	}
+
 }

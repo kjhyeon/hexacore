@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.hexa.core.dto.BbsDTO;
+import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeBbsIDao;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
@@ -107,6 +108,24 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	public String selectNewBbs() {
 		log.info("게시글 seq최대값 selectNewBbs");
 		return dao.selectNewBbs();
+	}
+
+	@Override
+	public List<FileDTO> selectFile(String seq) {
+		log.info("파일업로드 selectFile,\t {}", seq);
+		return dao.selectFile(seq);
+	}
+
+	@Override
+	public boolean insertFile(String seq) {
+		log.info("파일 추가 insertFile,\t {}", seq);
+		return dao.insertFile(seq);
+	}
+
+	@Override
+	public boolean deleteFile(String seq) {
+		log.info("파일 삭제,\t {}", seq);
+		return dao.deleteFile(seq);
 	}
 
 	

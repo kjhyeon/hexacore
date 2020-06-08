@@ -140,12 +140,14 @@ public class FreeBbsCtrl {
 		dto.setId(Ldto.getUsername());
 		dto.setName(Ldto.getName());	
 		
+		
+		
 		boolean isc = false;
 		isc = service.insertFreeBbs(dto);
 		
 		if(filename!=null&&!filename.isEmpty()) {
 			saveFile(filename);
-//			service.insertFile(seq);
+			service.insertFile(seq);
 		}
 		
 		

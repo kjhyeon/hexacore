@@ -150,7 +150,6 @@
 		SELECT SEQ FROM FREE_BBS WHERE SEQ=(SELECT MAX(SEQ) FROM FREE_BBS)
 	</select>
 	
-	
 	<!-- 15. 파일 추가 -->
 	<insert id="insertFile" parameterType="FileDto">
 	INSERT INTO HEXA.FILES
