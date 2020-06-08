@@ -123,7 +123,7 @@ public class SearchDao implements SearchIDao{
 			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
 			Analyzer analyzer = new StandardAnalyzer();
 		
-			BooleanQuery query = createQuery(type, keyword,analyzer,false,id); //찾을 키워드로 쿼리 생성
+			BooleanQuery query = createQuery(type, keyword,analyzer,false,id,null); //찾을 키워드로 쿼리 생성
 			SortField sortField = null;	// 정렬용 필드
 			boolean reverse = true;	//역정렬용 플래그
 			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
@@ -179,21 +179,21 @@ public class SearchDao implements SearchIDao{
 	}
 
 	@Override
-	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row) {
-		return bbsSearch("freeBbs", keyword, type,row);
+	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row,String auth) {
+		return bbsSearch("freeBbs", keyword, type,row,auth);
 	}
 
 	@Override
-	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row) {
-		return bbsSearch("noticeBbs", keyword, type,row);
+	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row,String auth) {
+		return bbsSearch("noticeBbs", keyword, type,row,auth);
 	}
 
 	@Override
-	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row) {
-		return bbsSearch("fileBbs", keyword, type,row);
+	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row,String auth) {
+		return bbsSearch("fileBbs", keyword, type,row,auth);
 	}
 
-	public List<BbsDTO> bbsSearch(String kind,String keyword,String type,RowNumDTO row){
+	public List<BbsDTO> bbsSearch(String kind,String keyword,String type,RowNumDTO row,String auth){
 		log.info("SearchDao 게시판 서치 {}",keyword);
 		FSDirectory directory;
 		List<BbsDTO> list = Lists.newArrayList(); //서치 결과 담을 리스트
@@ -219,7 +219,7 @@ public class SearchDao implements SearchIDao{
 			
 			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
 			Analyzer analyzer = new StandardAnalyzer();
-			BooleanQuery query = createQuery(type, keyword,analyzer,true,null); //찾을 키워드로 쿼리 생성			
+			BooleanQuery query = createQuery(type, keyword,analyzer,true,null,auth); //찾을 키워드로 쿼리 생성			
 			SortField sortField = null;	// 정렬용 필드
 			SortField sortField2 = null;	// 정렬용 필드
 			boolean reverse = true;	//역정렬용 플래그
@@ -471,7 +471,7 @@ public class SearchDao implements SearchIDao{
 		return fieldType;
 	}
 	
-	private BooleanQuery createQuery(String category,String keyword,Analyzer analyzer,boolean isBbs,String id) {
+	private BooleanQuery createQuery(String category,String keyword,Analyzer analyzer,boolean isBbs,String id,String auth) {
 		if(category==null)
 			category = "title";
 		BooleanQuery query = null;
@@ -479,9 +479,9 @@ public class SearchDao implements SearchIDao{
 			Query qq = null;
 			Query state=null;
 			Query idquery = null;
-			if(isBbs) {
+			if(isBbs&&auth.trim().equalsIgnoreCase("role_user")) {
 				state = new QueryBuilder(analyzer).createBooleanQuery("state", "0");
-			}else {
+			}else if(!isBbs){
 				
 				BytesRef lower = new BytesRef(Integer.toBinaryString(0));
 				BytesRef upper = new BytesRef(Integer.toBinaryString(5));
@@ -512,9 +512,11 @@ public class SearchDao implements SearchIDao{
 				qq = parser.parse(keyword+"*");
 			}
 			
-			if(isBbs) {
+			if(isBbs&&auth.trim().equalsIgnoreCase("role_user")) {
 				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(state, Occur.MUST).build();
-			}else {
+			}else if(isBbs) {
+				query = new BooleanQuery.Builder().add(qq, Occur.MUST).build();
+			}else{
 				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(state, Occur.MUST).add(idquery, Occur.MUST).build();
 			}
 		} catch (ParseException e) {
@@ -544,7 +546,7 @@ public class SearchDao implements SearchIDao{
 			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
 			Analyzer analyzer = new StandardAnalyzer();
 
-			BooleanQuery query = createQuery(type, keyword,analyzer,false,null); //찾을 키워드로 쿼리 생성
+			BooleanQuery query = createQuery(type, keyword,analyzer,false,null,null); //찾을 키워드로 쿼리 생성
 			SortField sortField = null;	// 정렬용 필드
 			boolean reverse = true;	//역정렬용 플래그
 			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
@@ -565,21 +567,21 @@ public class SearchDao implements SearchIDao{
 	}
 
 	@Override
-	public int freeBbsTotal(String keyword, String type) {
-		return bbsTotal(keyword, type, "/freeBbs");
+	public int freeBbsTotal(String keyword, String type,String auth) {
+		return bbsTotal(keyword, type, "/freeBbs",auth);
 	}
 
 	@Override
-	public int fileBbsTotal(String keyword, String type) {
-		return bbsTotal(keyword, type, "/fileBbs");
+	public int fileBbsTotal(String keyword, String type,String auth) {
+		return bbsTotal(keyword, type, "/fileBbs",auth);
 	}
 
 	@Override
-	public int noticeBbsTotal(String keyword, String type) {
-		return bbsTotal(keyword, type, "/noticeBbs");
+	public int noticeBbsTotal(String keyword, String type,String auth) {
+		return bbsTotal(keyword, type, "/noticeBbs",auth);
 	}
 	
-	private int bbsTotal(String keyword, String type,String category) {
+	private int bbsTotal(String keyword, String type,String category,String auth) {
 		FSDirectory directory;
 		try {
 			String indexPath = INDEX_PATH+category;
@@ -599,7 +601,7 @@ public class SearchDao implements SearchIDao{
 			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
 			Analyzer analyzer = new StandardAnalyzer();
 
-			BooleanQuery query = createQuery(type, keyword,analyzer,true,null); //찾을 키워드로 쿼리 생성
+			BooleanQuery query = createQuery(type, keyword,analyzer,true,null,auth); //찾을 키워드로 쿼리 생성
 			SortField sortField = null;	// 정렬용 필드
 			SortField sortField2 = null;	// 정렬용 필드
 			boolean reverse = true;	//역정렬용 플래그

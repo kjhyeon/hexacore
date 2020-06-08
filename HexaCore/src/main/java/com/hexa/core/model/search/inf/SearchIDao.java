@@ -20,12 +20,12 @@ public interface SearchIDao {
 	public void updateBbsIndex(BbsDTO dto,String type);
 	
 	public List<DocumentDTO> eDocSearch(String keyword,String type,String id,RowNumDTO row);
-	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row);
-	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row);
-	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row);
+	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row,String auth);
+	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row,String auth);
+	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row,String auth);
 	
 	public int eDocTotal(String keyword,String type);
-	public int freeBbsTotal(String keyword,String type);
-	public int fileBbsTotal(String keyword,String type);
-	public int noticeBbsTotal(String keyword,String type);
+	public int freeBbsTotal(String keyword,String type,String auth);
+	public int fileBbsTotal(String keyword,String type,String auth);
+	public int noticeBbsTotal(String keyword,String type,String auth);
 }

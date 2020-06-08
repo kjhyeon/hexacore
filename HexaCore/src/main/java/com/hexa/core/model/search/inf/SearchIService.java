@@ -63,7 +63,7 @@ public interface SearchIService {
 	 * @param type 검색종류
 	 * @return
 	 */
-	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row);
+	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row,String auth);
 	
 	/**
 	 * 공지게시판 서치
@@ -71,7 +71,7 @@ public interface SearchIService {
 	 * @param type 검색종류
 	 * @return
 	 */
-	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row);
+	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row,String auth);
 	
 	/**
 	 * 파일게시판 서치
@@ -79,11 +79,11 @@ public interface SearchIService {
 	 * @param type 검색종류
 	 * @return
 	 */
-	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row);
+	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row,String auth);
 	
 	public int eDocTotal(String keyword,String type);
-	public int freeBbsTotal(String keyword,String type);
-	public int fileBbsTotal(String keyword,String type);
-	public int noticeBbsTotal(String keyword,String type);
+	public int freeBbsTotal(String keyword,String type,String auth);
+	public int fileBbsTotal(String keyword,String type,String auth);
+	public int noticeBbsTotal(String keyword,String type,String auth);
 	
 }

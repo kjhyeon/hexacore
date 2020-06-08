@@ -57,19 +57,19 @@ public class SearchService implements SearchIService{
 		return dao.eDocSearch(keyword,type,id,row);
 	}
 	@Override
-	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row) {
+	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row,String auth) {
 		log.info("SearchService 자유게시판 서치");
-		return dao.freeBbsSearch(keyword,type,row);
+		return dao.freeBbsSearch(keyword,type,row,auth);
 	}
 	@Override
-	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row) {
+	public List<BbsDTO> noticeBbsSearch(String keyword,String type,RowNumDTO row,String auth) {
 		log.info("SearchService 공지게시판 서치");
-		return dao.noticeBbsSearch(keyword, type, row);
+		return dao.noticeBbsSearch(keyword, type, row,auth);
 	}
 	@Override
-	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row) {
+	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row,String auth) {
 		log.info("SearchService 파일게시판 서치");
-		return dao.fileBbsSearch(keyword,type,row);
+		return dao.fileBbsSearch(keyword,type,row,auth);
 	}
 	@Override
 	public void addDocIndex(DocumentDTO dto) {
@@ -96,16 +96,16 @@ public class SearchService implements SearchIService{
 		return dao.eDocTotal(keyword, type);
 	}
 	@Override
-	public int freeBbsTotal(String keyword, String type) {
-		return dao.freeBbsTotal(keyword, type);
+	public int freeBbsTotal(String keyword, String type,String auth) {
+		return dao.freeBbsTotal(keyword, type,auth);
 	}
 	@Override
-	public int fileBbsTotal(String keyword, String type) {
-		return dao.fileBbsTotal(keyword, type);
+	public int fileBbsTotal(String keyword, String type,String auth) {
+		return dao.fileBbsTotal(keyword, type,auth);
 	}
 	@Override
-	public int noticeBbsTotal(String keyword, String type) {
-		return dao.noticeBbsTotal(keyword, type);
+	public int noticeBbsTotal(String keyword, String type,String auth) {
+		return dao.noticeBbsTotal(keyword, type,auth);
 	}
 
 
