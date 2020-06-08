@@ -57,7 +57,8 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 	@Override
 	public boolean updateViewsBbs(String seq) {
 		log.info("자유게시판 조회수 증가 updateViewsBbs,\t {}", seq);
-		return false;
+		int n = session.update(NS + "updateViewsBbs", seq);
+		return (n>=0)?true:false;
 	}
 
 	@Override

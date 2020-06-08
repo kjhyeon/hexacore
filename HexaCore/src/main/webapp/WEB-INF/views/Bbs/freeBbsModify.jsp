@@ -48,6 +48,12 @@
         			<td>조회수</td>
         			<td>${dto.views}</td>
      		 	</tr>
+     		 	<tr>
+     		 		<td>파일</td>
+     		 		<td>
+     		 			<input multiple="multiple" type="file" name="filename">
+     		 		</td>
+     		 	</tr>
       			<tr>
         			<td>글내용</td>
         			<td>

@@ -53,4 +53,5 @@ public interface FreeBbsIService {
 	public int selectAdminBoardListTotal();
 	
 	
+	
 }
