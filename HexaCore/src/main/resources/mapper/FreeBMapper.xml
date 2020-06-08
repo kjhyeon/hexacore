@@ -25,7 +25,7 @@
 	<update id="updateDeleteFreeBbs" parameterType="java.lang.String">
 	UPDATE FREE_BBS
 		SET STATE = 1
-			WHERE STATE = 0 OR STATE = 2 AND SEQ = #{seq}
+			WHERE STATE = 0 AND SEQ = #{seq}
 	</update>
 	
 	<!-- 4. 자유 게시판 글 다중삭제 -->
@@ -70,34 +70,37 @@
 	</update>
 	
 	<!-- 9. 자유 게시판 답글 -->
+	<update id="updateReplyBbs" parameterType="BbsDto">
+		UPDATE FREE_BBS 
+			SET REPLY_SEQ = REPLY_SEQ+1
+				WHERE ROOT =(SELECT ROOT FROM FREE_BBS WHERE SEQ = #{seq})
+					AND REPLY_SEQ > (SELECT REPLY_SEQ FROM FREE_BBS WHERE SEQ =#{seq})
+	</update>
+	
 	<insert id="insertReplyBbs" parameterType="BbsDto">
 	INSERT INTO FREE_BBS 
-		(SEQ, 		ID, 		NAME, 
-		 TITLE, 	CONTENT, 	STATE, 
-		 REGDATE, 	VIEWS, 		ROOT, 
-		 REPLY_SEQ, BBS_DEPTH)
-	  VALUES (FREE_BBS_SEQ.NEXTVAL, #{id}, 			#{name}, 
-	  		  #{title}, 			#{content}, 	0, 
-	  		  SYSDATE, 				0,
+	(SEQ, ID, NAME, TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH)
+	VALUES (FREE_BBS_SEQ.NEXTVAL, #{id}, #{name}, #{title}, #{content},
+			0, SYSDATE, 0,
 			(SELECT ROOT FROM FREE_BBS WHERE SEQ = #{seq}),
 			(SELECT REPLY_SEQ FROM FREE_BBS WHERE SEQ = #{seq}) +1,
-			(SELECT BBS_DEPTH FROM FREE_BBS WHERE SEQ = #{seq}) +1);
+			(SELECT BBS_DEPTH FROM FREE_BBS WHERE SEQ = #{seq}) +1)
 	</insert>
 	
 	<!-- 10. 유저 자유게시판 페이징 처리 -->
 	<select id="selectUserBbsListRow" parameterType="RowNum"
 									  resultType="BbsDto">
-	SELECT SEQ, 		ID, =		NAME, 		TRIM(TITLE), 
+	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
 		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
 		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH
 		FROM 
 		(
 		SELECT ROWNUM RNUM, 	SEQ, 		ID, 		NAME,
-				   TRIM(TITLE), CONTENT,	STATE,		REGDATE,	
+				   TRIM(TITLE) TITLE, CONTENT,	STATE,		REGDATE,	
 				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH
 			FROM
 			(
-			SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+			SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
 				FROM FREE_BBS
 					WHERE STATE = 0 OR STATE = 2
 						ORDER BY ROOT DESC, REPLY_SEQ 
@@ -110,17 +113,17 @@
 	<!-- 11. 관리자 자유게시판 페이징 처리 -->
 	<select id="selectAdminBbsListRow" parameterType="RowNum"
 									  resultType="BbsDto">
-	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE), 
+	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
 		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
 		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH
 		FROM 
 		(
 		SELECT ROWNUM RNUM, 	SEQ, 		ID, 		NAME,
-				   TRIM(TITLE), CONTENT,	STATE,		REGDATE,	
+				   TRIM(TITLE) TITLE, CONTENT,	STATE,		REGDATE,	
 				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH
 			FROM
 			(
-			SELECT SEQ, ID, NAME, TRIM(TITLE), CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+			SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
 				FROM FREE_BBS
 					ORDER BY ROOT DESC, REPLY_SEQ 
 			)

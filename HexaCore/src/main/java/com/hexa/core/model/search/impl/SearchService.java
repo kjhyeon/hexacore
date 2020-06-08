@@ -91,6 +91,22 @@ public class SearchService implements SearchIService{
 		log.info("SearchService 게시판 업데이트 {}",dto);
 		dao.updateBbsIndex(dto, type);
 	}
+	@Override
+	public int eDocTotal(String keyword, String type) {
+		return dao.eDocTotal(keyword, type);
+	}
+	@Override
+	public int freeBbsTotal(String keyword, String type) {
+		return dao.freeBbsTotal(keyword, type);
+	}
+	@Override
+	public int fileBbsTotal(String keyword, String type) {
+		return dao.fileBbsTotal(keyword, type);
+	}
+	@Override
+	public int noticeBbsTotal(String keyword, String type) {
+		return dao.noticeBbsTotal(keyword, type);
+	}
 
 
 }

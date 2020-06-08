@@ -27,10 +27,11 @@ public interface FreeBbsIDao {
 		public boolean updateViewsBbs(String seq);
 		
 		// 7. 자유게시판 답글 달기
+		public boolean updateReplyBbs(BbsDTO dto);
 		public boolean insertReplyBbs(BbsDTO dto);
 		
 		// ** seq 최대값 갱신 + 자기가 쓴 글 조회
-		public String selectNewBbs(String seq);
+		public String selectNewBbs();
 		
 		// ============================================================
 		

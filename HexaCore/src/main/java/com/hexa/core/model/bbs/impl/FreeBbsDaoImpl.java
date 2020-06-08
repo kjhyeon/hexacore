@@ -61,6 +61,12 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 	}
 
 	@Override
+	public boolean updateReplyBbs(BbsDTO dto) {
+		log.info("자유게시판 updateReplyBbs,\t {}", dto);
+		int n = session.update(NS + "updateReplyBbs", dto);
+		return (n>=0)?true:false;
+	}
+	@Override
 	public boolean insertReplyBbs(BbsDTO dto) {
 		log.info("자유게시판 답글작성 insertReplyBbs,\t {}", dto);
 		int n = session.insert(NS + "insertReplyBbs", dto);
@@ -82,31 +88,33 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 	@Override
 	public List<BbsDTO> selectUserBbsListRow(RowNumDTO rdto) {
 		log.info("자유게시판 페이징 처리(유저) selectAdminFreeBbsList,\t {}", rdto);
-		return null;
+		return session.selectList(NS+"selectUserBbsListRow",rdto);
 	}
 
 	@Override
 	public List<BbsDTO> selectAdminBbsListRow(RowNumDTO rdto) {
 		log.info("자유게시판 페이징 처리(관리자) selectAdminBbsListRow,\t {}", rdto);
-		return null;
+		return session.selectList(NS+"selectAdminBbsListRow",rdto);
 	}
 
 	@Override
 	public int selectUserBoardListTotal() {
 		log.info("자유게시판 글 전체 갯수(유저) selectUserBoardListTotal,\t {}");
-		return 0;
+		return session.selectOne(NS+"selectUserBoardListTotal");
 	}
 
 	@Override
 	public int selectAdminBoardListTotal() {
 		log.info("자유게시판 글 전체 갯수(유저) selectAdminBoardListTotal,\t {}");
-		return 0;
+		return session.selectOne(NS+"selectAdminBoardListTotal");
 	}
 
 	@Override
-	public String selectNewBbs(String seq) {
-		log.info("게시글 seq 최대값 selectNewBbs, {}", seq);
-		return session.selectOne(NS + "selectNewBbs", seq);
+	public String selectNewBbs() {
+		log.info("게시글 seq 최대값 selectNewBbs");
+		return session.selectOne(NS + "selectNewBbs");
 	}
+
+	
 
 }

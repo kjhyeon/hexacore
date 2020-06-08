@@ -130,40 +130,42 @@ public class SearchDao implements SearchIDao{
 			Sort sort = new Sort(sortField);
 			Document doc = new Document();	//찾아온 결과를 읽어올 문서
 			int total = searcher.count(query);
-			TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
-			System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
-			System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
-			row.setTotal(total);
-			System.out.println(row.getStart() + " ~ " + row.getLast());
-			for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서를 페ㅇ징처리
-			{
-				doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
-				DocumentDTO item = new DocumentDTO();	//담아올 객체 생성
-				item.setSeq(Integer.parseInt(doc.get("seq")));
-				String title = doc.get("title");
-				String con = doc.get("content");
-				Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
-				Matcher m = SCRIPTS.matcher(con);
-				con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
-				item.setTitle(title);
-				if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
-					int idx = con.indexOf(keyword);
-					if(idx-15>0) {
-						con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
-					}else {
-						con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+			if(total>0) {
+				TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
+				System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+				System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+				row.setTotal(total);
+				System.out.println(row.getStart() + " ~ " + row.getLast());
+				for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서를 페ㅇ징처리
+				{
+					doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
+					DocumentDTO item = new DocumentDTO();	//담아올 객체 생성
+					item.setSeq(Integer.parseInt(doc.get("seq")));
+					String title = doc.get("title");
+					String con = doc.get("content");
+					Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
+					Matcher m = SCRIPTS.matcher(con);
+					con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
+					item.setTitle(title);
+					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
+						int idx = con.indexOf(keyword);
+						if(idx-15>0) {
+							con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
+						}else {
+							con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+						}
+					}else if(con.length()>30){
+						con = con.substring(0, 30)+"ㆍㆍㆍ";
 					}
-				}else if(con.length()>30){
-					con = con.substring(0, 30)+"ㆍㆍㆍ";
-				}
-				item.setContent(con);
-				item.setAuthor(doc.get("author"));
-				item.setRegdate(doc.get("regdate"));
-				item.setState(Integer.parseInt(doc.get("state")));
-				System.out.println(item.toString());
-				list.add(item);	//결과로 보낼 리스트에 담음
-				if(total-1==i) {
-					break;
+					item.setContent(con);
+					item.setAuthor(doc.get("author"));
+					item.setRegdate(doc.get("regdate"));
+					item.setState(Integer.parseInt(doc.get("state")));
+					System.out.println(item.toString());
+					list.add(item);	//결과로 보낼 리스트에 담음
+					if(total-1==i) {
+						break;
+					}
 				}
 			}
 			reader.close();
@@ -228,49 +230,50 @@ public class SearchDao implements SearchIDao{
 			Document doc = new Document();	//찾아온 결과를 읽어올 문서
 			int total = searcher.count(query);
 			row.setTotal(total);
-			TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과를 갯수만큼 가져옴
-			System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
-			System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
-			System.out.println(row.getStart() + " ~ " + row.getLast());
-			SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class=\"searcher_key\">", "</span>");
-			for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서들 갯수만큼 반복
-			{
+			if(total>0) {
+				TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과를 갯수만큼 가져옴
+				System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+				System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+				System.out.println(row.getStart() + " ~ " + row.getLast());
+				SimpleHTMLFormatter formatter = new SimpleHTMLFormatter("<span class=\"searcher_key\">", "</span>");
+				for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서들 갯수만큼 반복
+				{
 
-				doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
-				BbsDTO item = new BbsDTO();	//담아올 객체 생성
-				String title = doc.get("title");
-				String con = doc.get("content");
-				Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
-				Matcher m = SCRIPTS.matcher(con);
-				con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
-				if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
-					int idx = con.indexOf(keyword);
-					if(idx-15>0) {
-						con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
-					}else {
-						con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+					doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
+					BbsDTO item = new BbsDTO();	//담아올 객체 생성
+					String title = doc.get("title");
+					String con = doc.get("content");
+					Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
+					Matcher m = SCRIPTS.matcher(con);
+					con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
+					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
+						int idx = con.indexOf(keyword);
+						if(idx-15>0) {
+							con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
+						}else {
+							con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+						}
+					}else if(con.length()>30){
+						con = con.substring(0, 30)+"ㆍㆍㆍ";
 					}
-				}else if(con.length()>30){
-					con = con.substring(0, 30)+"ㆍㆍㆍ";
-				}
-				item.setSeq(Integer.parseInt(doc.get("seq")));
-				item.setTitle(title);
-				item.setContent(con);
-				item.setName(doc.get("name"));
-				item.setId(doc.get("id"));
-				item.setRegdate(doc.get("regdate"));
-				item.setState(Integer.parseInt(doc.get("state")));
-				item.setRoot(Integer.parseInt(doc.get("root")));
-				item.setReply_seq(Integer.parseInt(doc.get("reply_seq")));
-				item.setBbs_depth(Integer.parseInt(doc.get("bbs_depth")));
-				item.setViews(Integer.parseInt(doc.get("views")));
-				System.out.println(item.toString());
-				list.add(item);	//결과로 보낼 리스트에 담음
-				if(total-1==i) {
-					break;
+					item.setSeq(Integer.parseInt(doc.get("seq")));
+					item.setTitle(title);
+					item.setContent(con);
+					item.setName(doc.get("name"));
+					item.setId(doc.get("id"));
+					item.setRegdate(doc.get("regdate"));
+					item.setState(Integer.parseInt(doc.get("state")));
+					item.setRoot(Integer.parseInt(doc.get("root")));
+					item.setReply_seq(Integer.parseInt(doc.get("reply_seq")));
+					item.setBbs_depth(Integer.parseInt(doc.get("bbs_depth")));
+					item.setViews(Integer.parseInt(doc.get("views")));
+					System.out.println(item.toString());
+					list.add(item);	//결과로 보낼 리스트에 담음
+					if(total-1==i) {
+						break;
+					}
 				}
 			}
-
 			reader.close();
 			analyzer.close();   
 			return list;
@@ -496,7 +499,7 @@ public class SearchDao implements SearchIDao{
 			}else if(category.trim().equals("author")) {
 				String field = null;
 				if(isBbs) {
-					field = "name";
+					field = "id";
 					}
 				else {
 					field = "author";
@@ -519,4 +522,103 @@ public class SearchDao implements SearchIDao{
 		}
 		return query;
 	}
+
+	@Override
+	public int eDocTotal(String keyword, String type) {
+		FSDirectory directory;
+		try {
+			String indexPath = INDEX_PATH+"/eDoc";
+			File indexFolder = new File(indexPath);
+			if(indexFolder.isDirectory() == false){ //폴더가 있는지 탐색해서 없을경우
+				log.info("Lucene Search : NOT FOUND FOLDER {}",INDEX_PATH);
+				return 0;
+			}
+			System.out.println(indexFolder.list().length); 
+			if(indexFolder.list().length == 0){ //폴더 내 파일이 없을경우
+				log.info("Lucene Search : NOT FOUND FILE IN {}",INDEX_PATH);
+				return 0;
+			}
+			directory = FSDirectory.open(Paths.get(indexPath)); //경로에 있는 폴더를 연다
+			IndexReader reader = DirectoryReader.open(directory); //디렉터리 안 파일들을 읽어옴
+
+			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
+			Analyzer analyzer = new StandardAnalyzer();
+
+			BooleanQuery query = createQuery(type, keyword,analyzer,false,null); //찾을 키워드로 쿼리 생성
+			SortField sortField = null;	// 정렬용 필드
+			boolean reverse = true;	//역정렬용 플래그
+			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
+			Sort sort = new Sort(sortField);
+			Document doc = new Document();	//찾아온 결과를 읽어올 문서
+			int total = searcher.count(query);
+			TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
+			System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+			System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+			reader.close();
+			analyzer.close();   
+			return total;
+		}catch (Exception e) {
+			e.printStackTrace();
+			log.error("전자문서 검색중에 에러 발생");
+		}
+		return 0;
+	}
+
+	@Override
+	public int freeBbsTotal(String keyword, String type) {
+		return bbsTotal(keyword, type, "/freeBbs");
+	}
+
+	@Override
+	public int fileBbsTotal(String keyword, String type) {
+		return bbsTotal(keyword, type, "/fileBbs");
+	}
+
+	@Override
+	public int noticeBbsTotal(String keyword, String type) {
+		return bbsTotal(keyword, type, "/noticeBbs");
+	}
+	
+	private int bbsTotal(String keyword, String type,String category) {
+		FSDirectory directory;
+		try {
+			String indexPath = INDEX_PATH+category;
+			File indexFolder = new File(indexPath);
+			if(indexFolder.isDirectory() == false){ //폴더가 있는지 탐색해서 없을경우
+				log.info("Lucene Search : NOT FOUND FOLDER {}",INDEX_PATH);
+				return 0;
+			}
+			System.out.println(indexFolder.list().length); 
+			if(indexFolder.list().length == 0){ //폴더 내 파일이 없을경우
+				log.info("Lucene Search : NOT FOUND FILE IN {}",INDEX_PATH);
+				return 0;
+			}
+			directory = FSDirectory.open(Paths.get(indexPath)); //경로에 있는 폴더를 연다
+			IndexReader reader = DirectoryReader.open(directory); //디렉터리 안 파일들을 읽어옴
+
+			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
+			Analyzer analyzer = new StandardAnalyzer();
+
+			BooleanQuery query = createQuery(type, keyword,analyzer,true,null); //찾을 키워드로 쿼리 생성
+			SortField sortField = null;	// 정렬용 필드
+			SortField sortField2 = null;	// 정렬용 필드
+			boolean reverse = true;	//역정렬용 플래그
+			sortField = new SortField("sorted_root", SortField.Type.INT, reverse);
+			sortField2 = new SortField("sorted_reply_seq", SortField.Type.INT, !reverse);
+			Sort sort = new Sort(sortField,sortField2);
+			Document doc = new Document();	//찾아온 결과를 읽어올 문서
+			int total = searcher.count(query);
+			TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
+			System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+			System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+			reader.close();
+			analyzer.close();   
+			return total;
+		}catch (Exception e) {
+			e.printStackTrace();
+			log.error("전자문서 검색중에 에러 발생");
+		}
+		return 0;
+	}
+	
 }

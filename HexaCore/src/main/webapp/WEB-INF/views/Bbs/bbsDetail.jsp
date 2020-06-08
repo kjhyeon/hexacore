@@ -16,6 +16,11 @@
 		alert("삭제");
 		location.href="./del.do?seq="+${seq.seq};
 	}
+	
+	function BbsReplyWrite(){
+		alert("답글");
+		location.href="./freeBbsReplyInsert.do?seq="+${seq.seq};
+	}
 </script>
 <body>
 	<%@include file="/WEB-INF/header.jsp"%>
@@ -63,6 +68,7 @@
 	        	<input type="button" class="btn btn-default" onclick="BbsContent_modify()" value="수정">
 	        	<input type="submit" id="del" class="btn btn-default" value="삭제" onclick="del()">
 	        </c:if>
+	        	<input type="button" class="btn btn-default" onclick="BbsReplyWrite()" value="답글">
 	      </div>
 	    </div>
 	   </form>

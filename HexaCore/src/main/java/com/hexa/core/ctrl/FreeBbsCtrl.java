@@ -24,6 +24,7 @@ import org.w3c.dom.ls.LSInput;
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
 import com.hexa.core.model.search.inf.SearchIService;
 
@@ -38,21 +39,51 @@ public class FreeBbsCtrl {
 	@Autowired
 	private SearchIService sService;
 	
+	
 	// 자유게시판 (관리자)목록 조회
 	@RequestMapping(value = "/bbsMain.do", method = RequestMethod.GET)
-	public String bbsMain(Model model,boolean auth_check, BbsDTO dto, SecurityContextHolder session) {
+	public String bbsMain(Model model, BbsDTO dto, SecurityContextHolder session, String page,String keyword,String type) {
 		log.info("Welcome List 목록조회, {}", new Date());
+		if(page==null) {
+			page="0";
+		}
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
-		log.info("●●●●●●●●●● auth_check{}", auth_check);
-		
-		if(auth_check == false) {
-			List<BbsDTO> lists = service.selectUserFreeBbsList();
-			model.addAttribute("lists", lists);
-		}else {	
-			List<BbsDTO> lists = service.selectAdminFreeBbsList();
-			model.addAttribute("lists", lists);
+		Collection<GrantedAuthority> a = Ldto.getAuthorities();
+		String auth_check = null;
+		for (GrantedAuthority auths : a) {
+			auth_check = auths.getAuthority();
 		}
+		RowNumDTO row = new RowNumDTO();
+		if(keyword!=null&&!keyword.equals("")) {
+			row.setTotal(sService.freeBbsTotal(keyword, type));
+			model.addAttribute("keyword",keyword);
+			model.addAttribute("type",type);
+		}else if(auth_check.trim().equalsIgnoreCase("role_admin")){
+			row.setTotal(service.selectAdminBoardListTotal());
+		}else {
+			row.setTotal(service.selectUserBoardListTotal());
+		}
+		row.setListNum(10);
+		row.setPageNum(5);
+		row.setIndex(Integer.parseInt(page));
+		if(row.getLastPage()-1<Integer.parseInt(page)) {
+			row.setIndex(row.getLastPage()-1);
+		}else if(Integer.parseInt(page)<0) {
+			row.setIndex(0);
+		}else {
+			row.setIndex(Integer.parseInt(page));
+		}
+		model.addAttribute("row",row);
+		List<BbsDTO> lists = null;
+		if(keyword!=null&&!keyword.equals("")) {
+			lists = sService.freeBbsSearch(keyword, type, row);
+		}else if(!auth_check.trim().equalsIgnoreCase("role_admin")) {
+			lists = service.selectUserBbsListRow(row);
+		}else {	
+			lists = service.selectAdminBbsListRow(row);
+		}
+		model.addAttribute("lists", lists);	
 		return "bbsMain";
 	}
 	
@@ -85,7 +116,7 @@ public class FreeBbsCtrl {
 		isc = service.insertFreeBbs(dto);
 		
 		if(isc) {
-			BbsDTO result = service.selectDetailFreeBbs(service.selectNewBbs(seq));
+			BbsDTO result = service.selectDetailFreeBbs(service.selectNewBbs());
 			model.addAttribute("seq",result);
 			sService.addBbsIndex(result, "freeBbs");
 		}
@@ -159,9 +190,34 @@ public class FreeBbsCtrl {
 		return isc?"redirect:/bbsMain.do":"redirect:/logout.do";
 	}
 	
+	@RequestMapping(value = "/freeBbsReplyInsert.do", method = RequestMethod.GET)
+	public String goInsertReplyBbs(SecurityContextHolder session, Model model,String seq) {
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
+		
+		model.addAttribute("Ldto", Ldto);
+		model.addAttribute("seq",seq);
+		return "Bbs/freeBbsReplyInsert";
+	}
 	
-	public String insertReplyBbs(BbsDTO dto) {
-		return null;
+	@RequestMapping(value = "/freeBbsReplyInsert.do", method = RequestMethod.POST)
+	public String insertReplyBbs(BbsDTO dto, SecurityContextHolder session, Model model) {
+		log.info("Welcome insertReplyBbs 답글 작성완료, {}", dto);
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
+		dto.setId(Ldto.getUsername());
+		dto.setName(Ldto.getName());
+
+		boolean isc = false;
+		isc = service.ReplyBbs(dto);
+		
+		if(isc) {
+			BbsDTO result = service.selectDetailFreeBbs(service.selectNewBbs());
+			model.addAttribute("seq",result);
+			sService.addBbsIndex(result, "freeBbs");
+		}
+		
+		return isc?"redirect:/bbsMain.do":"redirect:/logout";
 	}
 	
 }
