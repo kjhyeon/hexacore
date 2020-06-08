@@ -40,19 +40,17 @@ background: linear-gradient(to bottom, #414345, #232526); /* W3C, IE 10+/ Edge, 
 
 	
 	color: white;
-	font-size: 2em;
+	font-size: 1.5em;
 }
 
 .sidebar {
 	position: fixed;
 	left: 0;
-	width: 15%;
+	width: 10%;
 	height: 100%;
 	padding-top: 100px;
 	padding-bottom: 100px;
-background: #232526;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to top, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to top, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	background: #232526;
 
 
 	
@@ -65,7 +63,7 @@ background: linear-gradient(to top, #414345, #232526); /* W3C, IE 10+/ Edge, Fir
 	width: 100%;
 	text-align: center;
 	color: white;
-	font-size: 1.5em;
+	font-size: 1em;
 }
 .menu:hover, .menu01:hover {
 	background-color: #414345;
@@ -78,9 +76,9 @@ footer {
 	left: 0;
 	right: 0;
 	height: 100px;
-background: #232526;  /* fallback for old browsers */
-background: -webkit-linear-gradient(to bottom, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
-background: linear-gradient(to bottom, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	background: #232526;  /* fallback for old browsers */
+	background: -webkit-linear-gradient(to top, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to top, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
 	color: white;
 }
@@ -88,10 +86,10 @@ background: linear-gradient(to bottom, #414345, #232526); /* W3C, IE 10+/ Edge, 
 .content {
 	position: relative;
 	top: 120px;
-	left: 16%;
+	left: 11%;
 	padding-bottom: 100px;
 	background-color: #F5F5F6;
-	width: 82%;
+	width: 87%;
 	padding: 10px;
 }
 
@@ -100,7 +98,7 @@ background: linear-gradient(to bottom, #414345, #232526); /* W3C, IE 10+/ Edge, 
 	background-color: #414345;
 	height: 70%;
 	top: 100px;
-	left: 15%;
+	left: 10%;
 	display: none;
 	z-index: 2;
 }
@@ -147,6 +145,7 @@ $(function(){
 			},200,function(){
 				$(".subside>p").show();
 			});
+			$(".menu01").css("background-color","#414345");
 		}else{
 			$(".subside>p").hide();
 			
@@ -155,6 +154,7 @@ $(function(){
 			},200,function(){
 				$(".subside").css("display", "none");
 			});
+			$(".menu01").css("background-color","#232526");
 		}
 	});
 });
@@ -171,7 +171,7 @@ $(function(){
 			<p>문서양식1</p>
 		</div>
 		<header>
-			<div class="topmenu">HEXA</div>
+			<div class="topmenu" style="font-size:0.5em"><img alt="logo" src="./image/hexa64.png">HEXACORE</div>
 			<div class="topmenu">전자결재</div>
 			<div class="topmenu">게시판</div>
 			<div class="topmenu">쪽지</div>

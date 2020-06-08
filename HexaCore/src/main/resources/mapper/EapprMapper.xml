@@ -180,6 +180,17 @@
 		SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = #{state}
 	</select>
 	
+	<!-- 상신문서함 리스트 출력 -->
+	<select id="selectMyDocList" parameterType="java.util.Map" resultType="DocumentDto">
+		SELECT * FROM 			
+			(SELECT 
+				ROW_NUMBER() OVER(ORDER BY SEQ DESC) AS ROW_NUM, TITLE, STATE, REGDATE, AUTHOR, SEQ, APPR_TURN
+					FROM DOCUMENT
+						WHERE STATE=#{state} AND AUTHOR=#{id}
+							ORDER BY ROW_NUM ASC)
+			WHERE ROW_NUM BETWEEN #{start} AND #{last}
+	</select>
+	
 	<!-- 참조문서함에 있는 문서의 개수 -->
 	<select id="selectReferDocCount" parameterType="ApprovalDto" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM APPROVAL WHERE ID = #{id} AND APPR_KIND = '참조'
