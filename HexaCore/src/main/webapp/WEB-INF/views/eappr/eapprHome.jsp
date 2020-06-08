@@ -5,7 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <title>전자결재 Home</title>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="./css/sidebar.css">
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
