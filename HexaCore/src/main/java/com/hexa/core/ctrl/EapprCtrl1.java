@@ -202,6 +202,7 @@ public class EapprCtrl1 {
 		List<DocumentDTO> list = service.selectMyDocList(map);
 		model.addAttribute("list", list);
 		model.addAttribute("row", row);
+		model.addAttribute("state", state);
 		return "eappr/myDocList";
 	}
 	
