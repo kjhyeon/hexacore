@@ -1,11 +1,14 @@
 package com.hexa.core.ctrl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.ls.LSInput;
 
 import com.hexa.core.dto.BbsDTO;
@@ -33,12 +37,35 @@ public class FreeBbsCtrl {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
+	/*절대 경로*/
+//	private static String attach_path = "C:\\nobrand\\git\\hexacore\\HexaCore\\file";
+	
+	/*상대 경로*/
+	private static String attach_path = "C:\\nobrand\\eclipse_spring\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\HexaCore\\resource\\file";
+	
 	@Autowired
 	private FreeBbsIService service;
 	
 	@Autowired
 	private SearchIService sService;
 	
+	// 파일
+	public static String saveFile(MultipartFile file) {
+		String saveName = file.getOriginalFilename();
+		
+		File dir = new File(attach_path);
+		if(dir.isDirectory() == false){
+			dir.mkdirs();
+		}
+		File f = new File(attach_path, saveName);
+		try {
+			file.transferTo(f);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "freeBbs_"+saveName+"_"+UUID.randomUUID();
+	}
 	
 	// 자유게시판 (관리자)목록 조회
 	@RequestMapping(value = "/bbsMain.do", method = RequestMethod.GET)
@@ -56,7 +83,7 @@ public class FreeBbsCtrl {
 		}
 		RowNumDTO row = new RowNumDTO();
 		if(keyword!=null&&!keyword.equals("")) {
-			row.setTotal(sService.freeBbsTotal(keyword, type));
+			row.setTotal(sService.freeBbsTotal(keyword, type,auth_check));
 			model.addAttribute("keyword",keyword);
 			model.addAttribute("type",type);
 		}else if(auth_check.trim().equalsIgnoreCase("role_admin")){
@@ -77,7 +104,7 @@ public class FreeBbsCtrl {
 		model.addAttribute("row",row);
 		List<BbsDTO> lists = null;
 		if(keyword!=null&&!keyword.equals("")) {
-			lists = sService.freeBbsSearch(keyword, type, row);
+			lists = sService.freeBbsSearch(keyword, type, row,auth_check);
 		}else if(!auth_check.trim().equalsIgnoreCase("role_admin")) {
 			lists = service.selectUserBbsListRow(row);
 		}else {	
@@ -106,31 +133,52 @@ public class FreeBbsCtrl {
 	
 	// 자유게시판 새 글 작성.POST
 	@RequestMapping(value = "/freeBbsInsert.do", method = RequestMethod.POST)
-	public String insertfreeBbs(String seq, BbsDTO dto, Model model,SecurityContextHolder session) {
-		log.info("Welcome insert 글 작성완료, {}", dto);
+	public String insertfreeBbs(String seq, BbsDTO dto, Model model,SecurityContextHolder session,MultipartFile filename) {
+		log.info("Welcome insert 글 작성완료, {}/{}", dto,filename);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		dto.setId(Ldto.getUsername());
 		dto.setName(Ldto.getName());
+		
 		boolean isc = false;
 		isc = service.insertFreeBbs(dto);
-		
+		if(filename!=null&&!filename.isEmpty()) {
+			saveFile(filename);
+		}
 		if(isc) {
 			BbsDTO result = service.selectDetailFreeBbs(service.selectNewBbs());
 			model.addAttribute("seq",result);
 			sService.addBbsIndex(result, "freeBbs");
 		}
 		
+		
 		return isc?"Bbs/bbsDetail":"redirect:/logdout.do";
 	}
 	
 	// 자유게시판 글 상세보기.GET
 	@RequestMapping(value = "/bbsDetail.do", method = RequestMethod.GET)
-	public String selectDetailFreeBbs(Model model, String seq) {
+	public String selectDetailFreeBbs(Model model, String seq, SecurityContextHolder session) {
 		log.info("Welcome 글 상세보기, {}", seq);
+		log.info("Welcome 글 조회수 여부, {}", seq);
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		
+		Collection<GrantedAuthority> a = Ldto.getAuthorities();
+		String auth_check = null;
+		for (GrantedAuthority auths : a) {
+			auth_check = auths.getAuthority();
+		}
+		
+		
+		if (!auth_check.trim().equalsIgnoreCase("role_admin")) {
+			boolean isc = false;
+			isc = service.updateViewsBbs(seq);
+		}
 		BbsDTO dto = service.selectDetailFreeBbs(seq);
 		model.addAttribute("seq", dto);
+		
+		
+		
 		
 		return "Bbs/bbsDetail";
 	}
@@ -219,6 +267,8 @@ public class FreeBbsCtrl {
 		
 		return isc?"redirect:/bbsMain.do":"redirect:/logout";
 	}
+	
+	
 	
 }
 
