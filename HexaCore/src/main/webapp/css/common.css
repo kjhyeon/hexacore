@@ -56,9 +56,11 @@ footer {
 .content {
 	position: relative;
 	padding-bottom: 100px;
-	background-color: #F5F5F6;
+	background-color: white;
 	padding: 10px;
 	margin: 20px;
+	height: 780px;
+	overflow: scroll;
 }
 
 .container {
@@ -70,7 +72,6 @@ footer {
 
 .topmenu {
 	display: table-cell;
-	width: 250px;
 	height: 100px;
 	vertical-align: middle;
 }
@@ -79,6 +80,33 @@ footer {
 	transform: scale(1.2);
 	transition: transform .5s;
 	cursor: pointer;
+}
+
+.mypage, .logout {
+	display: table-cell;
+	width: 100px;
+	height: 50px;
+	vertical-align: middle;
+	font-size: 0.75em;
+	right: 0;
+	transition: color 1s;
+}
+
+.logout:hover {
+	color: red;
+	cursor: pointer;
+}
+
+.mypage:hover {
+	color: blue;
+	cursor: pointer;
+}
+
+.searchbar {
+	display: table-cell;
+	width: 700px;
+	height: 100px;
+	vertical-align: middle;
 }
 
 .footer {

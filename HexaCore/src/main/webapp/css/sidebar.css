@@ -3,7 +3,7 @@
 .sidebar {
 	position: fixed;
 	left: 0;
-	width: 10%;
+	width: 12%;
 	height: 100%;
 	padding-top: 100px;
 	padding-bottom: 100px;
@@ -14,14 +14,19 @@
 .subside {
 	position: fixed;
 	background-color: #414345;
-	height: 70%;
-	top: 100px;
-	left: 10%;
+	height: 100%;
+	left: 12%;
 	display: none;
 	z-index: 2;
+	color: white;
+	padding: 120px 20px 120px 20px;
 }
 
-.menu, .menu01, .submenu {
+.subside > p {
+	display: none;
+}
+
+.menu, .menu01, .submenu, .ddmenu {
 	position: relative;
 	height: 100px;
 	line-height: 100px;
@@ -30,7 +35,7 @@
 	color: white;
 	font-size: 1em;
 }
-.menu:hover, .menu01:hover, .submenu:hover {
+.menu:hover, .menu01:hover, .submenu:hover, .ddmenu:hover {
 	background-color: #414345;
 	cursor: pointer;
 }
@@ -42,11 +47,7 @@
 	display: none;
 }
 
-.subside > p {
-	display: none;
-}
-
 .content {
-	left: 10%;
-	width: 88%;
+	left: 12%;
+	width: 86%;
 }

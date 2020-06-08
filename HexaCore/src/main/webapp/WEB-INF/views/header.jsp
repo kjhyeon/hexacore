@@ -22,32 +22,28 @@ function empPop() {
 <body>
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
 	<header>
-		<div class="topmenu" style="font-size:0.5em"><a href="./result.do"><img alt="logo" src="./image/hexa64.png"></a></div>
-		<div class="topmenu" onclick="location.href='./goEapprHome.do'">전자결재</div>
-		<div class="topmenu" onclick="location.href=''">게시판</div>
-		<div class="topmenu" onclick="location.href='./employeeList.do'">관리</div>
-		<div class="topmenu">
-			<form class="navbar-form navbar-right" role="search" action="./totalSearch.do" method="get">
-				<div class="form-group input-group">
-					<span class="input-group-btn">
-					<select name="type" class="form-control" >
+		<div class="topmenu" style="width:12%" onclick="location.href='./result.do'"><img alt="logo" src="./image/hexa64.png"></div>
+		<div class="topmenu" style="width:200px" onclick="location.href='./goEapprHome.do'">전자결재</div>
+		<div class="topmenu" style="width:200px" onclick="location.href=''">게시판</div>
+		<div class="topmenu" style="width:200px" onclick="location.href='./employeeList.do'">관리</div>
+		<div class="searchbar">
+			<form class="navbar-form" role="search" action="./totalSearch.do" method="get">
+				<div class="input-group-btn">
+					<select name="type" style="width:120px;  margin:1px" class="form-control">
 						<option value="title/con">제목+내용</option>
 						<option value="title">제목</option>
 						<option value="content">내용</option>
 						<option value="author">글쓴이</option>
 					</select>
-					</span>
-					<input type="text" class="form-control" placeholder="Search.." name="keyword" style="position: relative; float: right;">
-					<span class="input-group-btn">
-						<button class="btn btn-default" type="button">
+					<input type="text" class="form-control" style="width:300px;  margin:1px" name="keyword">
+						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;">
 							<span class="glyphicon glyphicon-search"></span>
 						</button>
-					</span>
 				</div>
 			</form>
 		</div>
-		<div class="topmenu" onclick="empPop()">My Page</div>
-		<div class="topmenu" onclick="location.href='./logout'">logout</div>
+		<div class="mypage" onclick="empPop()">My Page</div>
+		<div class="logout" onclick="location.href='./logout'">Logout</div>
 	</header>
 </body>
 </html>

@@ -49,6 +49,8 @@ public class EapprCtrl1 {
 		model.addAttribute("count7", count7);
 		model.addAttribute("count8", count8);
 		model.addAttribute("count9", count9);
+		List<DocumentTypeDTO> list = service.selectDocTypeList();
+		model.addAttribute("list", list);
 		
 		return "eappr/eapprHome";
 	}
