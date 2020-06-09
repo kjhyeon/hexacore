@@ -1,17 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>사원 입력</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="./css/empMng.css">
-<script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="./javascript/employeeMng.js"></script>
+<script type="text/javascript" src="./javascript/imgChk.js"></script>
 </head>
 <body>
-	<%@include file="./../../header.jsp"%>
 	<div id="container">
 	<form action="./insertEmployee.do" method="post" id ="frm" enctype="multipart/form-data">
 		<table class="table table-bordered">
@@ -72,27 +78,11 @@
 				</td>
 			</tr>
 			<tr>
-				<th>프로필이미지</th><td><input  multiple="multiple" type="file" name="profile_file" onchange="a(this)"></td>
+				<th>프로필이미지</th><td><input  multiple="multiple" type="file" name="profile_file" onchange="a(this,'profile-')" accept="image/*"></td>
 			</tr>
 		</table>
-			<script type="text/javascript">
-						function a(input) {
-							if (input.files && input.files[0]) {
-								var reader = new FileReader(); // File API
-								reader.onload = function(e) {
-									var img = document.getElementById("image");
-									img.src = e.target.result;
-									img.style.width = '120px';
-									img.style.height = "120px";
-								}
-								reader.readAsDataURL(input.files[0]);
-								$("#image").show();
-							}
-						}
-					</script>
 		<input class="btn" type="button" value="등록" onclick="formChk()">
 	</form>
 	</div>
-	<%@include file="./../../footer.jsp"%>
 </body>
 </html>

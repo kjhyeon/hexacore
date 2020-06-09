@@ -75,17 +75,17 @@ window.onload = function(){
 		var type = node.type;	// 노드의 타입
 		var id = node.id; // 클릭한 노드의 id
 		if(node.id !=0){ //루트는 선택 못함
-			top.document.getElementById("department_name").value = node.text;
+			parent.document.getElementById("department_name").value = node.text;
 			
 			if($("#"+node.id).attr("faxnum")!=undefined&&$("#"+node.id).attr("faxnum")!='null' ){
-				top.document.getElementById("department_fax").value = $("#"+node.id).attr("faxnum");
+				parent.document.getElementById("department_fax").value = $("#"+node.id).attr("faxnum");
 			}else{
-				top.document.getElementById("department_fax").value = '';
+				parent.document.getElementById("department_fax").value = '';
 			}
 			if($("#"+node.id).attr("d_phone")!=undefined&&$("#"+node.id).attr("d_phone")!='null' ){
-				top.document.getElementById("department_phone").value = $("#"+node.id).attr("d_phone");
+				parent.document.getElementById("department_phone").value = $("#"+node.id).attr("d_phone");
 			}else{
-				top.document.getElementById("department_phone").value = '';
+				parent.document.getElementById("department_phone").value = '';
 			}
 		}
 	});

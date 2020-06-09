@@ -1,12 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>사원 입력</title>
 <link rel="stylesheet" href="./css/empMng.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
 $(document).ready(
@@ -21,9 +27,9 @@ $(document).ready(
 	)
 </script>
 <script type="text/javascript" src="./javascript/employeeMng.js"></script>
+<script type="text/javascript" src="./javascript/imgChk.js"></script>
 </head>
 <body>
-	<%@include file="./../../header.jsp" %>
 	<div id="container">
 	<h2>사원 수정</h2>
 	<form action="./updateEmployee.do" method="post" id="frm" enctype="multipart/form-data">
@@ -132,40 +138,17 @@ $(document).ready(
 				</td>
 			</tr>
 			<tr>
-				<th>프로필이미지</th><td><input multiple="multiple" type="file" name="profile_file" onchange="a(this,'profile-')"></td>
+				<th>프로필이미지</th><td><input multiple="multiple" type="file" name="profile_file" onchange="a(this,'profile-')"  accept="image/*"></td>
 			</tr>
 			<tr>
-				<td><img id="sign-image" src="./image/profile/${dto.sign_img}" ></td><th>결재 도장</th><td><input multiple="multiple" type="file" name="sign_file" id="sign" onchange="a(this,'sign-')"></td>
+				<td><img id="sign-image" src="./image/profile/${dto.sign_img}" ></td><th>결재 도장</th><td><input multiple="multiple" type="file" name="sign_file" id="sign" onchange="a(this,'sign-')"  accept="image/*"></td>
 			</tr>
 		</table>
-		<div id="right-content">
-			<script type="text/javascript">
-						function a(input,str) {
-							if (input.files && input.files[0]) {
-								var reader = new FileReader(); // File API
-								reader.onload = function(e) {
-									var img = document.getElementById(str+"image");
-									img.src = e.target.result;
-									if(str=='sign-'){
-										img.style.width = '60px';
-										img.style.height = "60px";
-									}else{
-										img.style.height = "120px";
-										img.style.width = '120px';
-									}
-								}
-								}
-								reader.readAsDataURL(input.files[0]);
-								$(str+"#image").show();
-							}
-					</script>
-		</div>
 		<div class="btns" style="text-align: center;">
 			<input class="btn" type="button" onclick = "formChk()" value="수정">
 			<input class="btn" type="reset" value="리셋">
 		</div>
 	</form>
 	</div>
-	<%@include file="./../../footer.jsp" %>
 </body>
 </html>

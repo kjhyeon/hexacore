@@ -44,10 +44,15 @@
 	
 	function goPage(page){
 		var location = "./bbsMain.do?page="+page; 
-		if($("#keyword").val().trim()!=''){
-			location += "&keyword="+$("#keyword").val()+"&type="+$("#type").val();			
+		if($("#ori_keyword").val()!=null&&$("#ori_keyword").val().trim()!=''){
+			location += "&keyword="+$("#ori_keyword").val()+"&type="+$("#ori_type").val();			
 		}
-		alert(location);
+		document.location.href=location;
+	}
+	
+	function goSearch(){
+		var location = "./bbsMain.do?"; 
+		location += "keyword="+$("#keyword").val()+"&type="+$("#type").val();			
 		document.location.href=location;
 	}
 	
@@ -56,6 +61,8 @@
 	<%@include file="/WEB-INF/header.jsp"%>
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
 	<div class="container">
+	<input type="hidden" id="ori_keyword" value="${keyword }">
+	<input type="hidden" id="ori_type" value="${type }">
 	<form action="./multiDel.do" method="POST" id="List" name="List" onsubmit="return chkbox()">
 	<input type="hidden" name="auth_check" value="${auth}">
 	  <table class="table table-bordered">
@@ -109,7 +116,7 @@
 				<input type="text" class="form-control" placeholder="Search.." name="keyword"
 				style="position: relative; float: right;" id="keyword" value="${keyword }"> 
 			<span class="input-group-btn">
-				<button class="btn btn-default" type="button" onclick="goPage(0)">
+				<button class="btn btn-default" type="button" onclick="goSearch()">
 					<span class="glyphicon glyphicon-search"></span>
 				</button>
 			</span>
@@ -117,7 +124,7 @@
       <input type="hidden" name="index" id="index" value="${row.index }">
 		<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
 		<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
-      <div class="center" style="text-align: center; position: relative;">
+     	 <div class="center" style="text-align: center; position: relative;">
 			<ul class="pagination">
 				<li><a href="#" onclick="return goPage(${0});">&laquo;</a></li>
 				<li><a href="#" onclick="return goPage(${row.index-1});">&lt;</a></li>

@@ -7,6 +7,7 @@
 <title>님의 정보</title>
 </head>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="./javascript/imgChk.js"></script>
 <script type="text/javascript">
 function execDaumPostcode() {
     new daum.Postcode({
@@ -86,29 +87,8 @@ function formChk(){
 					<input class="form-control" type="text" name="detailaddress" id="detailAddress" placeholder="상세주소" value="${dto.detailaddress }">
 			</td>
 		</tr>
-		<tr><th>프로필 이미지</th><td><input multiple="multiple" type="file" name="profile_file" id="profile_file" onchange="a(this,'profile-')"></td></tr>
-		<tr><td><img id="sign-image" src="./image/profile/${dto.sign_img}" ></td><th>사인</th><td><input multiple="multiple" type="file" name="sign_file" id="sign_file"  onchange="a(this,'sign-')"></td></tr>
-		<div id="right-content">
-			<script type="text/javascript">
-						function a(input,str) {
-							if (input.files && input.files[0]) {
-								var reader = new FileReader(); // File API
-								reader.onload = function(e) {
-									var img = document.getElementById(str+"image");
-									img.src = e.target.result;
-									if(str==sign){
-										img.style.width = '80px';
-										img.style.height = "80px";
-									}else{
-										img.style.height = "120px";
-										img.style.width = '120px';
-									}
-								}
-								reader.readAsDataURL(input.files[0]);
-								$(str+"#image").show();
-							}
-						}
-					</script>
+		<tr><th>프로필 이미지</th><td><input multiple="multiple" type="file" name="profile_file" id="profile_file" onchange="a(this,'profile-')" accept="image/*"></td></tr>
+		<tr><td><img id="sign-image" src="./image/profile/${dto.sign_img}" ></td><th>사인</th><td><input multiple="multiple" type="file" name="sign_file" id="sign_file"  onchange="a(this,'sign-')" accept="image/*"></td></tr>
 	</table>
 		<div id="btns"><input type="button" value="수정" onclick="formChk()" id="sign-image" class="btn"><input type="reset" value="리셋" class="btn"></div>
 	</form>

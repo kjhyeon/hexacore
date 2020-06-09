@@ -52,6 +52,14 @@
 	width: 86%;
 }
 
+.content {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+.content::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+}
+
 .preview {
 	position: fixed;
 	left: 22%;

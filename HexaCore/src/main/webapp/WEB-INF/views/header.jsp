@@ -20,6 +20,10 @@
 function empPop() {
 	var treeWindow = window.open("./empInfo.do", "사원 정보", "width=1024,height=760");
 }
+
+function totalSearch(){
+	document.forms[0].submit();
+}
 </script>
 <body>
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
@@ -27,7 +31,14 @@ function empPop() {
 		<div class="topmenu" style="width:12%" onclick="location.href='./result.do'"><img alt="logo" src="./image/hexa64.png"></div>
 		<div class="topmenu" style="width:200px" onclick="location.href='./goEapprHome.do'">전자결재</div>
 		<div class="topmenu" style="width:200px" onclick="location.href=''">게시판</div>
-		<div class="topmenu" style="width:200px" onclick="location.href='./employeeList.do'">관리</div>
+		<c:choose >
+			<c:when test="${auth eq true }">
+				<div class="topmenu" style="width:200px" onclick="location.href='./mngMain.do'">관리</div>
+			</c:when>
+			<c:otherwise>
+				<div class="topmenu" style="width:200px"></div>
+			</c:otherwise>
+		</c:choose>
 		<div class="searchbar">
 			<form class="navbar-form" role="search" action="./totalSearch.do" method="get">
 				<div class="input-group-btn">
@@ -38,7 +49,7 @@ function empPop() {
 						<option value="author">글쓴이</option>
 					</select>
 					<input type="text" class="form-control" style="width:300px;  margin:1px" name="keyword">
-						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;">
+						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;" onclick="totalSearch()">
 							<span class="glyphicon glyphicon-search"></span>
 						</button>
 				</div>

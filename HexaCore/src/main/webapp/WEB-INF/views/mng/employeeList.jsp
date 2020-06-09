@@ -1,10 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>사원 목록</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <style type="text/css">
 	#container{
 		margin-top: 100px;
@@ -21,7 +28,6 @@ function gotoCreate(){
 </script>
 </head>
 <body>
-	<%@include file="./../../header.jsp" %>
 	<div id="container">
 	<h1 style="padding-left: 50px;">유저 리스트</h1>
 	<hr>
@@ -79,6 +85,5 @@ function gotoCreate(){
 		
 	</div>
 	
-	<%@include file="./../../footer.jsp" %>
 </body>
 </html>
