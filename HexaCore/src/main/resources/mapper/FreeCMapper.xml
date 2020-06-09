@@ -3,10 +3,12 @@
 <mapper namespace="com.hexa.core.notice.freec">
 
 	<!-- 1. 자유 게시판 댓글 목록 -->
-	<select id="selectFreeCommentList" resultType="CommentDto">
+	<select id="selectFreeCommentList"  parameterType="CommentDto"
+										resultType="CommentDto">
 	SELECT SEQ, ID, NAME, CONTENT, REGDATE, PARENT_SEQ 
 		FROM FREE_COMMENTS
-			ORDER BY PARENT_SEQ ASC
+			WHERE PARENT_SEQ = #{parent_seq}
+				ORDER BY SEQ ASC
 	</select>
 
 	<!-- 2. 자유 게시판 댓글 작성 -->
@@ -14,18 +16,24 @@
 		INSERT INTO FREE_COMMENTS
 			(SEQ, ID, NAME, CONTENT, REGDATE, PARENT_SEQ)
 		VALUES(FREE_COMMENTS_SEQ.NEXTVAL, #{id}, #{name}, #{content}, SYSDATE,
-		  	(SELECT NVL(MAX(PARENT_SEQ),0)+1 FROM FREE_COMMENTS))
+		  	#{parent_seq})
 	</insert>
 
 	<!-- 3. 자유 게시판 댓글 수정 -->
-	<update id="updateFreeComment" parameterType="CommentDto">
+	<update id="updateFreeComment" parameterType="java.lang.String">
 		UPDATE FREE_COMMENTS
-			SET CONTENT = #{content}, REGDATE = SYSDATE
-				WHERE SEQ = #{seq}
+			SET CONTENT = '뭐시여?', REGDATE = SYSDATE 
+				WHERE PARENT_SEQ = #{parent_seq}
 	</update>
 	
-	<!-- 4. 자유 게시판 댓글 삭제 -->
-	<delete id="deleteFreeComment">
+	<!-- 4. 자유 게시판 댓글 삭제(유저) -->
+	<delete id="deleteFreeUserComment" parameterType="java.util.Map">
+		DELETE FREE_COMMENTS
+			WHERE SEQ = #{seq} AND ID = #{id}
+	</delete>
+	
+	<!-- 5. 자유 게시판 댓글 삭제(관리자) -->
+	<delete id="deleteFreeAdminComment" parameterType="java.lang.String">
 		DELETE FREE_COMMENTS
 			WHERE SEQ = #{seq}
 	</delete>

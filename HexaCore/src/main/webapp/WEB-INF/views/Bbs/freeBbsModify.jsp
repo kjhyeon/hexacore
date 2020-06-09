@@ -25,7 +25,7 @@
 		<form action="./bbsDetail.do?seq=${dto.seq}" method="post">
   		<table class="table table-bordered">
     		<thead>
-      			<tr>
+    			<tr>
         			<th colspan="2">
         				<input type="text" name="title" value="${dto.title}">
         			</th>
@@ -46,12 +46,15 @@
       			</tr>
       			<tr>
         			<td>조회수</td>
-        			<td>${dto.views}</td>
+        			<td>${dtoo.views}</td>
      		 	</tr>
      		 	<tr>
      		 		<td>파일</td>
      		 		<td>
-     		 			<input multiple="multiple" type="file" name="filename">
+     		 			<c:forEach items="${list}" var="files">
+	     		 			<input multiple="multiple" type="file" name="filename"> <hr>
+	     		 			${files.ori_name} <input type="button" class="btn btn-default" name="deleteFile" onclick="delFile()" value="삭제">
+     		 			</c:forEach>
      		 		</td>
      		 	</tr>
       			<tr>

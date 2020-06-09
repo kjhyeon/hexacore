@@ -164,10 +164,11 @@
 	</delete>
 	
 	<!-- 17. 파일 조회 -->
-	<select id="selectFile" parameterType="java.lang.String">
-	SELECT NAME ,F_SIZE 
+	<select id="selectFile" parameterType="java.lang.String"
+							resultType="FileDto">
+	SELECT NAME ,F_SIZE, ORI_NAME, F_PATH 
 		FROM FILES 
-			WHERE SEQ=#{seq}
+			WHERE SEQ=#{seq} AND CATEGORY = 0
 	</select>
 	
 </mapper>

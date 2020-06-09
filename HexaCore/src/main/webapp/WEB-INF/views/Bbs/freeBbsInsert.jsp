@@ -10,7 +10,6 @@
 <script type="text/javascript">
 	function writeComplete(){
 		alert("작성완료");
-		location.href="/bbsMain.do";
 	}
 	function writeCancle(){
 		alert("작성취소");
@@ -20,7 +19,6 @@
 <%@include file="/WEB-INF/header.jsp"%>
 	<sec:authentication property="principal.username" var="sessionId"/>
 	${Ldto}
-		
 	<div class="container">
 		<form action="#" method="post" id="writeForm" name="writeForm" enctype="multipart/form-data">
   		<table class="table table-bordered">
@@ -48,6 +46,7 @@
       				<td>파일</td>
       				<td>
       					<input multiple="multiple" type="file" name="filename">
+      					${list.ori_name}
       				</td>
       			</tr>
       			<tr>

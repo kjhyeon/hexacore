@@ -117,9 +117,9 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	}
 
 	@Override
-	public boolean insertFile(String seq) {
-		log.info("파일 추가 insertFile,\t {}", seq);
-		return dao.insertFile(seq);
+	public boolean insertFile(FileDTO fDto) {
+		log.info("파일 추가 insertFile,\t {}", fDto);
+		return dao.insertFile(fDto);
 	}
 
 	@Override

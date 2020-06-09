@@ -5,6 +5,26 @@
 <head>
 <meta charset="UTF-8">
 <title>자유게시판 상세보기</title>
+<style type="text/css">
+	textarea{
+		height: 150px;
+		width: 750px; 
+		word-break:break-all;
+	}
+	.commnet_List{
+/* 		border: 2px solid black; */
+		height: 150px;
+		width: 750px;
+		margin: auto;
+	}
+	#comment_ListTable{
+		
+	}
+	input[type=image]{
+		position: absolute;
+		left: 1400px;
+	}
+</style>
 </head>
 <script type="text/javascript">
 	function BbsContent_modify(){
@@ -21,6 +41,16 @@
 		alert("답글");
 		location.href="./freeBbsReplyInsert.do?seq="+${seq.seq};
 	}
+	
+	function writeComment(){
+		document.forms[2].submit();
+	}
+	
+	function deleteComment(seq) {
+		alert("답글 삭제");
+		location.href="./commentDelete.do?seq="+seq+"&parent_seq="+$("#seq").val();
+	}
+	
 </script>
 <body>
 	<%@include file="/WEB-INF/header.jsp"%>
@@ -55,10 +85,12 @@
         			<td>조회수</td>
         			<td>${seq.views}</td>
      		 	</tr>
-     		 	<tr>
+     		 		<tr>
      		 		<td>파일</td>
      		 		<td>
-     		 			${saveFileName}
+     		 			<c:forEach items="${list}" var="files" varStatus="n">
+     		 				<a href="./download.do?name=${files.name}" >${files.ori_name}</a> | ${files.f_size }byte
+     		 			</c:forEach>
      		 		</td>
      		 	</tr>
       			<tr>
@@ -69,7 +101,7 @@
   		</table>
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
-	        <input type="hidden" name="seq" value="${seq.seq}">
+	        <input type="hidden" name="seq" value="${seq.seq}" id="seq">
 	        
 	        <c:if test="${(sessionId eq seq.id) || auth eq true}">
 	        	<input type="button" class="btn btn-default" onclick="BbsContent_modify()" value="수정">
@@ -78,30 +110,58 @@
 	        	<input type="button" class="btn btn-default" onclick="BbsReplyWrite()" value="답글">
 	      </div>
 	    </div>
+  		
 	   </form>
-	</div>
-   	<hr>
-   		 	
-	
-<div class="comment_container">	
-	<div class="reply_Comment">
-		<textarea rows="10" cols="10" 
-			style="padding-left:5;padding-right:50;padding-bottom:50;padding-top:50;
-				   word-break:break-all;width:50%">
-			댓글을 입력해 주세요
-		</textarea>
 	</div>
 	<hr>
 	
-	<div class="form-group">        
-      <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-default">작성</button>
-        <button type="submit" class="btn btn-default">수정</button>
-        <button type="submit" class="btn btn-default">삭제</button>
-      </div>
-    </div>
-</div>	
+	<div class="comment_container" style="text-align: center;">	
+	<form action="./commentWrite.do" method="post">
+		<div class="reply_Comment">
+			<textarea rows="10" cols="10" name=content placeholder="댓글을 입력하라고"></textarea>
+		</div>
+		<input type="hidden" name="parent_seq" value="${seq.seq}">
+	        
+	
+		<div class="form-group">        
+      		<div class="col-sm-offset-2 col-sm-10">
+        		<input type="button" id=write_Comment value="작성" onclick="writeComment()">
+      		</div>
+    	</div>
+	</form>
+	</div>
+		
+	<hr>
+	<hr>
+	
+	<div class="commnet_List" >
+		<c:forEach items="${lists}" var="commentList">
+			<table id="comment_ListTable">
+				<thead>
+					<tr>
+						<th style="border-right: 1px solid gray;">
+							<b>${commentList.id}</b>
+							
+						</th>
+						<td style="padding-left: 10px;">
+							${commentList.content}
+						</td>
+						<td>
+							<input type="image" src="./image/x.png" alt="XBox" onclick="deleteComment('${commentList.seq}')">
+						</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="border-right: 1px solid gray; padding-right: 20px;">
+							${fn:substring(commentList.regdate,0,10)}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<hr>
+		</c:forEach>
+	</div>
 	
 </body>
-	<%@include file="/WEB-INF/footer.jsp"%>
 </html>

@@ -57,7 +57,7 @@ public interface FreeBbsIService {
 	// 14. 파일 조회
 	public List<FileDTO> selectFile(String seq);
 	// 15. 파일 추가
-	public boolean insertFile(String seq);
+	public boolean insertFile(FileDTO fDto);
 	// 16. 파일 삭제
 	public boolean deleteFile(String seq);
 }

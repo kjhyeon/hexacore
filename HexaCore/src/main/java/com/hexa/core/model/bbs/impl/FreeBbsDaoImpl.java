@@ -124,9 +124,9 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 	}
 
 	@Override
-	public boolean insertFile(String seq) {
-		log.info("파일 추가 insertFile,\t {}", seq);
-		int n = session.insert(NS + "insertFile", seq);
+	public boolean insertFile(FileDTO fDto) {
+		log.info("파일 추가 insertFile,\t {}", fDto);
+		int n = session.insert(NS + "insertFile", fDto);
 		return (n>0)?true:false;
 	}
 

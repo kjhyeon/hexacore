@@ -1,7 +1,12 @@
 package com.hexa.core.ctrl;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -10,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -20,16 +26,20 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.ls.LSInput;
 
 import com.hexa.core.dto.BbsDTO;
+import com.hexa.core.dto.CommentDTO;
 import com.hexa.core.dto.EmployeeDTO;
+import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
+import com.hexa.core.model.bbs.inf.FreeComIService;
 import com.hexa.core.model.search.inf.SearchIService;
 
 @Controller
@@ -49,22 +59,26 @@ public class FreeBbsCtrl {
 	@Autowired
 	private SearchIService sService;
 	
+	@Autowired
+	private FreeComIService cService;
+	
 	// 파일
 	public static String saveFile(MultipartFile file) {
 		String saveName = file.getOriginalFilename();
 		
 		File dir = new File(attach_path);
+		String filename = "freeBbs-"+UUID.randomUUID()+"-"+saveName;
 		if(dir.isDirectory() == false){
 			dir.mkdirs();
 		}
-		File f = new File(attach_path, saveName);
+		File f = new File(attach_path, filename);
 		try {
 			file.transferTo(f);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return "freeBbs_"+saveName+"_"+UUID.randomUUID();
+		return filename;
 	}
 	
 	// 자유게시판 (관리자)목록 조회
@@ -138,27 +152,27 @@ public class FreeBbsCtrl {
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		dto.setId(Ldto.getUsername());
-		dto.setName(Ldto.getName());	
-		
-		
+		dto.setName(Ldto.getName());
 		
 		boolean isc = false;
 		isc = service.insertFreeBbs(dto);
 		
 		if(filename!=null&&!filename.isEmpty()) {
-			saveFile(filename);
-			service.insertFile(seq);
+			FileDTO fDto = new FileDTO();
+			fDto.setName(saveFile(filename));
+			fDto.setF_size(String.valueOf(filename.getSize()));
+			fDto.setOri_name(filename.getOriginalFilename());
+			fDto.setSeq(Integer.parseInt(service.selectNewBbs()));
+			fDto.setF_path(attach_path);
+			fDto.setCategory(0);
+			service.insertFile(fDto);
 		}
-		
-		
 		if(isc) {
 			BbsDTO result = service.selectDetailFreeBbs(service.selectNewBbs());
 			model.addAttribute("seq",result);
 			sService.addBbsIndex(result, "freeBbs");
 		}
-		
-		
-		return isc?"Bbs/bbsDetail":"redirect:/logdout.do";
+		return isc?"redirect:/bbsMain.do":"redirect:/logdout.do";
 	}
 	
 	// 자유게시판 글 상세보기.GET
@@ -175,14 +189,20 @@ public class FreeBbsCtrl {
 			auth_check = auths.getAuthority();
 		}
 		
-		
 		if (!auth_check.trim().equalsIgnoreCase("role_admin")) {
 			boolean isc = false;
 			isc = service.updateViewsBbs(seq);
 		}
-		BbsDTO dto = service.selectDetailFreeBbs(seq);
-		model.addAttribute("seq", dto);
+		CommentDTO cDto = new CommentDTO();
+		cDto.setParent_seq(Integer.parseInt(seq));
 		
+		List<CommentDTO> lists = cService.selectFreeCommentList(cDto);
+		model.addAttribute("lists", lists);
+		
+		BbsDTO dto = service.selectDetailFreeBbs(seq);
+		List<FileDTO> list = service.selectFile(seq);
+		model.addAttribute("seq", dto);
+		model.addAttribute("list", list);
 		
 		
 		
@@ -196,6 +216,8 @@ public class FreeBbsCtrl {
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		dto = service.selectDetailFreeBbs(seq);
+		List<FileDTO> list = service.selectFile(seq);
+		model.addAttribute("list", list);
 		if(dto.getId().equals(Ldto.getUsername())) {
 			model.addAttribute("dto", dto);
 			return "Bbs/freeBbsModify";
@@ -227,11 +249,7 @@ public class FreeBbsCtrl {
 		log.info("Welcome 글 단일삭제 값 보내기, {}", seq);
 		int n = service.updateDeleteFreeBbs(seq);
 		
-		if (n>0) {
-			return "redirect:/bbsMain.do";
-		}else {
-			return "redirect:/bbsTest.do";
-		}
+		return "redirect:/bbsMain.do";
 	}
 	
 	// 자유게시판 글 다중삭제
@@ -246,6 +264,8 @@ public class FreeBbsCtrl {
 		return isc?"redirect:/bbsMain.do":"redirect:/logout.do";
 	}
 	
+	
+	// 자유게시판 답글 작성.GET
 	@RequestMapping(value = "/freeBbsReplyInsert.do", method = RequestMethod.GET)
 	public String goInsertReplyBbs(SecurityContextHolder session, Model model,String seq) {
 		Authentication auth = session.getContext().getAuthentication();
@@ -256,6 +276,7 @@ public class FreeBbsCtrl {
 		return "Bbs/freeBbsReplyInsert";
 	}
 	
+	// 자유게시판 답글 작성.POST
 	@RequestMapping(value = "/freeBbsReplyInsert.do", method = RequestMethod.POST)
 	public String insertReplyBbs(BbsDTO dto, SecurityContextHolder session, Model model) {
 		log.info("Welcome insertReplyBbs 답글 작성완료, {}", dto);
@@ -276,7 +297,25 @@ public class FreeBbsCtrl {
 		return isc?"redirect:/bbsMain.do":"redirect:/logout";
 	}
 	
-	
+	@RequestMapping(value = "/download.do", method = RequestMethod.GET)
+	public void fileDownload(HttpServletResponse resp, FileDTO fDto) throws Exception {
+		log.info("#################################3 {}",fDto);
+		File file = new File(attach_path+"/"+fDto.getName());
+		
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+		String mimeType = URLConnection.guessContentTypeFromStream(inputStream);
+
+		if (mimeType == null) {
+			mimeType = "application/octec-stream";
+		}
+		resp.setContentType(mimeType);
+		resp.setContentLength((int) file.length());
+		//헤더에 해당 파일이 첨부 파일임을 명시
+		resp.setHeader("Content-Disposition", String.format("attachment; fileName=%s", fDto.getName()));
+		log.info(file.getName() + "@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		//파일 자체를 웹브라우저에서 읽어들인다. 
+		FileCopyUtils.copy(inputStream, resp.getOutputStream());
+	}
 	
 }
 
