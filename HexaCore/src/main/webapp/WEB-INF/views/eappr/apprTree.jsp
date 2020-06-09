@@ -4,12 +4,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<style type="text/css">
-	.selected{
-		background-color: skyblue;
-	}
-</style>
 <title>Insert title here</title>
+<link rel="stylesheet" href="./css/apprTree.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript">
 	function addEmp() {
@@ -17,16 +13,23 @@
 		var node = ($("#deptTree").jstree("get_node",id));
 		var flag = false;
 		if(node.type == 'people'){
+			alert($("tr").length);
 			for (var i = 0; i < $("tr").length; i++) {
 				var chr = $("tr").eq(i).children();
+				alert(chr.eq(0).text+"/////"+node.li_attr['deptname']);
 				if(chr.eq(0).text()==node.li_attr['deptname']&&chr.eq(1).text()==node.li_attr['e_rank_name']&&chr.eq(2).text()==node.text){
 					flag = true;
 				}
 			}
 			if(!flag){
-				var tr = "<tr onclick='selectNode(this) id='appr''> <td>"+node.li_attr['deptname']+"</td> <td>"+node.li_attr['e_rank_name']+"</td> <td>"+node.text+"</td>"
-						+"<td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
-				$("#empTable").append(tr);
+				var chkval = $(":input:radio[name=kind]:checked").val();
+				if(chkval == '참조'){
+					var tr1 = "<tr class='refernode' onclick='selectNode(this) id='appr''><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
+					$(".refertable").append(tr1);
+				}else{
+					var tr2 = "<tr class='apprnode' onclick='selectNode(this) id='appr''><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td>"+chkval+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
+					$(".apprtable").append(tr2);
+				}
 			}
 		}
 	}
@@ -51,18 +54,53 @@
 	}
 	
 	function closeEmp(){
-		var nodes = $("tr");
-		opener.setChildValue(nodes);
+		var apprnodes = $(".apprnode");
+		var refernodes = $(".refernode");
+		opener.setChildValue(apprnodes);
+		opener.setChildValue(refernodes);
 		window.close();
 	}
 </script>
 </head>
 <body>
+	<div class="leftBox">
 	<%@include file="../mng/allTree.jsp" %><br>
-	<input type="button" value="추가" onclick="addEmp()">
-	<input type="button" value="삭제" onclick="delEmps()">
-	<input type="button" value="확인" onclick="closeEmp()">
-	<table id="empTable">
-	</table>
+	</div>
+	<div class="centerBox">
+		<h1>결재 유형 선택</h1>
+		<input type="radio" id="kind" name="kind" value="참조" checked="checked">참조<br>
+		<input type="radio" id="kind" name="kind" value="합의">합의<br>
+		<input type="radio" id="kind" name="kind" value="결재">결재<br>
+		<input type="button" value="추가" onclick="addEmp()"><br>
+		<input type="button" value="삭제" onclick="delEmps()">
+		<div class="bottombtn">
+			<input type="button" value="확인" onclick="closeEmp()">
+			<input type="button" value="취소" onclick="">
+		</div>
+	</div>
+	<div class="rightBox">
+		<div class="apprBox">
+			<h3>결재자</h3>
+			<table class="apprIndex">
+				
+			</table>
+			<div class="apprs">
+				<table class="apprtable">
+					<tr style="background: #E1E2E1; height: 30px">
+						<th>부서</th><th>직급</th><th>이름</th><th>종류</th><th>삭제</th>
+					</tr>
+				</table>
+			</div>
+			<br><hr>
+			<h3>참조자</h3>
+		</div>
+		<div class="refers">
+			<table class="refertable">
+				<tr style="background: #E1E2E1; height: 30px">
+					<th>부서</th><th>직급</th><th>이름</th><th>삭제</th>
+				</tr>
+			</table>
+		</div>
+	</div>
 </body>
 </html>

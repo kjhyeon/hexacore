@@ -1,0 +1,60 @@
+@charset "UTF-8";
+
+body {
+	heigth: 100%;
+}
+
+.selected {
+	background-color: skyblue;
+}
+
+.leftBox {
+	float: left;
+	width: 30%;
+	padding: 10px;
+	border: 1px solid gray;
+	height: 700px;
+}
+
+.centerBox {
+	position: absolute;
+	left: 35%;
+	width: 20%;
+	padding-top: 150px;
+	height: 570px;
+	text-align: center;
+}
+
+.rightBox {
+	float: right;
+	width: 40%;
+	border: 1px solid gray;
+	text-align: center;
+	padding: 10px;
+	height: 700px;
+}
+
+table {
+	width: 100%;
+}
+
+.apprs {
+	height: 150px;
+	width: 100%;
+	border: 2px solid #E1E2E1;
+}
+
+.refers {
+	height: 350px;
+	width: 100%;
+	border: 2px solid #E1E2E1;
+	margin-bottom: 50px;
+}
+
+.bottombtn {
+	position: absolute;
+	bottom: 10px;
+	left: 0;
+	right: 0;
+}
+

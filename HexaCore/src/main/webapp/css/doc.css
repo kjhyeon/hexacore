@@ -1,24 +1,29 @@
 @charset "UTF-8";
 
-.docBox {
+.leftBox {
 	float: left;
 	width: 70%;
 	text-align: center;
 }
 
-.apprBox {
-	background: #fff;
-	border: 5px solid #414345;
-	padding: 10px;
+.rightBox {
 	float: right;
 	width: 25%;
 	text-align: center;
-	
 }
 
 .apprbtn {
 	width: 100%;
 	margin-bottom: 20px;
+}
+
+.apprBox {
+	border: 5px solid #414345;
+	padding: 10px;
+}
+
+.apprIndex, .referIndex {
+	width: 100%;
 }
 
 .apprs {
@@ -27,12 +32,31 @@
 	border: 2px solid #E1E2E1;
 }
 
+.btnBox {
+	margin-top: 50px;
+	width: 100%;
+}
+
 .refers {
 	height: 250px;
 	width: 100%;
 	border: 2px solid #E1E2E1;
 }
 
-#docu {
+#docuHead {
 	width: 100%;
+	border-collapse: collapse;
+}
+
+#docuHead tr {
+	border: 1px solid #E1E2E1;
+	height: 50px;
+}
+
+#docuHead th {
+	background: #E1E2E1;
+}
+
+#inputTitle {
+	width: 95%;
 }

@@ -45,14 +45,20 @@ window.onload = function(){
 				}
 			}
 			if(!flag){
-				var tr = "<tr onclick='selectNode(this)'> <td>"+node.li_attr['deptname']+"</td> <td>"+node.li_attr['e_rank_name']+"</td> <td>"+node.text+"</td>"
-						+"<td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
-				$("#empTable").append(tr);
+				var chkval = $(":input:radio[name=kind]:checked").val();
+				if(chkval == '참조'){
+					var tr1 = "<tr onclick='selectNode(this) id='appr''><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
+					$(".refertable").append(tr1);
+				}else{
+					var tr2 = "<tr onclick='selectNode(this) id='appr''><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td>"+chkval+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
+					$(".apprtable").append(tr2);
+				}
 			}
 		}
 	});
 
 }
+
 function search() { //트리 내 name을 통한 노드 검색
 	if ($("#menu_name").val()) {
 		$("#deptTree").jstree(true).search($("#menu_name").val());
