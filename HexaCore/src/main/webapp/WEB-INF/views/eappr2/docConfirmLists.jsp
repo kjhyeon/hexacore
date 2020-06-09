@@ -10,60 +10,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Insert title here</title>
-<link type="text/css" rel="stylesheet" href="./css/sweetalert.css">
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
-<script type="text/javascript" src="./js/sweetalert.js"></script>
 </head>
 <body>
-	<%@include file="./../../header.jsp"%>
+	<%@include file="../header.jsp"%>
 	<div id="container">
-		<div>
-			<form class="navbar-form navbar-right" role="search"
-				action="./totalSearch.do" method="get">
-				<div class="form-group input-group">
-					<span class="input-group-btn"> <select name="type"
-						class="form-control">
-							<option value="title/con">제목+내용</option>
-							<option value="title">제목</option>
-							<option value="content">내용</option>
-							<option value="author">기안자</option>
-					</select>
-					</span> <input type="text" class="form-control" placeholder="Search.."
-						name="keyword" style="position: relative; float: right;">
-					<span class="input-group-btn">
-						<button class="btn btn-default" type="button">
-							<span class="glyphicon glyphicon-search"></span>
-						</button>
-					</span>
-				</div>
-			</form>
-		</div>
 		<form action="#" method="post">
 			<table class="table table-bordered" style="width: 75%">
 				<tr>
 					<th>문서번호</th>
 					<th>기안자</th>
 					<th>제목</th>
-					<th>내용</th>
 					<th>기안일</th>
 					<th>결재</th>
 				</tr>
 				<c:if test="${empty lists}">
 					<tr>
-						<th colspan="5">결재 하실 문서가 없습니다.</th>
+						<th colspan="5">결재 문서가 없습니다.</th>
 					</tr>
 				</c:if>
 				<c:forEach var="dto" items="${lists}" varStatus="status">
 					<tr>
 						<td>${dto.seq}</td>
 						<td>${dto.author}</td>
-						<td>${dto.title}</td>
-						<td><a href="./docDetail.do?seq=${dto.seq}">${dto.content}</a></td>
+						<td><a href="./docDetail.do?seq=${dto.seq}&number=${number}">${dto.title}</a></td>
 						<td>${dto.regdate}</td>
 						<c:choose>
 							<c:when	test="${(id ne dto.author)&& (dto.a_turn eq dto.appr_turn)}">
-								<td><input type="button" value="결재" data-backdrop='static'	data-keyboard='false' data-toggle="modal"	data-target="#apprDoc"
-									onclick="apprDoc('${dto.seq}','${dto.appr_turn}','${dto.a_turn}','${number}')"></td>
+								<td><input type="button" value="결재" data-backdrop='static'	data-keyboard='false' data-toggle="modal"
+									data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}','${dto.a_turn}','${number}')">
+								</td>
 							</c:when>
 							<c:when test="${dto.appr_turn ne dto.a_turn}">
 								<td>결재중</td>
@@ -79,15 +55,13 @@
 				</c:forEach>
 			</table>
 			<input type="hidden" name="index" id="index" value="${row.index }">
-			<input type="hidden" name="pageNum" id="pageNum"
-				value="${row.pageNum }"> <input type="hidden" name="listNum"
-				id="listNum" value="${row.listNum }">
+			<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }"> 
+			<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
 			<div class="center" style="text-align: center; position: relative;">
 				<ul class="pagination">
 					<li><a href="./docLists.do?page=0" onclick="pageFirst()">&laquo;</a></li>
-					<li><a href="./docLists.do?page=${row.index-1}"
-						onclick="pagePre()">&lt;</a></li>
-					<c:forEach var="i" begin="${row.pageNum }" end="${row.count }"	step="1">
+					<li><a href="./docLists.do?page=${row.index-1}"	onclick="pagePre()">&lt;</a></li>
+					<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
 						<li><a href="./docLists.do?page=${i-1}">${i }</a></li>
 					</c:forEach>
 					<li><a href="./docLists.do?page=${row.index+1}">&gt;</a></li>
@@ -100,7 +74,8 @@
 				<!-- Modal content-->
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" data-toggle='modal'>&times;</button>
+						<button type="button" class="close" data-dismiss="modal"
+							data-toggle='modal'>&times;</button>
 						<h4 class="modal-title">결재</h4>
 					</div>
 					<div class="modal-body">

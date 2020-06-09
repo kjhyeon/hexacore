@@ -70,10 +70,10 @@ public class EapprCtrl2 {
 		List<DocumentDTO> lists =null;
 		if(number.equalsIgnoreCase("1")) {
 		lists = service.selectNeedApprDoc(map);
-		log.info("****{}",lists);
+		log.info("********lists:{}",lists);
 		}else if(number.equalsIgnoreCase("2")) {
 		lists = service.selectApprMyDoc(map);
-		log.info("****{}",lists);
+		log.info("********lists:{}",lists);
 		}
 		model.addAttribute("lists",lists);
 		model.addAttribute("row", row);
@@ -81,44 +81,57 @@ public class EapprCtrl2 {
 		model.addAttribute("number",number);
 		return "eappr2/docConfirmLists";
 	}
-		
+	
+	@Transactional
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
-	public String updateDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto) {
+	public String updateDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto,String number) {
 		log.info("받아온 seq 값: {}", Adto.getSeq());
 		String seq = Integer.toString(Adto.getSeq());
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		String id = Ldto.getUsername();
 		DocumentDTO Ddto = service.selectDoc(seq);
+		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
 		Adto.setId(id);
 		List<ApprovalDTO> listsa = service.selectApprRoot(Adto);
 		int turn = 0;
-		log.info("********{}",listsa.size());
+		log.info("********listsa Size:{}",listsa.size());
 		if(listsa!=null && listsa.size()!=0) {
 			turn = listsa.get(0).getTurn();
 			model.addAttribute("turn",turn);
 		}
-		log.info("********악!!!{}",turn);
-		log.info("********악!!!{}",Adto);
-		log.info("********악!!!{}",listsa);
+		log.info("********turn:{}",turn);
+		log.info("********Adto:{}",Adto);
+		log.info("********listsa:{}",listsa);
 		List<DocCommentDTO> lists = service.selectComment(seq);
 		model.addAttribute("comment",lists);
 		model.addAttribute("Ddto",Ddto);
 		model.addAttribute("name",id);
-		log.info("*************Ddto 값: {}", Ddto);
+		model.addAttribute("approvalLine",listsb);
+		log.info("********number:{}", number);
+		model.addAttribute("number",number);
+		log.info("********Ddto:{}", Ddto);
 		return "eappr2/docDetail";
 	}	
 	
-
-	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST)
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST,produces = "applicaton/text; charset=UTF-8;")
 	public String modifyDoc(Model model,String seq,SecurityContextHolder session) {
 		Authentication auth = session.getContext().getAuthentication();
 	    LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 	    String id = Ldto.getUsername();
 		DocumentDTO Ddto = service.selectDoc(seq);
 		model.addAttribute("Ddto",Ddto);
-		log.info("Ddto check{}", Ddto);
-		return "eappr2/modifyForm";
+		log.info("********Ddto:{}", Ddto);
+		JSONObject json = new JSONObject();
+		json.put("id",id);
+		json.put("seq",Ddto.getSeq());
+		json.put("author",Ddto.getAuthor());
+		json.put("title",Ddto.getTitle());
+		json.put("regdate",Ddto.getRegdate());
+		json.put("content", Ddto.getContent());
+		return json.toString();
 	}
 	
 	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.POST)
@@ -126,13 +139,13 @@ public class EapprCtrl2 {
 		service.deleteDoc(seq);
 		return "docLists.do";//리스트로 보내자
 	}
-	
+	@Transactional
 	@RequestMapping(value="/saveDoc.do", method= RequestMethod.POST)
 	public String saveDoc(DocumentDTO Ddto) {
-		log.info("Ddto 확인용 로그1 : {}", Ddto);
+		log.info("********Ddto:{}", Ddto);
 		Ddto.setAppr_turn(1);
 		boolean isc = service.updateDoc(Ddto);
-		log.info("****check DdtoList{}",Ddto.getLists());
+		log.info("********DdtoList:{}",Ddto.getLists());
 		
 		if(Ddto.getLists()!=null) {
 			for (int i = 0; i < Ddto.getLists().size(); i++) {
@@ -151,12 +164,12 @@ public class EapprCtrl2 {
 	@ResponseBody
 	public String apprDoc(ApprovalDTO Adto, int appr_turn, int a_turn ,String number, SecurityContextHolder session) {
 		JSONObject json = new JSONObject();
-		log.info("***********************************{}",Adto);
+		log.info("********Adto:{}",Adto);
 		Authentication auth = session.getContext().getAuthentication();
 	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		Adto.setId(dto.getUsername());
 		List<ApprovalDTO> lists = service.selectApprRoot(Adto);
-		log.info("***********************************{}",lists);
+		log.info("********lists:{}",lists);
 		json.put("seq", lists.get(0).getSeq());
 		json.put("id", lists.get(0).getId());
 		json.put("name", lists.get(0).getName());
@@ -171,8 +184,7 @@ public class EapprCtrl2 {
 	@ResponseBody
 	@RequestMapping(value="/checkPassword", method=RequestMethod.POST)
 	public String checkPassword(String password , SecurityContextHolder session) {
-		log.info("password{}",password);
-		
+		log.info("********password:{}",password);
 		Authentication auth = session.getContext().getAuthentication();
 	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		EmployeeDTO EDto =  EService.selectLoginInfo(dto.getUsername());
@@ -187,9 +199,9 @@ public class EapprCtrl2 {
 	@Transactional
 	@RequestMapping(value="/confirmDoc.do", method= RequestMethod.POST)
 	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto,String number,SecurityContextHolder session) {
-		log.info("confirm Test{}",Adto);
-		log.info("confirm Test{}",Ddto);
-		log.info("confirm Test{}",DCdto);
+		log.info("********confirm Test Adto:{}",Adto);
+		log.info("********confirm Test Ddto:{}",Ddto);
+		log.info("********confirm Test DCdto:{}",DCdto);
 		Authentication auth = session.getContext().getAuthentication();
 	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		DCdto.setName(dto.getName());
@@ -213,9 +225,9 @@ public class EapprCtrl2 {
 			}else if(Adto.getChk().equalsIgnoreCase("R")){
 				Adto.setAppr_kind("반려");
 				Ddto.setState(4);
-				log.info("confirm Test2R{}",Adto);
-				log.info("confirm Test2R{}",Ddto);
-				log.info("confirm Test2R{}",DCdto);
+				log.info("********confirm Test2R Adto:{}",Adto);
+				log.info("********confirm Test2R Ddto:{}",Ddto);
+				log.info("********confirm Test2R DCdto:{}",DCdto);
 				service.updateDoc(Ddto);
 				service.updateApprChk(Adto);
 				service.insertComment(DCdto);//코멘트 입력

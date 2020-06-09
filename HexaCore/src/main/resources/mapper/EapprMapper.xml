@@ -73,7 +73,7 @@
 
 	<!-- 코멘트 조회  -->
 	<select id="selectComment" parameterType="java.lang.String" resultType="DocCommentDto">
-	SELECT *
+	SELECT SEQ, COMMENT_SEQ, ID, NAME, CONTENT, REGDATE
 		FROM DOC_COMMENTS
 			WHERE SEQ = #{seq}
 				ORDER BY COMMENT_SEQ
@@ -105,7 +105,7 @@
 			(SELECT 
 				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.title, d.content, d.state, d.regdate, d.author, d.seq, d.appr_turn, id, a.turn a_turn
 					FROM DOCUMENT d ,APPROVAL a 
-						WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ=d.SEQ AND d.APPR_TURN>=a.TURN 
+						WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ=d.SEQ AND d.APPR_TURN>a.TURN
 							ORDER BY ROW_NUM ASC)
 			WHERE ROW_NUM BETWEEN #{start} AND #{last}
 	</select>

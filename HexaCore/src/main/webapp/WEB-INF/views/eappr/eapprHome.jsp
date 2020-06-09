@@ -68,6 +68,8 @@ $(function(){
 				<div class="submenu" onclick="location.href='./goMyDocList.do?state=1'">결재중문서</div>
 				<div class="submenu" onclick="location.href='./goMyDocList.do?state=2'">승인문서</div>
 				<div class="submenu" onclick="location.href='./goMyDocList.do?state=3'">반려문서</div>
+				<div class="submenu" onclick="location.href='./docLists.do?number=1'">결재필요문서</div>
+				<div class="submenu" onclick="location.href='./docLists.do?number=2'">결재중문서(결재선안에 나)</div>
 			</div>
 			<div class="menu">참조문서함</div>
 		</div>

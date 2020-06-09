@@ -8,6 +8,7 @@
 </head>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
+
 	function apprSearch(){
 		var treeWindow = window.open("./goApprTree.do", "결재루트 선택", "width=600, height=800");
 	}
@@ -79,28 +80,30 @@
 	
 </script>
 <body>
-<%@include file="./../../header.jsp"%>
+<%@include file="../header.jsp" %>
 	<form id="modifyDoc" name="modifyDoc" method="POST">
 		<input type="button" onclick="apprSearch()" value="결재선 선택">
 		<table id="approval">
 		</table>
 		<table id="docu">
 			<tr>
-				<td>문서번호</td>
-				<td><input type="text" name="seq" value="${Ddto.seq}"></td>
+				<td>No.</td>
+				<td>${Ddto.seq}</td>
 			</tr>
 			<tr>
-				<td>기안자:</td>
-				<td>
-					<input type="text" name="author" value="${Ddto.author}">
-				</td>
+				<td>Author</td>
+				<td>${Ddto.author}</td>
 			</tr>
 			<tr>
-				<td>title:</td>
-				<td><input type="text" name="title" value="${Ddto.title}"></td>
+				<td>Title</td>
+				<td><input type="text" name="title" value="${Ddto.title}" ></td>
 			</tr>
 			<tr>
-				<td>content:</td>
+				<td>Report Date</td>
+				<td><input type="text" name="regdate" value="${Ddto.regdate}"></td>
+			</tr>
+			<tr>
+				<td>Content</td>
 				<td>
 					<textarea id="p_content" name="content" rows="5" cols="50">${Ddto.content}</textarea>
 					<script type="text/javascript">CKEDITOR.replace('p_content', {height: 500});</script>
