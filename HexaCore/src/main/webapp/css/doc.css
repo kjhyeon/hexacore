@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+.docBox {
+	float: left;
+	width: 70%;
+	text-align: center;
+}
+
+.apprBox {
+	background: #fff;
+	border: 5px solid #414345;
+	padding: 10px;
+	float: right;
+	width: 25%;
+	text-align: center;
+	
+}
+
+.apprbtn {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+.apprs {
+	height: 100px;
+	width: 100%;
+	border: 2px solid #E1E2E1;
+}
+
+.refers {
+	height: 250px;
+	width: 100%;
+	border: 2px solid #E1E2E1;
+}
+
+#docu {
+	width: 100%;
+}

@@ -4,6 +4,12 @@
 <head>
 <meta charset="UTF-8">
 <title>전자결재 홈</title>
+<style type="text/css">
+@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+* {
+	font-family: 'Jeju Gothic', sans-serif;
+}
+</style>
 </head>
 <body>
 	문서요약보기
