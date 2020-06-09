@@ -26,6 +26,11 @@
 	display: none;
 }
 
+.subside > p:hover {
+	background-color: #232526;
+	cursor: pointer;
+}
+
 .menu, .menu01, .submenu, .ddmenu {
 	position: relative;
 	height: 100px;
@@ -49,13 +54,12 @@
 
 .content {
 	left: 12%;
-	width: 86%;
-}
-
-.content {
-    -ms-overflow-style: none; /* IE and Edge */
+	width: 85%;
+	height: 800px;
+	-ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 }
+
 .content::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera*/
 }
@@ -64,7 +68,7 @@
 	position: fixed;
 	left: 22%;
 	top: 100px;
-	width: 60%;
+	width: auto;
 	height: 80%;
 	background-color: white;
 	z-index: 10;
@@ -74,4 +78,10 @@
 	overflow: scroll;
 	border: 1px solid black;
 	box-shadow: 2px 2px 2px 2px gray;
+}
+
+#iframe {
+	height: 100%;
+	width: 100%;
+	border: none;
 }

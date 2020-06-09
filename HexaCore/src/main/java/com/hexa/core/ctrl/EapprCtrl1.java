@@ -32,7 +32,15 @@ public class EapprCtrl1 {
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	// 전자결재 홈 화면으로 이동
+	// 전자결재 메인 화면으로 이동
+	@RequestMapping(value="/goEapprMain.do")
+	public String mngMain(Model model) {
+		List<DocumentTypeDTO> list = service.selectDocTypeList();
+		model.addAttribute("list", list);
+		return "eappr/eapprMain";
+	}
+	
+	// iframe내에 전자결재 홈 화면 출력
 	@RequestMapping(value = "/goEapprHome.do", method = RequestMethod.GET)
 	public String EapprHome(Principal scInfo, Model model) {
 		String userId = scInfo.getName();

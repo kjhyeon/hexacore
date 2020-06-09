@@ -81,7 +81,7 @@
 	
 </script>
 <body>
-	<%@include file="./../../header.jsp" %>
+	<%@include file="../header.jsp" %>
 	<form id="insertdoc" name="insertdoc" method="POST">
 		<input type="button" onclick="apprSearch()" value="결재선 선택">
 		<table id="approval">
