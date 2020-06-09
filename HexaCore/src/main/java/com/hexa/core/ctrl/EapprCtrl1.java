@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
@@ -64,18 +66,24 @@ public class EapprCtrl1 {
 	}
 	
 	// 문서 양식 미리보기 화면으로 이동
-	@RequestMapping(value = "/goDocTypePreview.do", method = RequestMethod.GET)
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value = "/goDocTypePreview.do", method = RequestMethod.GET, produces = "application/text; charset=utf8")
 	public String DocTypePreview(String type_seq, Model model) {
 		log.info("seq값 확인 : {}", type_seq);
 		DocumentTypeDTO dto = service.selectDocType(type_seq);
 		log.info("dto 확인 : {}", dto);
 		model.addAttribute("dto", dto);
-		return "eappr/docTypePreview";
+		JSONObject json = new JSONObject();
+		json.put("content", dto.getContent());
+		json.put("type_seq", dto.getType_seq());
+		return json.toString();
 	}
 	
 	// 문서 작성 화면으로 이동
-	@RequestMapping(value = "/goDocWriteForm.do", method = RequestMethod.POST)
-	public String DocTypePreview(DocumentTypeDTO dto, Model model) {
+	@RequestMapping(value = "/goDocWriteForm.do", method = RequestMethod.GET)
+	public String DocWriteForm(String type_seq, Model model) {
+		DocumentTypeDTO dto = service.selectDocType(type_seq);
 		model.addAttribute("typeDto", dto);
 		return "eappr/DocWriteForm";
 	}

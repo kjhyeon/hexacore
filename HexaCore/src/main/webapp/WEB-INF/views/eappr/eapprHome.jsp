@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="./css/sidebar.css">
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="./js/eapprjs.js"></script>
 <script type="text/javascript">
 $(function(){
 	// 사이드 바의 문서 작성 클릭할 때마다 문서 양식 출력/숨기기
@@ -48,10 +49,10 @@ $(function(){
 	<div id="wrap" class="wrap">
 		<div class="subside">
 			<c:forEach var="docType" items="${list}">
-				<p onclick="location.href='./goDocTypePreview.do?type_seq=${docType.type_seq}'">${docType.name}</p>
+				<p onclick="previewAjax(${docType.type_seq})">${docType.name}</p>
 			</c:forEach>
 		</div>
-		
+		<div class="preview"></div>
 		<div class="sidebar">
 			<div class="menu01">문서 작성</div>
 			<div>

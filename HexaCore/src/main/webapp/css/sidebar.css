@@ -51,3 +51,19 @@
 	left: 12%;
 	width: 86%;
 }
+
+.preview {
+	position: fixed;
+	left: 22%;
+	top: 100px;
+	width: 60%;
+	height: 80%;
+	background-color: white;
+	z-index: 10;
+	padding: 10px;
+	color: black;
+	display: none;
+	overflow: scroll;
+	border: 1px solid black;
+	box-shadow: 2px 2px 2px 2px gray;
+}
