@@ -59,7 +59,7 @@ public interface FreeBbsIDao {
 		// 15. 파일 추가
 		public boolean insertFile(FileDTO fdto);
 		// 16. 파일 삭제
-		public boolean deleteFile(String seq);
+		public boolean deleteFile(Map<String,Object> map);
 
 	
 }

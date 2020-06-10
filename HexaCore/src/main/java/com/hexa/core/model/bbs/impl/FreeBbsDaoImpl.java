@@ -131,9 +131,9 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 	}
 
 	@Override
-	public boolean deleteFile(String seq) {
-		log.info("파일 삭제 deleteFile,\t {}", seq);
-		int n = session.delete(NS + "deleteFile", seq);
+	public boolean deleteFile(Map<String,Object> map) {
+		log.info("파일 삭제 deleteFile,\t {}", map);
+		int n = session.delete(NS + "deleteFile", map);
 		return (n>0)?true:false;
 	}
 

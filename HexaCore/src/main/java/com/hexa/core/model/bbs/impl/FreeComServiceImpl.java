@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hexa.core.dto.CommentDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeComIDao;
 import com.hexa.core.model.bbs.inf.FreeComIService;
 
@@ -49,5 +50,19 @@ public class FreeComServiceImpl implements FreeComIService {
 		log.info("자유게시판 댓글 삭제(관리자) deleteFreeAdminComment,\t {}",seq); 
 		return dao.deleteFreeAdminComment(seq);
 	}
+
+	@Override
+	public List<CommentDTO> selectFreeCommentListRow(Map<String, Object> map) {
+		log.info("자유게시판 페이징 처리 selectFreeComment,\t {}", map);
+		return dao.selectFreeCommentListRow(map);
+	}
+
+	@Override
+	public int selectFreeCommentListTotal(String parent_seq) {
+		log.info("자유게시판 댓글 총 갯수 selectFreeCommentListTotal,\t {}", parent_seq);
+		return dao.selectFreeCommentListTotal(parent_seq);
+	}
+	
+	
 
 }

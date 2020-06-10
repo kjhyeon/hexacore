@@ -92,18 +92,30 @@
 									  resultType="BbsDto">
 	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
 		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
-		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH
+		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH,F_COUNT, C_COUNT 
 		FROM 
 		(
 		SELECT ROWNUM RNUM, 	SEQ, 		ID, 		NAME,
 				   TRIM(TITLE) TITLE, CONTENT,	STATE,		REGDATE,	
-				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH
+				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH, F_COUNT, C_COUNT 
 			FROM
 			(
-			SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
-				FROM FREE_BBS
-					WHERE STATE = 0 OR STATE = 2
-						ORDER BY ROOT DESC, REPLY_SEQ 
+			 SELECT * FROM
+					(
+					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
+					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
+					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	f.CONTENT
+						FROM FREE_BBS f LEFT JOIN 
+						(
+						 SELECT SEQ,COUNT(*) F_COUNT 
+						 	FROM FILES WHERE CATEGORY=0 GROUP BY SEQ
+						 ) f2 ON f.SEQ = f2.SEQ
+					 ) j1 LEFT JOIN (
+					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
+					 				 	FROM FREE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
+					 	WHERE STATE = 0
+						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
 			)
 		)
 		WHERE
@@ -115,17 +127,29 @@
 									  resultType="BbsDto">
 	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
 		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
-		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH
+		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH,F_COUNT, C_COUNT 
 		FROM 
 		(
 		SELECT ROWNUM RNUM, 	SEQ, 		ID, 		NAME,
 				   TRIM(TITLE) TITLE, CONTENT,	STATE,		REGDATE,	
-				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH
+				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH, F_COUNT, C_COUNT 
 			FROM
 			(
-			SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
-				FROM FREE_BBS
-					ORDER BY ROOT DESC, REPLY_SEQ 
+			 SELECT * FROM
+					(
+					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
+					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
+					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	f.CONTENT
+						FROM FREE_BBS f LEFT JOIN 
+						(
+						 SELECT SEQ,COUNT(*) F_COUNT 
+						 	FROM FILES WHERE CATEGORY=0 GROUP BY SEQ
+						 ) f2 ON f.SEQ = f2.SEQ
+					 ) j1 LEFT JOIN (
+					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
+					 				 	FROM FREE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
+						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
 			)
 		)
 		WHERE
@@ -158,9 +182,17 @@
 	</insert>
 	
 	<!-- 16. 파일 삭제 -->
-	<delete id="deleteFile" parameterType="java.lang.String">
-	DELETE FILES 
-		WHERE SEQ = #{seq}
+	<delete id="deleteFile" parameterType="java.util.Map">
+	DELETE FROM FILES 
+		WHERE
+			<if test="files != null">
+				NAME NOT IN
+				<foreach collection="files" item="name" open="(" separator="," close=")">
+					#{name}
+				</foreach> 
+				AND
+			</if>
+				SEQ = #{seq} AND CATEGORY = 0
 	</delete>
 	
 	<!-- 17. 파일 조회 -->

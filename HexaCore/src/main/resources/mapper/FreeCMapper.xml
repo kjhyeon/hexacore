@@ -37,4 +37,26 @@
 		DELETE FREE_COMMENTS
 			WHERE SEQ = #{seq}
 	</delete>
+	
+	<!-- 6. 자유 게시판 댓글 페이징 -->
+	<select id="selectFreeCommentListRow" parameterType="java.util.Map" resultType="CommentDto">
+		SELECT * FROM 
+			(
+			SELECT 
+				ROW_NUMBER() OVER(ORDER BY SEQ ASC) AS ROW_NUM, 
+					SEQ, ID, NAME, 
+					CONTENT, REGDATE, PARENT_SEQ 
+					FROM FREE_COMMENTS 
+					WHERE PARENT_SEQ = #{parent_seq}
+			)
+					WHERE ROW_NUM BETWEEN #{start} AND #{last}
+	</select>
+	
+	<!-- 7. 자유 게시판 댓글 총 갯수 -->	
+	<select id="selectFreeCommentListTotal" parameterType="java.lang.String" 
+											resultType="java.lang.Integer">
+		SELECT COUNT(*)
+			FROM FREE_COMMENTS
+				WHERE PARENT_SEQ = #{parent_seq}
+	</select>
 </mapper>
