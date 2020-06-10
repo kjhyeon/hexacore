@@ -34,9 +34,12 @@ public class EapprCtrl1 {
 	
 	// 전자결재 메인 화면으로 이동
 	@RequestMapping(value="/goEapprMain.do")
-	public String mngMain(Model model) {
+	public String mngMain(Model model,Principal scInfo) {
 		List<DocumentTypeDTO> list = service.selectDocTypeList();
 		model.addAttribute("list", list);
+		String userId = scInfo.getName();
+		int cnt = service.selectNeedApprDocCount(userId);
+		model.addAttribute("cnt",cnt);
 		return "eappr/eapprMain";
 	}
 	

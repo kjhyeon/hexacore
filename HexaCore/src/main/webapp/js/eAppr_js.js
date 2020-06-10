@@ -69,11 +69,6 @@ function passwordChk(conf, a_turn, number) {
 	      }
 	   });
 }
-function saveUpdoc(){
-	$("#docu").append("<tr><td><input type='hidden' name='state' value='0'></td></tr>");
-	$("#modifyDoc").attr("action", "./saveDoc.do");
-	document.modifyDoc.submit();
-}
 
 function confirmDoc(a_turn,number){
 	
@@ -93,48 +88,104 @@ function rejectDoc(a_turn,number){
 //////////////////////////////////
 
 
-function apprSearch(){
-	var treeWindow = window.open("./goApprTree.do", "결재루트 선택", "width=600, height=800");
+function apprSearch() {
+	var treeWindow = window.open("./goApprTree.do", "결재루트 선택",
+			"width=1000, height=750");
 }
-function setChildValue(nodes){
-	$("#approval").empty();
+function setChildValue(nodes) {
+	nodes = nodeSort(nodes);
+	$(".apprtable").empty();
+	var ap = "<tr class='index'>"
+		   + "<td>부서직급</td><td>이름</td><td>종류</td><td>순서</td>"
+		   + "</tr>"
+		   + "<tbody>";
+	$(".apprtable").append(ap);
 	for (var i = 0; i < nodes.length; i++) {
 		var child = nodes[i].children;
-// 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3X 4아이디 5e_rank
-// 			alert(child[j].innerHTML);
-// 		}
-		var app =
-			"<tr>"+
-			"<td>결재자"+i+" 아이디:<input name='lists["+i+"].id' value='"+child[4].innerHTML+"' readonly='readonly' ></td>"+
-			"<td>결재자"+i+" 이름:<input name='lists["+i+"].name' value='"+child[2].innerHTML+"' readonly='readonly' ></td>"+
-			"<td>결재자"+i+" 직위:<input name='lists["+i+"].duty' value='"+child[0].innerHTML+" "+child[1].innerHTML+"' readonly='readonly' ></td>"+
-			"<td>결재자"+i+" 결재순서:<input name='lists["+i+"].turn' value='"+(i+1)+"' readonly='readonly' ></td>"+
-			"<td><select name='lists["+i+"].appr_kind'>"+
-			"<option value='참조'>참조</option>"+
-			"<option value='합의'>합의</option>"+
-			"<option value='결재'>결재</option>"+
-			"</select></td>"+
-			"</tr>";
-		
-		$("#approval").append(app);
-		
+//				 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3종류 4X 5아이디 6e_rank
+//				 			alert(child[j].innerHTML);
+//				 		}
+		var app = "<tr>"
+				+ "<td>"+child[0].innerHTML+" "+child[1].innerHTML+"<input type='hidden' name='lists["+i+"].duty' value='"+child[0].innerHTML+" "+child[1].innerHTML+"'></td>"
+				+ "<td>"+child[2].innerHTML+"<input type='hidden' name='lists["+i+"].name' value='"+child[2].innerHTML+"'></td>"
+				+ "<td>"+child[3].innerHTML+"<input type='hidden' name='lists["+i+"].appr_kind' value='"+child[3].innerHTML+"'></td>"
+				+ "<td>"+(i+1)+"<input type='hidden' name='lists["+i+"].turn' value='"+(i+1)+"'>"
+				+ "<input type='hidden' name='lists["+i+"].id' value='"+child[5].innerHTML+"'>"
+				+ "</td>"
+				+ "</tr>";
+
+		$(".apprtable").append(app);
+		$(".apprtable").append("</tbody>");
 	}
-	
+}
+function setChildValue2(nodes1) {
+	nodes = nodeSort(nodes1);
+	$(".refertable").empty();
+	var ap = "<tr class='index'>"
+		   + "<td>부서직급</td><td>이름</td>"
+		   + "</tr>"
+		   + "<tbody>";
+	$(".refertable").append(ap);
+	for (var i = 0; i < nodes.length; i++) {
+		var child = nodes[i].children;
+//				 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3종류 4X 5아이디 6e_rank
+//				 			alert(child[j].innerHTML);
+//				 		}
+		var app = "<tr>"
+				+ "<td>"+child[0].innerHTML+" "+child[1].innerHTML+"<input type='hidden' name='lists["+(i+3)+"].duty' value='"+child[0].innerHTML+" "+child[1].innerHTML+"'></td>"
+				+ "<td>"+child[2].innerHTML+"<input type='hidden' name='lists["+(i+3)+"].name' value='"+child[2].innerHTML+"'>"
+				+ "<input type='hidden' name='lists["+(i+3)+"].appr_kind' value='"+child[3].innerHTML+"'>"
+				+ "<input type='hidden' name='lists["+(i+3)+"].turn' value='"+0+"'>"
+				+ "<input type='hidden' name='lists["+(i+3)+"].id' value='"+child[5].innerHTML+"'>"
+				+ "</td>"
+				+ "</tr>";
+
+		$(".refertable").append(app);
+		$(".apprtable").append("</tbody>");
+	}
 }
 
-function report(){
-	$("#docu").append("<tr><td><input type='hidden' name='state' value='1'></td></tr>");
-	$("#modifyDoc").attr("action", "./DocWrite.do");
-	$("#modifyDoc").attr("method", "post");
-	document.modifyDoc.submit();	
+function nodeSort(nodes){
+	var tempNode;
+	for (var i = 0; i < nodes.length; i++) {
+		var child1 = nodes[i].children;
+		for (var j = 0; j < nodes.length; j++) {
+			var child2 = nodes[j].children;
+			if((i < j)&&(child1[6].innerHTML < child2[6].innerHTML)){
+				tempNode = nodes[j];
+				nodes[j] = nodes[i];
+				nodes[i] = tempNode;
+			}
+		}
+	}
+	
+	return nodes;
 }
+
+function report() {
+	if($("#inputTitle").val()==""){
+		alert("제목을 입력하세요.");
+	}else if($(".apprtable > tbody >tr").length != 4){
+		alert("결재자를 선택하세요.");
+	}else{
+		$(".leftBox").append("<input type='hidden' name='state' value='1'>");
+		$("#formDoc").attr("action", "./DocWrite.do");
+		document.formDoc.submit();
+	}
+}
+
 
 function saveUpdoc(){
 	if(confirm("임시저장 하시겠습니까?\n(작성한 내용은 임시보관함에 저장됩니다.)") == true){
-$("#docu").append("<tr><td><input type='hidden' name='state' value='0'></td></tr>");
-$("#modifyDoc").attr("action", "./saveDoc.do");
-$("#modifyDoc").attr("method", "post");
-document.modifyDoc.submit();
+		if($("#inputTitle").val()==""){
+			alert("제목을 입력하세요.");
+		}else if($(".apprtable > tbody  > tr").length != 4){
+			alert("결재자를 선택하세요.");
+		}else{
+			$("#formDoc").attr("action", "./saveUpDoc.do");
+			$("#formDoc").attr("method", "post");
+			document.formDoc.submit();
+		}
 	}else{
 		return;
 	}
@@ -142,28 +193,7 @@ document.modifyDoc.submit();
 
 function cancelmodify(){
 	if(confirm("문서 수정을 취소하시겠습니까?\n(작성한 내용은 저장되지 않습니다.)") == true){
-		$("#modifyDoc").attr("action", "./goEapprHome.do");
-		$("#modifyDoc").attr("method", "get");
-		document.modifyDoc.submit();
-	}else{
-		return;
-	}
-}
-
-function reselecttype(){
-	var isc = window.confirm("문서 양식을 재선택하시겠습니까?");
-	if( isc == true){
-		$("#modifyDoc").attr("action", "./goDocTypeList.do");
-		$("#modifyDoc").attr("method", "get");
-		modifyDoc.submit();
-	}else{
-		return;
-	}
-}
-
-function resetDoc(){
-	if(confirm("모든 내용을 초기화하시겠습니까?\n(지정한 결재루트와 문서 내용 모두가 삭제됩니다.)") == true){
-		location.reload(true);	
+		location.reload(true);
 	}else{
 		return;
 	}
@@ -175,98 +205,42 @@ function modifyFormDoc(val){
 		type : "post",
 		data : {"seq":val},
 		dataType : "json",
-		
+		async : true,
 		success : function(msg) {
-			var html="";
-			html+= "<script type='text/javascript' src='./ckeditor/ckeditor.js'></script>";
-			html+= "<form id='modifyDoc' name='modifyDoc'>                                    	        " ;      
-			html+= "	<tr>                                                                                 	      	";      
-			html+= "<input type='button' onclick='apprSearch()' value='결재선 재선택'>                            		"     ;      
-			html+= "<input type='button' value='수정 취소' onclick='cancelmodify()'>                                  	"	;      
-			html+= "<input type='button' value='초기화' onclick='resetDoc()'>                                        	"	;      
-			html+= "<input type='button' value='임시저장' onclick='saveUpdoc()'>                                    	"	;      
-			html+= "<input type='button' value='바로상신' onclick='report()'>                                    		 "   ;      
-			html+= "	</tr>                                                                                    	  	";      
-			html+= "<table id='docu' class='table'  style='text-align:center;'>                                                                            	    ";      
-			html+= "	<tr>                                                                                       		";      
-			html+= "		<td>No.</td>                                                                           		";      
-			html+= "		<td>Author</td>                                                                        	 	";      
-			html+= "		<td>Title</td>                                                                         		";      
-			html+= "		<td>First Report Date</td>                                                              	";      
-			html+= "	</tr>                                                                                   	   	";      
-			html+= "	<tr>                                                                                    	   	";      
-			html+= "		<td>"+msg.seq+"</td>                                                               	    	";      
-			html+= "		<td>"+msg.author+"</td>                                                               	 	";      
-			html+= "		<td><input type='text' name='title' value='"+msg.title+"'></td>                        	 	";      
-			html+= "		<td>"+msg.regdate+"</td>                                                               	 	";      
-			html+= "	</tr>                                                                                      		";      
-			html+= "<div id='appr'>";
-			html+= "</div>";
-			html+= "</table>                                                                                         	";      
-			html+= "<div class='apprSignTable'>";
-			html+= "</div>";
-			html+= "		<p>Content</p>                                                                       	  	";      
-			html+= "<table'>                                                                                         	";      
-			html+= "		<tr>                                                                                   	  	";      
-			html+= "		<td>                                                                                   	  	";      
-			html+= "			<textarea id='p_content' name='content' rows='5' cols='50'>"+msg.content+"</textarea>	";      
-			html+= "			<script type='text/javascript'>CKEDITOR.replace('p_content', {height: 500});</script>	";      
-			html+= "		</td>                                                                                    	";      
-			html+= "		</tr>                                                                                   	  	";      
-			html+= "		<td><input type='hidden' name='regdate' value='"+msg.regdate+" readonly = 'readonly''></td>                 	   	";      
-			html+= "		<td><input type='hidden' name='author' value='"+msg.author+"' readonly = 'readonly'></td>                                                               	 	";      
-			html+= "		<td><input type='hidden' name='seq' value='"+msg.seq+"' readonly = 'readonly'></td>                                                               	    	";      
-			html+= "</form>                                                                                           "  ;
-			$("#ajaxModify").html("");
-			$("#ajaxModify").html(html);
-			$(".apprSignTable").append(appLineInsert(msg.content2));
-			
-			
-			
+			$(".btnBox").html("");
+			$(".btnBox").append(btnInsert());
+			$("#titleModi").html("");
+			$("#titleModi").append(titleInsert(msg.title));
+			$("#contentModi").html("");
+			$("#contentModi").append(contentInsert(msg.content));
+			$(".apprSignTable").html("");
 		},	error: function() {
 			alert("실패");
 		}
 		
 	});
 }
-function appLineInsert(val) {
+function titleInsert(val) {
 	var result="";
-	result+="<table id='approval' class='table'>";
-	if(val !=null){
-		result+="<tr>                  ";
-		result+="	<td>이름</td>      ";
-		result+="	<td>직위</td>      ";
-		result+="	<td>결재 종류</td> ";
-		result+="	<td>결재 상태</td> ";
-		result+="</tr>                 ";
-		for (var i = 0; i < val.length; i++) {
-			result+="<tr>";
-			result+="<td><input name='lists["+i+"].name' value='"+val[i].name+"' readonly='readonly'></td>                         ";
-			result+="<td><input name='lists["+i+"].duty' value='"+val[i].duty+"' readonly='readonly'></td>                         ";
-			result+="<td>"+val[i].appr_kind+"</td>                                                                                 ";
-			if(val[i].chk != null){
-				if(val[i].chk =='T'){
-					result+="<td>승인</td>                                                                                              ";
-				}
-				if(val[i].chk =='R'){
-					result+="<td>반려</td>                                                                                              ";
-				}
-				if(val[i].chk =='F'){
-					result+="<td>미결재</td>                                                                                              ";
-				}
-			}
-			result+="<td>                                                                                                       ";
-			if(val[i].appr_sign!=null){
-				result+="<img src='./image/도장1.png'	 style='width: 30px; height: 30px;'>             ";
-			}
-			result+="</td>                                                                                                      ";
-			result+="</tr>                                                                                                      ";
-			result+="<td><input type='hidden' name='lists["+i+"].id'	value='"+val[i].id+"' readonly='readonly'></td>            ";
-			result+="<td><input type='hidden' name='lists["+i+"].turn' value='"+(i+1)+"' readonly='readonly'></td>              ";
-			
-		}
-	}
-result+="</table>";
+	result+="<th>제목</th>";
+	result+="<td><input type='text' id='inputTitle' name='title' value='"+val+"'></td>";
+	return result;
+}
+
+function contentInsert(val) {
+	var result="";
+	result+="<script type='text/javascript' src='./ckeditor/ckeditor.js'></script>";
+	result+="<textarea id='p_content' name='content' rows='5' cols='50'>"+val+"</textarea>	";      
+	result+="<script type='text/javascript'>CKEDITOR.replace('p_content', {height: 500});</script>	";   
+	return result;
+}
+
+function btnInsert() {
+	var result="";
+	result+="<input type='button' onclick='apprSearch()' value='결재선 재선택'>                            		"     ;      
+	result+="<input type='button' value='수정 취소' onclick='cancelmodify()'>                                  	"	;      
+	result+="<input type='button' value='임시저장' onclick='saveUpdoc()'>                                    	"	;      
+	result+="<input type='button' value='바로상신' onclick='report()'>                                    		 "   ;
 	return result;
 }
 
@@ -282,3 +256,34 @@ function upApprDoc(){
 	$("#formDoc").submit();
 }
 
+//////
+
+window.onload = function () {
+    if (window.Notification) {
+       Notification.requestPermission();
+   }
+    if($(".cnt")!=0){
+    	calculate();
+    }
+}
+
+function calculate() {
+   setTimeout(function () {
+      notify();
+      }, 10000);
+}
+function notify() {
+     if (Notification.permission !== 'granted') {
+          alert('notification is disabled');
+     }
+     else {
+     var notification = new Notification('결재문서하실 문서가 있습니다.', {
+                   icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                   body: '결재하실 문서 확인 요청드립니다.',
+               });
+
+               notification.onclick = function () {
+                  $("#appr").click();
+               };
+           }
+       }

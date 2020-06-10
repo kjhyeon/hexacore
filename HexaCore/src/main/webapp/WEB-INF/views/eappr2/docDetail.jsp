@@ -36,6 +36,8 @@
 										<td>${Adto.name}<input type="hidden" name='lists[${i.index}].name' value='${Adto.name}'></td>
 										<td>
 											${Adto.appr_kind}
+											<input type="hidden" name='lists[${i.index}].seq' value='${Adto.seq}'>
+											<input type="hidden" name='lists[${i.index}].appr_kind' value='${Adto.appr_kind}'>
 											<input type="hidden" name='lists[${i.index}].id' value='${Adto.id}'>
 											<input type="hidden" name='lists[${i.index}].turn' value='${i.index+1}'>
 										</td>
@@ -71,6 +73,8 @@
 										<td>${Adto.duty}<input type="hidden" name='lists[${i.index}].duty' value='${Adto.duty}'></td>
 										<td>
 											${Adto.name}
+											<input type="hidden" name='seq' value='${Adto.seq}'>
+											<input type="hidden" name='lists[${i.index}].seq' value='${Adto.seq}'>
 											<input type="hidden" name='lists[${i.index}].name' value='${Adto.name}'>
 											<input type="hidden" name='lists[${i.index}].appr_kind' value='${Adto.appr_kind}'>
 											<input type="hidden" name='lists[${i.index}].id' value='${Adto.id}'>
@@ -102,12 +106,16 @@
 			<h1>지원이형 이거 양식 이름 어떻게 받아와??</h1>
 			<table id="docuHead">
 				<tr>
-					<th>기안자</th>
-					<td>${Ddto.author}</td>
+					<th>문서번호</th>
+					<td>${Ddto.seq}<input type="hidden" name ="seq" value="${Ddto.seq}"></td>
 				</tr>
 				<tr>
+					<th>기안자</th>
+					<td>${Ddto.author}<input type="hidden" name ="author" value="${Ddto.author}"></td>
+				</tr>
+				<tr id="titleModi">
 					<th>제목</th>
-					<td>${Ddto.title}</td>
+					<td>${Ddto.title}<input type="hidden" name ="title" value="${Ddto.title}"></td>
 				</tr>
 			</table>
 			<div class="apprSignTable" style="width: 30%; position: absolute; right:450px; margin-top: 100px;">
@@ -135,9 +143,9 @@
 			</table>
 		</div>
 			<br>
-			<table  style="text-align: center; width: 800px;">
+			<table  id="contentModi" style="text-align: center; width: 800px;">
 				<tr>
-					<td style="text-align: center; right: 450px; position: absolute; margin-top: 130px;">${Ddto.content}</td>
+					<td>${Ddto.content}</td>
 				</tr>
 			</table>
 		</div>
@@ -163,6 +171,7 @@
 			</table>
 		</div>
 		
+		</form>
 		<div id="apprDoc" class="modal fade" role="dialog">
 			<div class="modal-dialog">
 				<!-- Modal content-->
@@ -177,7 +186,6 @@
 				</div>
 			</div>
 		</div>
-		</form>
 	</div>
 </body>
 </html>

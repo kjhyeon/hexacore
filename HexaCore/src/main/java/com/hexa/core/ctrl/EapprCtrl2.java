@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
@@ -159,6 +160,9 @@ public class EapprCtrl2 {
 		log.info("********number:{}", number);
 		log.info("********Ddto:{}", Ddto);
 		//해당문서 코멘트 조회
+		//독타입 가져오기
+		DocumentTypeDTO TDto = service.selectDocType(Integer.toString(Ddto.getType_seq()));
+		model.addAttribute("typeDto",TDto);
 		model.addAttribute("comment",lists);
 		model.addAttribute("Ddto",Ddto);
 		model.addAttribute("name",id);
@@ -170,11 +174,11 @@ public class EapprCtrl2 {
 	//문서수정 Ajax
 	@ResponseBody
 	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST)
-	public Map<String, Object> modifyDoc(Model model,String seq,SecurityContextHolder session,ApprovalDTO Adto) {
+	public Map<String, Object> modifyDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto) {
 		Authentication auth = session.getContext().getAuthentication();
 	    LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 	    String id = Ldto.getUsername();
-		DocumentDTO Ddto = service.selectDoc(seq);
+		DocumentDTO Ddto = service.selectDoc(Integer.toString(Adto.getSeq()));
 		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
 		log.info("********Adto:{}",listsb);
 		log.info("********Ddto:{}", Ddto);
@@ -186,7 +190,7 @@ public class EapprCtrl2 {
 		map.put("regdate",Ddto.getRegdate());
 		map.put("content", Ddto.getContent());
 		map.put("content2", listsb);
-		
+//		map.put("typeDto",TDto);
 		return map;
 	}
 	
@@ -199,17 +203,17 @@ public class EapprCtrl2 {
 	
 	//임시저장
 	@Transactional
-	@RequestMapping(value="/saveDoc.do", method= RequestMethod.POST)
-	public String saveDoc(DocumentDTO Ddto) {
+	@RequestMapping(value="/saveUpDoc.do", method= RequestMethod.POST)
+	public String saveUpDoc(DocumentDTO Ddto) {
 		log.info("********Ddto:{}", Ddto);
-		Ddto.setAppr_turn(1);
+		Ddto.setAppr_turn(0);
+		Ddto.setState(0);
 		boolean isc = service.updateDoc(Ddto);
 		log.info("********DdtoList:{}",Ddto.getLists());
 		
 		if(Ddto.getLists()!=null) {
 			for (int i = 0; i < Ddto.getLists().size(); i++) {
 				Ddto.getLists().get(i).setChk("F");
-				Ddto.getLists().get(i).setSeq(Ddto.getSeq());
 					service.insertApprRoot(Ddto.getLists().get(i));
 			}
 		}

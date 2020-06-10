@@ -97,8 +97,6 @@
 	function savedoc() {
 		if($("#inputTitle").val()==""){
 			alert("제목을 입력하세요.");
-		}else if($(".apprtable > tr").length != 4){
-			alert("결재자를 선택하세요.");
 		}else{
 			$(".leftBox").append("<input type='hidden' name='state' value='0'>");
 			$("#insertdoc").attr("action", "./DocWrite.do");

@@ -1,120 +1,111 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>전자문서 작성</title>
+<link rel="stylesheet" href="./css/doc.css">
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
-<script type="text/javascript">
-
-	function apprSearch(){
-		var treeWindow = window.open("./goApprTree.do", "결재루트 선택", "width=600, height=800");
-	}
-	function setChildValue(nodes){
-		$("#approval").empty();
-		for (var i = 0; i < nodes.length; i++) {
-			var child = nodes[i].children;
-//	 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3X 4아이디 5e_rank
-//	 			alert(child[j].innerHTML);
-//	 		}
-			var app =
-				"<tr>"+
-				"<td>결재자1</td>"+
-				"<td>결재자1 아이디:<input name='lists["+i+"].id' value='"+child[4].innerHTML+"'></td>"+
-				"<td>결재자1 이름:<input name='lists["+i+"].name' value='"+child[2].innerHTML+"'></td>"+
-				"<td>결재자1 직위:<input name='lists["+i+"].duty' value='"+child[0].innerHTML+" "+child[1].innerHTML+"'></td>"+
-				"<td>결재자1 결재순서:<input name='lists["+i+"].turn' value='"+(i+1)+"'></td>"+
-				"<td><select name='lists["+i+"].appr_kind'>"+
-				"<option value='참조'>참조</option>"+
-				"<option value='합의'>합의</option>"+
-				"<option value='결재'>결재</option>"+
-				"</select></td>"+
-				"</tr>";
-			
-			$("#approval").append(app);
-			
-		}
-		
-	}
-	
-	function report(){
-			$("#docu").append("<tr><td><input type='hidden' name='state' value='1'></td></tr>");
-			$("#modifyDoc").attr("action", "./DocWrite.do");
-			document.modifyDoc.submit();	
-	}
-	
-	function saveUpdoc(){
-		$("#docu").append("<tr><td><input type='hidden' name='state' value='0'></td></tr>");
-		$("#modifyDoc").attr("action", "./saveDoc.do");
-		document.modifyDoc.submit();
-	}
-	function cancelwrite(){
-		if(confirm("문서 작성을 취소하시겠습니까?\n(작성한 내용은 저장되지 않습니다.)") == true){
-			$("#modifyDoc").attr("action", "./goEapprHome.do");
-			$("#modifyDoc").attr("method", "get");
-			document.modifyDoc.submit();
-		}else{
-			return;
-		}
-	}
-	
-	function reselecttype(){
-		if(confirm("문서 양식을 재선택하시겠습니까?\n(작성한 내용은 저장되지 않습니다.)") == true){
-			$("#modifyDoc").attr("action", "./goDocTypeList.do");
-			$("#modifyDoc").attr("method", "get");
-			document.modifyDoc.submit();
-		}else{
-			return;
-		}
-	}
-	
-	function resetDoc(){
-		if(confirm("모든 내용을 초기화하시겠습니까?\n(지정한 결재루트와 문서 내용 모두가 삭제됩니다.)") == true){
-			location.reload(true);	
-		}else{
-			return;
-		}
-	}
-	
-</script>
+<script type="text/javascript" src="./js/eAppr_js.js"></script>
 <body>
-<%@include file="../header.jsp" %>
-	<form id="modifyDoc" name="modifyDoc" method="POST">
-		<input type="button" onclick="apprSearch()" value="결재선 선택">
-		<table id="approval">
-		</table>
-		<table id="docu">
-			<tr>
-				<td>No.</td>
-				<td>${Ddto.seq}</td>
-			</tr>
-			<tr>
-				<td>Author</td>
-				<td>${Ddto.author}</td>
-			</tr>
-			<tr>
-				<td>Title</td>
-				<td><input type="text" name="title" value="${Ddto.title}" ></td>
-			</tr>
-			<tr>
-				<td>Report Date</td>
-				<td><input type="text" name="regdate" value="${Ddto.regdate}"></td>
-			</tr>
-			<tr>
-				<td>Content</td>
-				<td>
-					<textarea id="p_content" name="content" rows="5" cols="50">${Ddto.content}</textarea>
-					<script type="text/javascript">CKEDITOR.replace('p_content', {height: 500});</script>
-				</td>
-			</tr>
-		</table>
-		<input type="button" value="작성 취소" onclick="cancelwrite()">
-		<input type="button" value="양식 재선택" onclick="reselecttype()">
-		<input type="button" value="초기화" onclick="resetDoc()">
-		<input type="button" value="임시저장" onclick="saveUpdoc()">
-		<input type="button" value="바로상신" onclick="report()">
+	<form id="insertdoc" name="insertdoc" method="POST">
+		<div class="rightBox">
+			<div class="apprBox">
+				<input class="apprbtn" type="button" onclick="apprSearch()" value="결재선 선택/수정"><br>
+				<h3>결재자</h3>
+				<div class="apprs">
+					<table class="apprtable">
+						<tr class="index">
+							<td>부서직급</td>
+							<td>이름</td>
+							<td>종류</td>
+							<td>상태</td>
+						</tr>
+						<c:forEach var="Adto" items="${approvalLine}" varStatus="i">
+								<c:if test="${i.index < 3}">
+									<tr>
+										<td>${Adto.duty}<input type="hidden" name='lists[${i.index}].duty' value='${Adto.duty}'></td>
+										<td>${Adto.name}<input type="hidden" name='lists[${i.index}].name' value='${Adto.name}'></td>
+										<td>
+											${Adto.appr_kind}
+											<input type="hidden" name='lists[${i.index}].id' value='${Adto.id}'>
+											<input type="hidden" name='lists[${i.index}].turn' value='${i.index+1}'>
+										</td>
+										<c:if test="${Adto.chk ne null}">
+											<c:choose>
+												<c:when test="${Adto.chk eq 'T'}">
+													<td>승인</td>
+												</c:when>
+												<c:when test="${Adto.chk eq 'R'}">
+													<td>반려</td>
+												</c:when>
+												<c:when test="${Adto.chk  eq 'F'}">
+													<td>미결재</td>
+												</c:when>
+											</c:choose>
+										</c:if>
+									</tr>
+								</c:if>
+							</c:forEach>
+					</table>	
+				</div>
+				<br><hr>
+				<h3>참조자</h3>
+				<div class="refers">
+					<table class="refertable">
+						<tr class="index">
+							<td>부서직급</td>
+							<td>이름</td>
+						</tr>
+						<c:forEach var="Adto" items="${approvalLine}" varStatus="i">
+								<c:if test="${i.index > 2}">
+									<tr>
+										<td>${Adto.duty}<input type="hidden" name='lists[${i.index}].duty' value='${Adto.duty}'></td>
+										<td>
+											${Adto.name}
+											<input type="hidden" name='lists[${i.index}].name' value='${Adto.name}'>
+											<input type="hidden" name='lists[${i.index}].appr_kind' value='${Adto.appr_kind}'>
+											<input type="hidden" name='lists[${i.index}].id' value='${Adto.id}'>
+											<input type="hidden" name='lists[${i.index}].turn' value='0'>
+										</td>
+									</tr>
+								</c:if>
+							</c:forEach>
+					</table>
+				</div>
+			</div>
+			<div class="btnBox">
+				<input type="hidden" name="type_seq" value="${typeDto.type_seq}">
+				<input type="button" value="작성 취소" onclick="cancelwrite()">
+				<input type="button" value="초기화" onclick="resetDoc()">
+				<input type="button" value="임시저장" onclick="saveUpdoc()">
+				<input type="button" value="바로상신" onclick="report()">
+			</div>
+		</div>
+		
+		<div class="leftBox">
+			<h1>${typeDto.name}</h1>
+			<table id="docuHead">
+				<tr>
+					<th>기안자</th>
+					<td>${Ddto.author}</td>
+					<td><input type="hidden" id="author" name="author" value="${drafter}"></td>
+				</tr>
+				<tr>
+					<th>제목</th>
+					<td><input id="inputTitle" type="text" name="title" value="${Ddto.title}"></td>
+				</tr>
+			</table>
+			<table id="apprSign">
+			</table>
+			<br>
+			<textarea id="p_content" name="content" rows="5" cols="50">${Ddto.content}</textarea>
+			<script type="text/javascript">CKEDITOR.replace('p_content', {height : 700});</script>
+		</div>
 	</form>
 </body>
 </html>
