@@ -4,25 +4,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<style type="text/css">
-.apprLine {
-	text-align: center;
-	padding: 10px;
-}
-
-.table {
-	width: 90%;
-}
-
-#approval>tr>td {
-	width: 10px;
-}
-</style>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link type="text/css" rel="stylesheet" href="./css/sweetalert.css">
 <meta charset="UTF-8">
 <title>전자</title>
+<link rel="stylesheet" href="./css/doc.css">
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -30,8 +17,72 @@
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
 <body>
 	<div id="ajaxModify">
-	
-			<form name="formDoc" id="formDoc">
+		<form name="formDoc" id="formDoc">
+			<div class="rightBox">
+				<div class="apprBox">
+					<h3>결재자</h3>
+					<div class="apprs">
+						<table class="apprtable">
+							<tr class="index">
+								<td>부서직급</td>
+								<td>이름</td>
+								<td>종류</td>
+								<td>상태</td>
+							</tr>
+							<c:forEach var="Adto" items="${approvalLine}" varStatus="i">
+								<c:if test="${i.index < 3}">
+									<tr>
+										<td>${Adto.duty}<input type="hidden" name='lists[${i.index}].duty' value='${Adto.duty}'></td>
+										<td>${Adto.name}<input type="hidden" name='lists[${i.index}].name' value='${Adto.name}'></td>
+										<td>
+											${Adto.appr_kind}
+											<input type="hidden" name='lists[${i.index}].id' value='${Adto.id}'>
+											<input type="hidden" name='lists[${i.index}].turn' value='${i.index+1}'>
+										</td>
+										<c:if test="${Adto.chk ne null}">
+											<c:choose>
+												<c:when test="${Adto.chk eq 'T'}">
+													<td>승인</td>
+												</c:when>
+												<c:when test="${Adto.chk eq 'R'}">
+													<td>반려</td>
+												</c:when>
+												<c:when test="${Adto.chk  eq 'F'}">
+													<td>미결재</td>
+												</c:when>
+											</c:choose>
+										</c:if>
+									</tr>
+								</c:if>
+							</c:forEach>
+						</table>
+					</div>
+					<br><hr>
+					<h3>참조자</h3>
+					<div class="refers">
+						<table class="refertable">
+							<tr class="index">
+								<td>부서직급</td>
+								<td>이름</td>
+							</tr>
+							<c:forEach var="Adto" items="${approvalLine}" varStatus="i">
+								<c:if test="${i.index > 2}">
+									<tr>
+										<td>${Adto.duty}<input type="hidden" name='lists[${i.index}].duty' value='${Adto.duty}'></td>
+										<td>
+											${Adto.name}
+											<input type="hidden" name='lists[${i.index}].name' value='${Adto.name}'>
+											<input type="hidden" name='lists[${i.index}].appr_kind' value='${Adto.appr_kind}'>
+											<input type="hidden" name='lists[${i.index}].id' value='${Adto.id}'>
+											<input type="hidden" name='lists[${i.index}].turn' value='0'>
+										</td>
+									</tr>
+								</c:if>
+							</c:forEach>
+						</table>
+					</div>
+				</div>
+				<div class="btnBox">
 					<input type="button" id="modifyDoc" value="수정"		onclick="modifyFormDoc('${Ddto.seq}')">
 				<c:if
 					test="${name eq Ddto.author && (Ddto.state eq '0' || Ddto.state eq '1') && (Ddto.appr_turn ne '2')}">
@@ -45,64 +96,21 @@
 					<input type="button" value="결재" data-toggle="modal"		data-target="#apprDoc" data-backdrop='static' data-keyboard='false'	
 																		onclick="apprDoc('${Ddto.seq}','${Ddto.appr_turn}','${Ddto.a_turn}','${number}')">
 				</c:if>
-			</form>
-	
-		<table id="table" class="table">
-			<tr>
-				<th>No.</th>
-				<th>Author</th>
-				<th>Title</th>
-				<th>Report Date</th>
-			</tr>
-			<tr>
-				<td>${Ddto.seq}</td>
-				<td>${Ddto.author}</td>
-				<td>${Ddto.title}</td>
-				<td>${Ddto.regdate}</td>
-			</tr>
-		</table>
-		<div id="appr">
-		<table id="approval" class="table">
-			<c:if test="${approvalLine ne null }">
+				</div>
+			</div>
+			<div class="leftBox">
+			<h1>지원이형 이거 양식 이름 어떻게 받아와??</h1>
+			<table id="docuHead">
 				<tr>
-					<td>이름</td>
-					<td>직위</td>
-					<td>결재 종류</td>
-					<td>결재 상태</td>
-					<td>서명</td>
+					<th>기안자</th>
+					<td>${Ddto.author}</td>
 				</tr>
-				<c:forEach var="Adto" items="${approvalLine}" varStatus="aNum">
-					<tr>
-						<td><input name='lists["+i+"].name' value='${Adto.name}' readonly="readonly"></td>
-						<td><input name='lists["+i+"].duty' value='${Adto.duty}' readonly="readonly"></td>
-						<td>${Adto.appr_kind}</td>
-						<c:if test="${Adto.chk ne null}">
-							<c:choose>
-								<c:when test="${Adto.chk eq 'T'}">
-									<td>승인</td>
-								</c:when>
-								<c:when test="${Adto.chk eq 'R'}">
-									<td>반려</td>
-								</c:when>
-								<c:when test="${Adto.chk  eq 'F'}">
-									<td>미결재</td>
-								</c:when>
-							</c:choose>
-						</c:if>
-							<td>
-								<c:if test="${Adto.appr_sign ne null}">
-									<img src="./image/도장1.png<%-- ${Adto.appr_sign} --%>"	style="width: 30px; height: 30px;">
-								</c:if>
-							</td>
-					</tr>
-					<td><input type="hidden" name='lists["+i+"].id'	value='${Adto.id}' readonly="readonly"></td>
-					<td><input type="hidden" name='lists["+i+"].turn' value='"+(i+1)+"' readonly="readonly"></td>
-				</c:forEach>
-			</c:if>
-		</table>
-		</div>
-		<div class="allcontent">
-		<div class="apprSignTable" style="width: 30%; position: absolute; right:450px; margin-top: 100px;">
+				<tr>
+					<th>제목</th>
+					<td>${Ddto.title}</td>
+				</tr>
+			</table>
+			<div class="apprSignTable" style="width: 30%; position: absolute; right:450px; margin-top: 100px;">
 			<table id="approLine" style="border: 1px solid black; width: 100%">
 			
 				<c:if test="${approvalLine ne null}">
@@ -126,17 +134,14 @@
 				</c:if>
 			</table>
 		</div>
-		<div class="contentTable">
-		<p>Content</p>
+			<br>
 			<table  style="text-align: center; width: 800px;">
 				<tr>
 					<td style="text-align: center; right: 450px; position: absolute; margin-top: 130px;">${Ddto.content}</td>
 				</tr>
 			</table>
 		</div>
-		</div>
-		
-		<div class="commentTable" style="position: relative;">
+		<div class="commentTable" style="position: static;">
 			<table id="commentTable" class="table">
 				<tr>
 					<th>Comment</th>
@@ -171,7 +176,8 @@
 					</div>
 				</div>
 			</div>
-	</div>
 		</div>
+		</form>
+	</div>
 </body>
 </html>
