@@ -38,7 +38,9 @@ public class EapprCtrl1 {
 		List<DocumentTypeDTO> list = service.selectDocTypeList();
 		model.addAttribute("list", list);
 		String userId = scInfo.getName();
-		int cnt = service.selectNeedApprDocCount(userId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", userId);
+		int cnt = service.selectNeedApprDocCount(map);
 		model.addAttribute("cnt",cnt);
 		return "eappr/eapprMain";
 	}
@@ -56,9 +58,11 @@ public class EapprCtrl1 {
 			int count =service.selectMyDocCount(map);
 			model.addAttribute("count"+(i+2), count);
 		}
-		int count7 = service.selectReferDocCount(userId);
-		int count8 = service.selectApprDocCount(userId);
-		int count9 = service.selectNeedApprDocCount(userId);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", userId);
+		int count7 = service.selectReferDocCount(map);
+		int count8 = service.selectApprDocCount(map);
+		int count9 = service.selectNeedApprDocCount(map);
 		model.addAttribute("count7", count7);
 		model.addAttribute("count8", count8);
 		model.addAttribute("count9", count9);

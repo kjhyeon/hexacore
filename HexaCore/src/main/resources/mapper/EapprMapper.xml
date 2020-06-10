@@ -208,19 +208,19 @@
 	</select>
 	
 	<!-- 참조문서함에 있는 문서의 개수 -->
-	<select id="selectReferDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+	<select id="selectReferDocCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT count(*)
 					FROM DOCUMENT d ,APPROVAL a 
 						WHERE ID = #{id} AND APPR_KIND = '참조' AND STATE>0 AND d.SEQ=a.SEQ
 	</select>
 	
 	<!-- 결재문서함-문서의 총 개수 -->
-	<select id="selectApprDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+	<select id="selectApprDocCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ = d.SEQ AND (d.APPR_TURN>a.TURN)
 	</select>
 	
 	<!-- 결재문서함-결재해야할 문서의 개수 -->
-	<select id="selectNeedApprDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+	<select id="selectNeedApprDocCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		SELECT COUNT(*) 
 			FROM APPROVAL a ,DOCUMENT d 
 				WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F'

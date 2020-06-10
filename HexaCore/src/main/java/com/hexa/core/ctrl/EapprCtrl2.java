@@ -50,43 +50,17 @@ public class EapprCtrl2 {
 			page="0";
 		}
 		RowNumDTO row = new RowNumDTO();
-		int count = 0;
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("id", id);
-		switch (state) {
-		case "0":
-			map1.put("state",state);
-			count=service.selectMyDocCount(map1);
-			break;
-		case "1":
-			map1.put("state",state);
-			count=service.selectMyDocCount(map1);
-			break;
-		case "2":
-			map1.put("state",state);
-			count=service.selectMyDocCount(map1);
-			break;
-		case "3":
-			map1.put("state",state);
-			count=service.selectMyDocCount(map1);
-			break;
-		case "4":
-			map1.put("state",state);
-			count=service.selectMyDocCount(map1);
-			break;
-		case "6":
-			count=service.selectApprDocCount(id);
-			break;
-		case "7":
-			count=service.selectNeedApprDocCount(id);
-			break;
-		case "8":
-			count=service.selectReferDocCount(id);
-			break;
-
-		default:
-			break;
-		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<DocumentDTO> lists =null;
+		map.put("id", id);
+		map.put("start",row.getStart());
+		map.put("last",row.getLast());
+		map.put("state",state);
+		//문서 list 조회
+		lists = service.selectMyDocList(map);
+		
+		//결재할 문서 갯수 조회
+		int count=service.selectNeedApprDocCount(map);
 		row.setTotal(count);
 		row.setPageNum(3);
 		row.setListNum(10);
@@ -96,24 +70,6 @@ public class EapprCtrl2 {
 			row.setIndex(0);
 		}else {
 			row.setIndex(Integer.parseInt(page));
-		}
-		Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", id);
-			map.put("start",row.getStart());
-			map.put("last",row.getLast());
-		List<DocumentDTO> lists =null;
-		if(state.equalsIgnoreCase("7")) {
-			lists = service.selectNeedApprDoc(map);
-			log.info("********lists:{}",lists);
-		}else if(state.equalsIgnoreCase("6")) {
-			lists = service.selectApprMyDoc(map);
-			log.info("********lists:{}",lists);
-		}else if(state.equalsIgnoreCase("8")) {
-			lists = service.selectReferDoc(map);
-			log.info("********lists:{}",lists);
-		}else{
-			map.put("state", state);
-			lists = service.selectMyDocList(map);
 		}
 		model.addAttribute("lists",lists);
 		model.addAttribute("row", row);

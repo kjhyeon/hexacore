@@ -194,21 +194,21 @@ public class EapprDaoImpl implements EapprIDao{
 	}
 
 	@Override
-	public int selectReferDocCount(String id) {
+	public int selectReferDocCount(Map<String, Object> map) {
 		log.info("selectReferDocCount DaoImpl 실행");
-		return sqlSession.selectOne(NS+"selectReferDocCount", id);
+		return sqlSession.selectOne(NS+"selectReferDocCount", map);
 	}
 
 	@Override
-	public int selectApprDocCount(String id) {
+	public int selectApprDocCount(Map<String, Object> map) {
 		log.info("selectApprDocCount DaoImpl 실행");
-		return sqlSession.selectOne(NS+"selectApprDocCount", id);
+		return sqlSession.selectOne(NS+"selectApprDocCount", map);
 	}
 
 	@Override
-	public int selectNeedApprDocCount(String id) {
+	public int selectNeedApprDocCount(Map<String, Object> map) {
 		log.info("selectNeedApprDocCount DaoImpl 실행");
-		return sqlSession.selectOne(NS+"selectNeedApprDocCount", id);
+		return sqlSession.selectOne(NS+"selectNeedApprDocCount", map);
 	}
 
 	@Override

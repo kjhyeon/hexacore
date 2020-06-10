@@ -186,21 +186,21 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public int selectReferDocCount(String id) {
-		log.info("selectReferDocCount ServiceImpl 실행 : {}",id);
-		return dao.selectReferDocCount(id);
+	public int selectReferDocCount(Map<String, Object> map) {
+		log.info("selectReferDocCount ServiceImpl 실행 : {}",map);
+		return dao.selectReferDocCount(map);
 	}
 
 	@Override
-	public int selectApprDocCount(String id) {
-		log.info("selectApprDocCount ServiceImpl 실행 : {}",id);
-		return dao.selectApprDocCount(id);
+	public int selectApprDocCount(Map<String, Object> map) {
+		log.info("selectApprDocCount ServiceImpl 실행 : {}",map);
+		return dao.selectApprDocCount(map);
 	}
 
 	@Override
-	public int selectNeedApprDocCount(String id) {
-		log.info("selectNeedApprDocCount ServiceImpl 실행 : {}",id);
-		return dao.selectNeedApprDocCount(id);
+	public int selectNeedApprDocCount(Map<String, Object> map) {
+		log.info("selectNeedApprDocCount ServiceImpl 실행 : {}",map);
+		return dao.selectNeedApprDocCount(map);
 	}
 
 	@Override
@@ -221,10 +221,31 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectApprMyDoc(map);
 	}
 
+	@Transactional
 	@Override
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map) {
 		log.info("selectMyDoc ServiceImpl 실행 : {}",map);
-		return dao.selectMyDocList(map);
+		List<DocumentDTO> lists = null;
+		
+		log.info("**** 실행 : {}",map);
+		if(Integer.parseInt((String)map.get("state"))<5) {
+			lists = dao.selectMyDocList(map);
+		}else {
+			switch ((String)map.get("state")) {
+			case "6":
+				lists = dao.selectApprMyDoc(map);
+				break;
+			case "7":
+				lists = dao.selectNeedApprDoc(map);
+				break;
+			case "8":
+				lists = dao.selectReferDoc(map);
+				break;
+			default:
+				break;
+			}
+		}
+		return lists;
 	}
 
 	@Override

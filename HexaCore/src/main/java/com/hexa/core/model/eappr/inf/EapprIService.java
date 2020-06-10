@@ -2,7 +2,6 @@ package com.hexa.core.model.eappr.inf;
 
 import java.util.List;
 import java.util.Map;
-import javax.print.Doc;
 
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
@@ -194,21 +193,21 @@ public interface EapprIService {
 	 * @param id
 	 * @return 문서 개수
 	 */
-	public int selectReferDocCount(String id);
+	public int selectReferDocCount(Map<String, Object> map);
 	
 	/**
 	 * 결재문서함에 있는 문서의 총 개수
 	 * @param id
 	 * @return 문서 개수
 	 */
-	public int selectApprDocCount(String id);
+	public int selectApprDocCount(Map<String, Object> map);
 	
 	/**
 	 * 결재문서함에 결재해야 할 문서의 개수
 	 * @param id
 	 * @return 문서 개수
 	 */
-	public int selectNeedApprDocCount(String id);
+	public int selectNeedApprDocCount(Map<String, Object> map);
 	
 	/**
 	 * 문서 양식 총 개수
@@ -230,12 +229,12 @@ public interface EapprIService {
 	 */
 	public List<DocumentDTO> selectApprMyDoc(Map<String, Object> map);
 	
-	/**
-	 * 상신문서함의 문서 조회
-	 * @param map
-	 * @return 문서 리스트
-	 */
-	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
+//	/**
+//	 * 상신문서함의 문서 조회
+//	 * @param map
+//	 * @return 문서 리스트
+//	 */
+//	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
 	
 	/**
 	 * 참조문서함 List
@@ -251,5 +250,10 @@ public interface EapprIService {
 	 */
 	public List<DocumentDTO> selectDocListAll(String id);
 	
-	
+	/**
+	 * 상신문서함의 문서 조회
+	 * @param map
+	 * @return 문서 리스트
+	 */
+	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
 }

@@ -193,21 +193,21 @@ public interface EapprIDao {
 	 * @param id
 	 * @return 문서 개수
 	 */
-	public int selectReferDocCount(String id);
+	public int selectReferDocCount(Map<String, Object> map);
 	
 	/**
 	 * 결재문서함에 있는 문서의 총 개수
 	 * @param id
 	 * @return 문서 개수
 	 */
-	public int selectApprDocCount(String id);
+	public int selectApprDocCount(Map<String, Object> map);
 	
 	/**
 	 * 결재문서함에 결재해야 할 문서의 개수
 	 * @param id
 	 * @return 문서 개수
 	 */
-	public int selectNeedApprDocCount(String id);
+	public int selectNeedApprDocCount(Map<String, Object> map);
 	
 	/**
 	 * 문서 양식 총 개수
