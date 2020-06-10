@@ -40,6 +40,10 @@ $(function(){
 		$('#iframe').attr('src',$(this).attr('data-url'));
 	})
 	
+$('#referMenu').click(function(){
+		$('#iframe').attr('src',$(this).attr('data-url'));
+	})
+	
 });
 
 function previewAjax(seq){

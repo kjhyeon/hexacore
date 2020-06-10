@@ -121,7 +121,7 @@
 			(SELECT 
 				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.title, d.content, d.state, d.regdate, d.author, d.seq, d.appr_turn, id, a.turn a_turn
 					FROM DOCUMENT d ,APPROVAL a 
-						WHERE ID = #{id} AND APPR_KIND = '참조' AND STATE>0
+						WHERE ID = #{id} AND APPR_KIND = '참조' AND STATE>0 AND d.SEQ=a.SEQ
 							ORDER BY ROW_NUM ASC)
 				WHERE ROW_NUM BETWEEN #{start} AND #{last}
 	</select>
@@ -208,8 +208,10 @@
 	</select>
 	
 	<!-- 참조문서함에 있는 문서의 개수 -->
-	<select id="selectReferDocCount" parameterType="ApprovalDto" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM APPROVAL WHERE ID = #{id} AND APPR_KIND = '참조'
+	<select id="selectReferDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT count(*)
+					FROM DOCUMENT d ,APPROVAL a 
+						WHERE ID = #{id} AND APPR_KIND = '참조' AND STATE>0 AND d.SEQ=a.SEQ
 	</select>
 	
 	<!-- 결재문서함-문서의 총 개수 -->

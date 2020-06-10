@@ -36,7 +36,7 @@
 						<td><a href="./docDetail.do?seq=${dto.seq}&number=${number}">${dto.title}</a></td>
 						<td>${dto.regdate}</td>
 						<c:choose>
-							<c:when	test="${(id ne dto.author)&& (dto.a_turn eq dto.appr_turn)}">
+							<c:when	test="${(id ne dto.author)&& (dto.a_turn eq dto.appr_turn) &&(dto.state eq '1') && (dto.state eq '2')}">
 								<td><input type="button" value="결재" data-backdrop='static'	data-keyboard='false' data-toggle="modal"
 									data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}','${dto.a_turn}','${number}')">
 								</td>

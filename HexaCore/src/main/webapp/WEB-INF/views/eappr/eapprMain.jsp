@@ -20,7 +20,7 @@
 			<div class="menu01">문서 작성</div>
 			<div>
 			<div class="ddmenu">상신문서함</div>
-				<div class="submenu" data-url="./docLists.do?state=0">임시저장문서</div>
+				<div class="submenu" data-url="./docLists.do?state=0">임시저장문서${lists}</div>
 				<div class="submenu" data-url="./docLists.do?state=1">결재대기문서</div>
 				<div class="submenu" data-url="./docLists.do?state=2">결재중문서</div>
 				<div class="submenu" data-url="./docLists.do?state=3">승인문서</div>
@@ -31,7 +31,7 @@
 				<div class="submenu" data-url="./docLists.do?state=7">결재필요문서</div>
 				<div class="submenu" data-url="./docLists.do?state=6">결재중문서</div>
 			</div>
-			<div class="menu" data-url="./docLists.do?state=8">참조문서함</div>
+			<div id="referMenu" class="menu" data-url="./docLists.do?state=8">참조문서함</div>
 		</div>
 	<%@include file="../header.jsp" %>
 	<script type="text/javascript" src="./js/sidebar_js.js"></script>
