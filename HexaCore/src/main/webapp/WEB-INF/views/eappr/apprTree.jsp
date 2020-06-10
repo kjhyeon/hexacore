@@ -13,10 +13,8 @@
 		var node = ($("#deptTree").jstree("get_node",id));
 		var flag = false;
 		if(node.type == 'people'){
-			alert($("tr").length);
 			for (var i = 0; i < $("tr").length; i++) {
 				var chr = $("tr").eq(i).children();
-				alert(chr.eq(0).text+"/////"+node.li_attr['deptname']);
 				if(chr.eq(0).text()==node.li_attr['deptname']&&chr.eq(1).text()==node.li_attr['e_rank_name']&&chr.eq(2).text()==node.text){
 					flag = true;
 				}
@@ -24,10 +22,10 @@
 			if(!flag){
 				var chkval = $(":input:radio[name=kind]:checked").val();
 				if(chkval == '참조'){
-					var tr1 = "<tr class='refernode' onclick='selectNode(this) id='appr''><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
+					var tr1 = "<tr class='refernode' onclick='selectNode(this)' id='referss'><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td>"+chkval+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
 					$(".refertable").append(tr1);
 				}else{
-					var tr2 = "<tr class='apprnode' onclick='selectNode(this) id='appr''><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td>"+chkval+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
+					var tr2 = "<tr class='apprnode' onclick='selectNode(this)' id='apprss'><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td>"+chkval+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
 					$(".apprtable").append(tr2);
 				}
 			}
@@ -54,10 +52,18 @@
 	}
 	
 	function closeEmp(){
-		var apprnodes = $(".apprnode");
-		var refernodes = $(".refernode");
-		opener.setChildValue(apprnodes);
-		opener.setChildValue(refernodes);
+		if($(".apprtable > tbody > tr").length != 4){
+			alert("결재자는 3명을 선택해야합니다.");
+		} else{
+			var apprnodes = $(".apprnode");
+			var refernodes = $(".refernode");
+			opener.setChildValue(apprnodes);
+			opener.setChildValue2(refernodes);
+			window.close();
+		}
+	}
+	
+	function cancelEmp(){
 		window.close();
 	}
 </script>
@@ -75,15 +81,12 @@
 		<input type="button" value="삭제" onclick="delEmps()">
 		<div class="bottombtn">
 			<input type="button" value="확인" onclick="closeEmp()">
-			<input type="button" value="취소" onclick="">
+			<input type="button" value="취소" onclick="cancelEmp()">
 		</div>
 	</div>
 	<div class="rightBox">
 		<div class="apprBox">
 			<h3>결재자</h3>
-			<table class="apprIndex">
-				
-			</table>
 			<div class="apprs">
 				<table class="apprtable">
 					<tr style="background: #E1E2E1; height: 30px">
@@ -91,15 +94,17 @@
 					</tr>
 				</table>
 			</div>
-			<br><hr>
-			<h3>참조자</h3>
 		</div>
-		<div class="refers">
-			<table class="refertable">
-				<tr style="background: #E1E2E1; height: 30px">
-					<th>부서</th><th>직급</th><th>이름</th><th>삭제</th>
-				</tr>
-			</table>
+			<br><hr>
+		<div class="referBox">
+			<h3>참조자</h3>
+			<div class="refers">
+				<table class="refertable">
+					<tr style="background: #E1E2E1; height: 30px">
+						<th>부서</th><th>직급</th><th>이름</th><th>종류</th><th>삭제</th>
+					</tr>
+				</table>
+			</div>
 		</div>
 	</div>
 </body>

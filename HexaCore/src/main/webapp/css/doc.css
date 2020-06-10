@@ -8,7 +8,7 @@
 
 .rightBox {
 	float: right;
-	width: 25%;
+	width: 29%;
 	text-align: center;
 }
 
@@ -22,8 +22,13 @@
 	padding: 10px;
 }
 
-.apprIndex, .referIndex {
+.apprtable, .refertable {
 	width: 100%;
+}
+
+.index {
+	background: #E1E2E1;
+	height: 30px;
 }
 
 .apprs {

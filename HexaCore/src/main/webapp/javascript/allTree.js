@@ -47,10 +47,10 @@ window.onload = function(){
 			if(!flag){
 				var chkval = $(":input:radio[name=kind]:checked").val();
 				if(chkval == '참조'){
-					var tr1 = "<tr onclick='selectNode(this) id='appr''><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
+					var tr1 = "<tr class='refernode' onclick='selectNode(this)' id='referss'><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td>"+chkval+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
 					$(".refertable").append(tr1);
 				}else{
-					var tr2 = "<tr onclick='selectNode(this) id='appr''><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td>"+chkval+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
+					var tr2 = "<tr class='apprnode' onclick='selectNode(this)' id='appr'><td>"+node.li_attr['deptname']+"</td><td>"+node.li_attr['e_rank_name']+"</td><td>"+node.text+"</td><td>"+chkval+"</td><td><input type='button' value='삭제' onclick='delEmp(this)'></td><td hidden='false'>"+node.id+"</td><td hidden='false'>"+node.li_attr['e_rank']+"</td></tr>";
 					$(".apprtable").append(tr2);
 				}
 			}

@@ -54,8 +54,9 @@
 
 .content {
 	left: 12%;
-	width: 85%;
-	height: 800px;
+	width: 86%;
+	min-height: 760px;
+	height: auto;
 	-ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
 }
@@ -81,7 +82,9 @@
 }
 
 #iframe {
-	height: 100%;
+	display: block;
+	min-height: 760px;
+	height: auto;
 	width: 100%;
 	border: none;
 }
