@@ -57,12 +57,12 @@ public interface EapprIService {
 	 */
 	public boolean updateDoc(DocumentDTO Ddto);
 	
-	/**
-	 * 결재 루트 삭제
-	 * @param seq 문서 seq
-	 * @return True : 성공 / False 실패
-	 */
-	public boolean deleteApprRoot(String seq);
+//	/**
+//	 * 결재 루트 삭제
+//	 * @param seq 문서 seq
+//	 * @return True : 성공 / False 실패
+//	 */
+//	public boolean deleteApprRoot(String seq);
 	
 	/**
 	 * 결재루트 입력

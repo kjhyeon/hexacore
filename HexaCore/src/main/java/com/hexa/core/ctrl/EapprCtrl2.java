@@ -39,13 +39,9 @@ public class EapprCtrl2 {
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	
-	@RequestMapping(value = "/eApprMain.do", method = RequestMethod.GET)
-	public String MainTest(Model model) {
-		return "eappr2/eApprMain";
-	}
-	
+	//문서함 List 조회 (분기)
 	@RequestMapping(value = "/docLists.do", method = RequestMethod.GET,produces = "applicaton/text; charset=UTF-8;")
-	public String docLists(Model model,SecurityContextHolder session, String page,String number) {
+	public String docLists(Model model,SecurityContextHolder session, String page,String state) {
 		 Authentication auth = session.getContext().getAuthentication();
 		 LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		    String id = Ldto.getUsername();
@@ -64,81 +60,104 @@ public class EapprCtrl2 {
 			row.setIndex(Integer.parseInt(page));
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", id);
-		map.put("start",row.getStart());
-		map.put("last",row.getLast());
+			map.put("id", id);
+			map.put("start",row.getStart());
+			map.put("last",row.getLast());
 		List<DocumentDTO> lists =null;
-		if(number.equalsIgnoreCase("1")) {
-		lists = service.selectNeedApprDoc(map);
-		log.info("********lists:{}",lists);
-		}else if(number.equalsIgnoreCase("2")) {
-		lists = service.selectApprMyDoc(map);
-		log.info("********lists:{}",lists);
+		if(state.equalsIgnoreCase("7")) {
+			lists = service.selectNeedApprDoc(map);
+			log.info("********lists:{}",lists);
+		}else if(state.equalsIgnoreCase("6")) {
+			lists = service.selectApprMyDoc(map);
+			log.info("********lists:{}",lists);
+		}else{
+			map.put("state", state);
+			lists = service.selectMyDocList(map);
 		}
 		model.addAttribute("lists",lists);
 		model.addAttribute("row", row);
 		model.addAttribute("id",id);
-		model.addAttribute("number",number);
+		model.addAttribute("number",state);
 		return "eappr2/docConfirmLists";
 	}
 	
+	//문서 상세조회
 	@Transactional
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
 	public String updateDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto,String number) {
 		log.info("받아온 seq 값: {}", Adto.getSeq());
-		String seq = Integer.toString(Adto.getSeq());
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		String id = Ldto.getUsername();
+		String seq = Integer.toString(Adto.getSeq());
 		DocumentDTO Ddto = service.selectDoc(seq);
+		//문서 결재선 전체 조회
+		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
 		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
+		for (int i = 0; i < listsb.size(); i++) {
+			if(listsb.get(i).getAppr_sign()!=null) {
+				listsb.get(i).setAppr_sign(attach_path+listsb.get(i).getAppr_sign()); 
+			}
+		}
+		//문서 나의 결재선 조회
 		Adto.setId(id);
 		List<ApprovalDTO> listsa = service.selectApprRoot(Adto);
-		int turn = 0;
+		log.info("********listsa:{}",listsa);
 		log.info("********listsa Size:{}",listsa.size());
+		int turn = 0;
 		if(listsa!=null && listsa.size()!=0) {
 			turn = listsa.get(0).getTurn();
 			model.addAttribute("turn",turn);
 		}
 		log.info("********turn:{}",turn);
-		log.info("********Adto:{}",Adto);
-		log.info("********listsa:{}",listsa);
+		
+		//결재자 코멘트 가져오기
 		List<DocCommentDTO> lists = service.selectComment(seq);
+		log.info("********commentlists:{}",lists);
+		log.info("********Adto:{}",Adto);
+		log.info("********approvalLine:{}",listsb);
+		log.info("********number:{}", number);
+		log.info("********Ddto:{}", Ddto);
+		//해당문서 코멘트 조회
 		model.addAttribute("comment",lists);
 		model.addAttribute("Ddto",Ddto);
 		model.addAttribute("name",id);
 		model.addAttribute("approvalLine",listsb);
-		log.info("********number:{}", number);
 		model.addAttribute("number",number);
-		log.info("********Ddto:{}", Ddto);
 		return "eappr2/docDetail";
 	}	
 	
-	@SuppressWarnings("unchecked")
+	//문서수정 Ajax
 	@ResponseBody
-	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST,produces = "applicaton/text; charset=UTF-8;")
-	public String modifyDoc(Model model,String seq,SecurityContextHolder session) {
+	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST)
+	public Map<String, Object> modifyDoc(Model model,String seq,SecurityContextHolder session,ApprovalDTO Adto) {
 		Authentication auth = session.getContext().getAuthentication();
 	    LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 	    String id = Ldto.getUsername();
 		DocumentDTO Ddto = service.selectDoc(seq);
-		model.addAttribute("Ddto",Ddto);
+		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
+		log.info("********Adto:{}",listsb);
 		log.info("********Ddto:{}", Ddto);
-		JSONObject json = new JSONObject();
-		json.put("id",id);
-		json.put("seq",Ddto.getSeq());
-		json.put("author",Ddto.getAuthor());
-		json.put("title",Ddto.getTitle());
-		json.put("regdate",Ddto.getRegdate());
-		json.put("content", Ddto.getContent());
-		return json.toString();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id",id);
+		map.put("seq",Ddto.getSeq());
+		map.put("author",Ddto.getAuthor());
+		map.put("title",Ddto.getTitle());
+		map.put("regdate",Ddto.getRegdate());
+		map.put("content", Ddto.getContent());
+		map.put("content2", listsb);
+		
+		return map;
 	}
 	
+	//문서 삭제
 	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.POST)
 	public String deleteDoc(String seq) {
 		service.deleteDoc(seq);
 		return "docLists.do";//리스트로 보내자
 	}
+	
+	//임시저장
 	@Transactional
 	@RequestMapping(value="/saveDoc.do", method= RequestMethod.POST)
 	public String saveDoc(DocumentDTO Ddto) {
@@ -151,14 +170,13 @@ public class EapprCtrl2 {
 			for (int i = 0; i < Ddto.getLists().size(); i++) {
 				Ddto.getLists().get(i).setChk("F");
 				Ddto.getLists().get(i).setSeq(Ddto.getSeq());
-					service.deleteApprRoot(Integer.toString(Ddto.getSeq()));
 					service.insertApprRoot(Ddto.getLists().get(i));
 			}
 		}
 		return isc?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
-		//임시보관함의 디테일로 보내자11
 	}
 	
+	//문서승인 Modal Ajax
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/apprDoc.do", method= RequestMethod.POST ,produces = "applicaton/text; charset=UTF-8;")
 	@ResponseBody
@@ -181,6 +199,7 @@ public class EapprCtrl2 {
 		return json.toString();
 	}
 
+	//비밀번호 Check
 	@ResponseBody
 	@RequestMapping(value="/checkPassword", method=RequestMethod.POST)
 	public String checkPassword(String password , SecurityContextHolder session) {
@@ -196,9 +215,10 @@ public class EapprCtrl2 {
 		
 	}
 	
+	//승인,반려 기능
 	@Transactional
 	@RequestMapping(value="/confirmDoc.do", method= RequestMethod.POST)
-	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto,String number,SecurityContextHolder session) {
+	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto,String state,SecurityContextHolder session) {
 		log.info("********confirm Test Adto:{}",Adto);
 		log.info("********confirm Test Ddto:{}",Ddto);
 		log.info("********confirm Test DCdto:{}",DCdto);
@@ -232,6 +252,6 @@ public class EapprCtrl2 {
 				service.updateApprChk(Adto);
 				service.insertComment(DCdto);//코멘트 입력
 			}
-		return "redirect:/docLists.do?number="+number;
+		return "redirect:/docLists.do?state="+state;
 	}
 }

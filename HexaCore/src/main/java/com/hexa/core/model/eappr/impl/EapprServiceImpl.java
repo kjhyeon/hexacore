@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
@@ -61,16 +62,19 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.updateDoc(Ddto);
 	}
 
-	@Override
-	public boolean deleteApprRoot(String seq) {
-		log.info("deleteApprRoot serviceImpl 실행");
-		return dao.deleteApprRoot(seq);
-	}
+//	@Override
+//	public boolean deleteApprRoot(String seq) {
+//		return
+//	}
 
+	@Transactional
 	@Override
 	public boolean insertApprRoot(ApprovalDTO Adto) {
+		log.info("deleteApprRoot serviceImpl 실행");
+		boolean iscD = dao.deleteApprRoot(Integer.toString(Adto.getSeq()));
 		log.info("insertApprRoot serviceImpl 실행");
-		return dao.insertApprRoot(Adto);
+		boolean iscI = dao.insertApprRoot(Adto);
+		return (iscD||iscI)?true:false;
 	}
 
 	@Override

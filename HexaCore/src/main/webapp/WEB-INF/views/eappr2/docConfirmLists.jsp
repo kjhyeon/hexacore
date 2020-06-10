@@ -1,20 +1,20 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib uri="http://www.springframework.org/security/tags"
-	prefix="sec"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Insert title here</title>
-<script type="text/javascript" src="./js/eAppr_js.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link type="text/css" rel="stylesheet" href="./css/sweetalert.css">
+<meta charset="UTF-8">
+<title>전자</title>
 </head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="./js/sweetalert.js"></script>
+<script type="text/javascript" src="./js/eAppr_js.js"></script>
 <body>
-	<%@include file="../header.jsp"%>
-	<div id="container">
 		<form action="#" method="post">
 			<table class="table table-bordered" style="width: 75%">
 				<tr>
@@ -41,14 +41,20 @@
 									data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}','${dto.a_turn}','${number}')">
 								</td>
 							</c:when>
-							<c:when test="${dto.appr_turn ne dto.a_turn}">
+							<c:when test="${dto.state eq '2'}">
 								<td>결재중</td>
+							</c:when>
+							<c:when test="${dto.state eq '1'}">
+								<td>결재대기</td>
 							</c:when>
 							<c:when test="${dto.state eq '4'}">
 								<td>반려</td>
 							</c:when>
 							<c:when test="${dto.state eq '3'}">
 								<td>승인</td>
+							</c:when>
+							<c:when test="${dto.state eq '0'}">
+								<td>보관중</td>
 							</c:when>
 						</c:choose>
 					</tr>
@@ -85,6 +91,5 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </body>
 </html>
