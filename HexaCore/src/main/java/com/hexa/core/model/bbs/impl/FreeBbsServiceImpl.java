@@ -1,19 +1,24 @@
 package com.hexa.core.model.bbs.impl;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.google.common.collect.Maps;
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeBbsIDao;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
+import com.hexa.core.model.search.inf.SearchIService;
 
 @Service
 public class FreeBbsServiceImpl implements FreeBbsIService {
@@ -23,16 +28,37 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	@Autowired
 	private FreeBbsIDao dao;
 	
+	@Autowired
+	private SearchIService sService;
+	
 	@Override
-	public boolean insertFreeBbs(BbsDTO dto) {
+	public BbsDTO insertFreeBbs(BbsDTO dto,MultipartFile[] filename) {
 		log.info("자유게시판 글 작성 insertFreeBbs,\t {}", dto);
-		return dao.insertFreeBbs(dto);
+		dao.insertFreeBbs(dto);
+		String seq = dao.selectNewBbs();
+		saveFile(filename,Integer.parseInt(seq));
+		BbsDTO result = dao.selectDetailFreeBbs(seq);
+		
+		sService.addBbsIndex(result, SearchIService.FREE);
+		
+		return result;
 	}
 
 	@Override
-	public int updateModifyFreeBbs(BbsDTO dto) {
+	public BbsDTO updateModifyFreeBbs(BbsDTO dto,String[] files,MultipartFile[] filename) {
 		log.info("자유게시판 글 수정 updateModifyFreeBbs,\t {}", dto);
-		return dao.updateModifyFreeBbs(dto);
+		Map<String, Object> map = Maps.newHashMap();
+		dao.updateModifyFreeBbs(dto);
+		map.put("files", files);
+		map.put("seq", dto.getSeq());
+		dao.deleteFile(map);
+		saveFile(filename,dto.getSeq());
+		
+		BbsDTO result = dao.selectDetailFreeBbs(String.valueOf(dto.getSeq()));
+		
+		sService.updateBbsIndex(result, SearchIService.FREE);
+		
+		return result;
 	}
 
 	@Override
@@ -123,12 +149,39 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	}
 
 	@Override
-	public boolean deleteFile(String seq) {
-		log.info("파일 삭제,\t {}", seq);
-		return dao.deleteFile(seq);
+	public boolean deleteFile(Map<String,Object> map) {
+		log.info("파일 삭제,\t {}", map);
+		return false;
 	}
 
-	
+	private boolean saveFile(MultipartFile[] files,int seq) {
+		boolean isc = false;
+		if(files!=null) {
+			for (MultipartFile file : files) {
+				String saveName = file.getOriginalFilename();
+				File dir = new File(ATTACH_PATH);
+				String filename = "freeBbs-"+UUID.randomUUID()+"-"+saveName;
+				if(dir.isDirectory() == false){
+					dir.mkdirs();
+				}
+				File f = new File(ATTACH_PATH, filename);
+				try {
+					file.transferTo(f);
+					FileDTO dto = new FileDTO();
+					dto.setOri_name(file.getOriginalFilename());
+					dto.setName(filename);
+					dto.setF_size(String.valueOf(file.getSize()));
+					dto.setF_path(ATTACH_PATH);
+					dto.setCategory(0);
+					dto.setSeq(seq);
+					isc = dao.insertFile(dto);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return isc;
+	}
 	
 
 }

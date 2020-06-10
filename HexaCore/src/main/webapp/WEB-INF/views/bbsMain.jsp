@@ -90,7 +90,14 @@
       			</c:if>
       			<td>${dto.seq}</td>
       			<td>${dto.id}</td>
-      			<td><a href="bbsDetail.do?seq=${dto.seq}">${dto.title}</a></td>
+      			<td><a href="bbsDetail.do?seq=${dto.seq}">${dto.title}&nbsp;&nbsp;
+ 	     			<c:if test="${dto.c_count != 0}">
+    		  			[${dto.c_count}]
+      				</c:if>
+      				<c:if test="${dto.f_count != 0}">
+      					<img alt="FileImg" src="./image/file.png" style="width: 13px; height: 13px;">
+      				</c:if>
+      			</a></td>
       			<td>${dto.views}</td>
       			<c:if test="${auth eq true}">
  	    	 		<td>${dto.state}</td>

@@ -51,6 +51,11 @@
 		location.href="./commentDelete.do?seq="+seq+"&parent_seq="+$("#seq").val();
 	}
 	
+	function goPage(page){
+		var location = "./bbsDetail.do?seq="+${seq.seq}+"&page="+page; 
+		document.location.href=location;
+	}
+	
 </script>
 <body>
 	<%@include file="/WEB-INF/header.jsp"%>
@@ -147,7 +152,9 @@
 							${commentList.content}
 						</td>
 						<td>
-							<input type="image" src="./image/x.png" alt="XBox" onclick="deleteComment('${commentList.seq}')">
+							<c:if test="${(sessionId eq commentList.id) || auth eq true}">
+								<input type="image" src="./image/x.png" alt="XBox" onclick="deleteComment('${commentList.seq}')">
+							</c:if>
 						</td>
 					</tr>
 				</thead>
@@ -161,7 +168,22 @@
 			</table>
 			<hr>
 		</c:forEach>
+		<c:if test="${lists.size() ne 0}">
+		<input type="hidden" name="index" id="index" value="${row.index }">
+		<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
+		<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
+     	 <div class="center" style="text-align: center; position: relative;">
+			<ul class="pagination">
+				<li><a href="#" onclick="return goPage(${0});">&laquo;</a></li>
+				<li><a href="#" onclick="return goPage(${row.index-1});">&lt;</a></li>
+				<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
+					<li><a href="#" onclick="goPage(${i-1})">${i }</a></li>
+				</c:forEach>
+				<li><a href="#" onclick="return goPage(${row.index+1});" >&gt;</a></li>
+				<li><a href="#" onclick="return goPage(${row.lastPage-1});" >&raquo;</a></li>
+			</ul>
+		</div>
+		</c:if>
 	</div>
-	
 </body>
 </html>

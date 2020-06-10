@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hexa.core.dto.CommentDTO;
+import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeComIDao;
 @Repository
 public class FreeComDaoImpl implements FreeComIDao {
@@ -53,6 +54,18 @@ public class FreeComDaoImpl implements FreeComIDao {
 		log.info("자유게시판 댓글 삭제(관리자) deleteFreeAdminComment,\t {}", seq);
 		int n = session.delete(NS + "deleteFreeAdminComment", seq);
 		return (n>0)?true:false;
+	}
+
+	@Override
+	public List<CommentDTO> selectFreeCommentListRow(Map<String, Object> map) {
+		log.info("자유게시판 페이징 처리 selectFreeCommentListRow,\t {}", map);
+		return session.selectList(NS + "selectFreeCommentListRow", map);
+	}
+
+	@Override
+	public int selectFreeCommentListTotal(String parent_seq) {
+		log.info("자유게시판 댓글 총 갯수 selectFreeCommentListTotal,\t {}", parent_seq);
+		return session.selectOne(NS + "selectFreeCommentListTotal", parent_seq);
 	}
 
 }

@@ -3,17 +3,25 @@ package com.hexa.core.model.bbs.inf;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
 
 public interface FreeBbsIService {
 
+	/*절대 경로*/
+//	public static final String ATTACH_PATH = "C:\\nobrand\\git\\hexacore\\HexaCore\\file";
+	
+	/*상대 경로*/
+	public static final String ATTACH_PATH = "C:\\nobrand\\eclipse_spring\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\HexaCore\\resource\\file";
+	
 	// 1. 자유게시판 글 작성
-	public boolean insertFreeBbs(BbsDTO dto);
+	public BbsDTO insertFreeBbs(BbsDTO dto,MultipartFile[] filename);
 	
 	// 2. 자유게시판 글 수정
-	public int updateModifyFreeBbs(BbsDTO dto);
+	public BbsDTO updateModifyFreeBbs(BbsDTO dto,String[] files,MultipartFile[] filename);
 	
 	// 3. 자유게시판 글 단일삭제
 	public int updateDeleteFreeBbs(String seq);
@@ -59,5 +67,5 @@ public interface FreeBbsIService {
 	// 15. 파일 추가
 	public boolean insertFile(FileDTO fDto);
 	// 16. 파일 삭제
-	public boolean deleteFile(String seq);
+	public boolean deleteFile(Map<String,Object> map);
 }

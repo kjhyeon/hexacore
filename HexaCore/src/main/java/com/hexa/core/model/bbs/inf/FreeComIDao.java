@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.hexa.core.dto.CommentDTO;
+import com.hexa.core.dto.RowNumDTO;
 
 public interface FreeComIDao {
 
@@ -22,4 +23,9 @@ public interface FreeComIDao {
 		// 5. 자유 게시판 댓글 삭제(관리자)
 		public boolean deleteFreeAdminComment(String seq);
 
+		// 6. 자유 게시판 페이징 처리
+		public List<CommentDTO> selectFreeCommentListRow(Map<String, Object> map);
+		
+		// 7. 자유 게시판 댓글 총 갯수
+		public int selectFreeCommentListTotal(String parent_seq);
 }

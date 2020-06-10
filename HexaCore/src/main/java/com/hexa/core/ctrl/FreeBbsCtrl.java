@@ -47,11 +47,6 @@ public class FreeBbsCtrl {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	/*절대 경로*/
-//	private static String attach_path = "C:\\nobrand\\git\\hexacore\\HexaCore\\file";
-	
-	/*상대 경로*/
-	private static String attach_path = "C:\\nobrand\\eclipse_spring\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\HexaCore\\resource\\file";
 	
 	@Autowired
 	private FreeBbsIService service;
@@ -61,25 +56,6 @@ public class FreeBbsCtrl {
 	
 	@Autowired
 	private FreeComIService cService;
-	
-	// 파일
-	public static String saveFile(MultipartFile file) {
-		String saveName = file.getOriginalFilename();
-		
-		File dir = new File(attach_path);
-		String filename = "freeBbs-"+UUID.randomUUID()+"-"+saveName;
-		if(dir.isDirectory() == false){
-			dir.mkdirs();
-		}
-		File f = new File(attach_path, filename);
-		try {
-			file.transferTo(f);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return filename;
-	}
 	
 	// 자유게시판 (관리자)목록 조회
 	@RequestMapping(value = "/bbsMain.do", method = RequestMethod.GET)
@@ -147,37 +123,23 @@ public class FreeBbsCtrl {
 	
 	// 자유게시판 새 글 작성.POST
 	@RequestMapping(value = "/freeBbsInsert.do", method = RequestMethod.POST)
-	public String insertfreeBbs(String seq, BbsDTO dto, Model model,SecurityContextHolder session, MultipartFile filename) {
+	public String insertfreeBbs(String seq, BbsDTO dto, Model model,SecurityContextHolder session, MultipartFile[] filename) {
 		log.info("Welcome insert 글 작성완료, {}/{}", dto, filename);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		dto.setId(Ldto.getUsername());
 		dto.setName(Ldto.getName());
 		
-		boolean isc = false;
-		isc = service.insertFreeBbs(dto);
-		
-		if(filename!=null&&!filename.isEmpty()) {
-			FileDTO fDto = new FileDTO();
-			fDto.setName(saveFile(filename));
-			fDto.setF_size(String.valueOf(filename.getSize()));
-			fDto.setOri_name(filename.getOriginalFilename());
-			fDto.setSeq(Integer.parseInt(service.selectNewBbs()));
-			fDto.setF_path(attach_path);
-			fDto.setCategory(0);
-			service.insertFile(fDto);
-		}
-		if(isc) {
-			BbsDTO result = service.selectDetailFreeBbs(service.selectNewBbs());
-			model.addAttribute("seq",result);
-			sService.addBbsIndex(result, "freeBbs");
-		}
-		return isc?"redirect:/bbsMain.do":"redirect:/logdout.do";
+		BbsDTO result = service.insertFreeBbs(dto,filename);
+		List<FileDTO> list = service.selectFile(String.valueOf(result.getSeq()));
+		model.addAttribute("list", list);
+		model.addAttribute("seq",result);
+		return result!=null?"redirect:/bbsDetail.do?seq="+result.getSeq():"redirect:/logdout.do";
 	}
 	
 	// 자유게시판 글 상세보기.GET
 	@RequestMapping(value = "/bbsDetail.do", method = RequestMethod.GET)
-	public String selectDetailFreeBbs(Model model, String seq, SecurityContextHolder session) {
+	public String selectDetailFreeBbs(Model model, String page, String seq, SecurityContextHolder session) {
 		log.info("Welcome 글 상세보기, {}", seq);
 		log.info("Welcome 글 조회수 여부, {}", seq);
 		Authentication auth = session.getContext().getAuthentication();
@@ -188,16 +150,39 @@ public class FreeBbsCtrl {
 		for (GrantedAuthority auths : a) {
 			auth_check = auths.getAuthority();
 		}
+		if (page == null) {
+			page = "0";
+		}
+		
+		RowNumDTO row = new RowNumDTO();
+		CommentDTO cDto = new CommentDTO();
+		
+		row.setTotal(cService.selectFreeCommentListTotal(seq));
+		row.setListNum(5);
+		row.setPageNum(5);
+		row.setIndex(Integer.parseInt(page));
+		if(row.getLastPage()-1<Integer.parseInt(page)) {
+			row.setIndex(row.getLastPage()-1);
+		}else if(Integer.parseInt(page)<0) {
+			row.setIndex(0);
+		}else {
+			row.setIndex(Integer.parseInt(page));
+		}
+		model.addAttribute("row",row);
+		List<CommentDTO> lists = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("parent_seq", seq);
+		map.put("start", row.getStart());
+		map.put("last", row.getLast());
+		lists = cService.selectFreeCommentListRow(map);
+		model.addAttribute("lists", lists);
 		
 		if (!auth_check.trim().equalsIgnoreCase("role_admin")) {
 			boolean isc = false;
 			isc = service.updateViewsBbs(seq);
 		}
-		CommentDTO cDto = new CommentDTO();
-		cDto.setParent_seq(Integer.parseInt(seq));
 		
-		List<CommentDTO> lists = cService.selectFreeCommentList(cDto);
-		model.addAttribute("lists", lists);
+		cDto.setParent_seq(Integer.parseInt(seq));
 		
 		BbsDTO dto = service.selectDetailFreeBbs(seq);
 		List<FileDTO> list = service.selectFile(seq);
@@ -228,15 +213,38 @@ public class FreeBbsCtrl {
 	
 	// 자유게시판 글 수정.POST
 	@RequestMapping(value = "/bbsDetail.do", method = RequestMethod.POST)
-	public String updateModifyFreeBbs(BbsDTO dto, Model model, MultipartFile filename) {
-		log.info("Welcome 글 수정 값 보내기, {}", dto);
+	public String updateModifyFreeBbs(BbsDTO dto, Model model, MultipartFile[] filename,String[] files) {
+		log.info("Welcome 글 수정 값 보내기, {},{}", dto,Arrays.toString(files));
 		
-		int n = service.updateModifyFreeBbs(dto);
-		dto = service.selectDetailFreeBbs(String.valueOf(dto.getSeq()));
-		
-		if (n>0) {
-			sService.updateBbsIndex(dto, "freeBbs");
+		dto = service.updateModifyFreeBbs(dto,files,filename);
+		String page = "0";
+		if(dto!=null) {
 			model.addAttribute("seq",dto);
+			List<FileDTO> list = service.selectFile(String.valueOf(dto.getSeq()));
+			model.addAttribute("list", list);
+					
+			RowNumDTO row = new RowNumDTO();
+			CommentDTO cDto = new CommentDTO();
+			
+			row.setTotal(cService.selectFreeCommentListTotal(String.valueOf(dto.getSeq())));
+			row.setListNum(5);
+			row.setPageNum(5);
+			row.setIndex(Integer.parseInt(page));
+			if(row.getLastPage()-1<Integer.parseInt(page)) {
+				row.setIndex(row.getLastPage()-1);
+			}else if(Integer.parseInt(page)<0) {
+				row.setIndex(0);
+			}else {
+				row.setIndex(Integer.parseInt(page));
+			}
+			model.addAttribute("row",row);
+			List<CommentDTO> lists = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("parent_seq", dto.getSeq());
+			map.put("start", row.getStart());
+			map.put("last", row.getLast());
+			lists = cService.selectFreeCommentListRow(map);
+			model.addAttribute("lists", lists);
 			return "Bbs/bbsDetail";
 		}else {
 			return "redirect:/bbsMain.do";
@@ -300,7 +308,7 @@ public class FreeBbsCtrl {
 	@RequestMapping(value = "/download.do", method = RequestMethod.GET)
 	public void fileDownload(HttpServletResponse resp, FileDTO fDto) throws Exception {
 		log.info("#################################3 {}",fDto);
-		File file = new File(attach_path+"/"+fDto.getName());
+		File file = new File(FreeBbsIService.ATTACH_PATH+"/"+fDto.getName());
 		
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 		String mimeType = URLConnection.guessContentTypeFromStream(inputStream);

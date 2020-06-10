@@ -4,6 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <title>자유게시판 글 수정페이지</title>
 <script type="text/javascript">
 	function BbsContent_modify_cancle(){
@@ -12,7 +15,32 @@
 	
 	function BbsContent_modify_complete(){
 		alert("수정을 완료하였습니다.");
-		
+	}
+	
+	$(document).ready(function() {
+		var len = document.getElementsByName("files").length;
+		if(len<3){
+			var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
+			$("#file_td").append(button);
+		}
+// 		if(len ==)
+	});
+	
+	function addinput(){
+		var len1 = document.getElementsByName("files").length;
+		var len2 = document.getElementsByName("filename").length;
+		if(len1+len2<3){
+			$("#addbutton").remove();
+			var input = "<input type='file' name='filename'><br>";
+			if(len1+len2<2){
+				input += "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
+			}
+			$("#file_td").append(input);
+		}
+	}
+	
+	function delFile(val){
+		$(val).parent().remove();
 	}
 </script>
 </head>
@@ -20,9 +48,9 @@
 <body>
 <%@include file="/WEB-INF/header.jsp" %>
 	${dto}
-	
+	${list}
 	<div class="container">
-		<form action="./bbsDetail.do?seq=${dto.seq}" method="post">
+		<form action="./bbsDetail.do?seq=${dto.seq}" method="post" enctype="multipart/form-data">
   		<table class="table table-bordered">
     		<thead>
     			<tr>
@@ -44,18 +72,17 @@
         			<td>성명</td>
         			<td>${dto.name}</td>
       			</tr>
-      			<tr>
-        			<td>조회수</td>
-        			<td>${dtoo.views}</td>
-     		 	</tr>
      		 	<tr>
      		 		<td>파일</td>
-     		 		<td>
-     		 			<c:forEach items="${list}" var="files">
-	     		 			<input multiple="multiple" type="file" name="filename"> <hr>
-	     		 			${files.ori_name} <input type="button" class="btn btn-default" name="deleteFile" onclick="delFile()" value="삭제">
-     		 			</c:forEach>
-     		 		</td>
+		     		<td id="file_td">
+		     		 	<c:forEach items="${list}" var="files">
+		     		 	<span id="file">
+			    	  		${files.ori_name}
+			    	  		<input readonly="readonly" type="hidden" name="files" value="${files.name }" >
+			    	  		<input type="button" class="btn btn-default" name="deleteFile" onclick="delFile(this)" value="삭제"><br>
+		     		 	</span>
+		     		 	</c:forEach>
+		     		</td>
      		 	</tr>
       			<tr>
         			<td>글내용</td>
