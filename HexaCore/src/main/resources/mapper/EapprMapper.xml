@@ -5,7 +5,8 @@
 
 	<!-- 문서 수정을 위한 해당 문서 조회 -->
 	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto">
-	SELECT SEQ, AUTHOR, TITLE, STATE, APPR_TURN, TYPE_SEQ, CONTENT,REGDATE 
+	SELECT	SEQ, 		AUTHOR, 	TITLE,		STATE,
+		 	APPR_TURN, 	TYPE_SEQ, 	CONTENT,	REGDATE 
 		FROM DOCUMENT
 			WHERE SEQ = #{seq}
 	</select>
@@ -14,15 +15,16 @@
 	<update id="updateDoc" parameterType="DocumentDto">
 	UPDATE DOCUMENT
 		SET STATE=#{state}, APPR_TURN=#{appr_turn}, REGDATE=SYSDATE
-		<if test="content !=null and title!=null">
-		,CONTENT=#{content} ,TITLE=#{title}
-		</if>
-			WHERE SEQ=#{seq}
+			<if test="content !=null and title!=null">
+				,CONTENT=#{content}, TITLE=#{title}
+			</if>
+		WHERE SEQ=#{seq}
 	</update>
 	
 	<!-- 해당문서 결재루트 체크 -->
 	<select id="selectApprRoot" parameterType="ApprovalDto" resultType="ApprovalDto">
-	SELECT ID , CHK , TURN, NAME, DUTY, APPR_DATE, APPR_KIND, APPR_SIGN, SEQ
+	SELECT	ID,		CHK,	TURN,	NAME,
+			DUTY, 	APPR_DATE,	APPR_KIND,	APPR_SIGN, SEQ
 		FROM APPROVAL 
 			WHERE SEQ = #{seq}
 			<if test="id!=null">
@@ -38,15 +40,18 @@
 	
 	<!-- 결재루트 입력 -->
 	<insert id="insertApprRoot" parameterType="ApprovalDto">
-	INSERT INTO APPROVAL
-		(SEQ, ID, NAME, DUTY, CHK, TURN, APPR_KIND)
-	VALUES(#{seq}, #{id}, #{name}, #{duty}, 'F', #{turn}, #{appr_kind})
+	INSERT INTO APPROVAL(
+						SEQ,	ID,		NAME,	DUTY,
+						CHK,	TURN,	APPR_KIND)
+				  VALUES(
+				  		#{seq},	#{id},	#{name},	#{duty},
+				  		'F',	#{turn},#{appr_kind})
 	</insert>
 	
 	<!-- 파일 업로드 DB에 첨부파일 저장 하는 쿼리 작성 및 테스트 -->
 	<insert id="insertFile" parameterType="DocFileDto">
 		INSERT INTO DocFileDTO
-			(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE)
+					(NAME,	SEQ,	F_PATH,		ORI_NAME,	F_SIZE)
 			VALUES(#{name}, #{seq}, #{f_path}, #{ori_name}, #{f_size})
 		
 	</insert>
@@ -108,6 +113,17 @@
 						WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ=d.SEQ AND d.APPR_TURN>a.TURN
 							ORDER BY ROW_NUM ASC)
 			WHERE ROW_NUM BETWEEN #{start} AND #{last}
+	</select>
+	
+	<!-- 참조문서함  문서-->
+	<select id="selectReferDoc" parameterType="java.util.Map" resultType="DocumentDto">
+		SELECT * FROM 			
+			(SELECT 
+				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.title, d.content, d.state, d.regdate, d.author, d.seq, d.appr_turn, id, a.turn a_turn
+					FROM DOCUMENT d ,APPROVAL a 
+						WHERE ID = #{id} AND APPR_KIND = '참조' AND STATE>0
+							ORDER BY ROW_NUM ASC)
+				WHERE ROW_NUM BETWEEN #{start} AND #{last}
 	</select>
 	
 	<select id="searchDoc" parameterType="java.util.Map" resultType="DocumentDto">
@@ -198,12 +214,14 @@
 	
 	<!-- 결재문서함-문서의 총 개수 -->
 	<select id="selectApprDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND (d.APPR_TURN>a.TURN)
+		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ = d.SEQ AND (d.APPR_TURN>a.TURN)
 	</select>
 	
 	<!-- 결재문서함-결재해야할 문서의 개수 -->
 	<select id="selectNeedApprDocCount" parameterType="java.lang.String" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F'
+		SELECT COUNT(*) 
+			FROM APPROVAL a ,DOCUMENT d 
+				WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F'
 	</select>
 	
 	<!-- 문서 상신(임시보관함에서 상신하는 경우) -->
@@ -248,6 +266,28 @@
 		SELECT TYPE_SEQ FROM DOCUMENT_TYPE WHERE TYPE_SEQ=(SELECT MAX(TYPE_SEQ) FROM DOCUMENT_TYPE)
 	</select>
 	
-
+	
+	<select id="selectDocListAll" parameterType="java.lang.String" resultType="DocumentDto">
+	SELECT * 
+		FROM
+	<!--상신함 문서 총갯수  -->
+		(SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND (STATE = '1' OR STATE = '2')) A1,
+		<!--참조문서함  -->
+		(SELECT COUNT(*) FROM APPROVAL WHERE ID = #{id} AND APPR_KIND = '참조') A2,
+		<!-- 결재문서함 -->
+		(SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND (d.APPR_TURN>a.TURN)) A3,
+		<!-- 결재할 문서 -->
+		(SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F') A4,
+		<!-- 임시저장함 -->
+		(SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 0) A5,
+		<!-- 승인문서함 -->
+		(SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 3) A6,
+		<!-- 반려문서함 -->
+		(SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 4) A7,
+		<!-- 결재선에 내가 포함된 문서갯수 -->
+		(SELECT COUNT(*) FROM DOCUMENT d ,APPROVAL a WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ=d.SEQ AND d.APPR_TURN>a.TURN)
+	</select>
+	
+	
 	
 </mapper>

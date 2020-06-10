@@ -234,5 +234,17 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("selectMyDoc DaoImpl 실행 : {}",map);
 		return sqlSession.selectList(NS+"selectMyDocList", map);
 	}
-	
+
+	@Override
+	public List<DocumentDTO> selectReferDoc(Map<String, Object> map) {
+		log.info("selectReferDoc DaoImpl 실행 : {}",map);
+		return sqlSession.selectList(NS+"selectReferDoc", map);
+	}
+
+	@Override
+	public List<DocumentDTO> selectDocListAll(String id) {
+		log.info("selectDocListAll DaoImpl 실행 : {}",id);
+		return sqlSession.selectList(NS+"selectDocListAll",id);
+	}
+
 }

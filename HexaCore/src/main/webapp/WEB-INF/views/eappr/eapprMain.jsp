@@ -7,6 +7,7 @@
 <title>전자결재 메인</title>
 <link rel="stylesheet" href="./css/sidebar.css">
 </head>
+
 <body>
 	<div id="wrap" class="wrap">
 		<div class="subside">
@@ -26,11 +27,11 @@
 				<div class="submenu" data-url="./docLists.do?state=4">반려문서</div>
 			</div>
 			<div>
-				<div class="ddmenu">결재문서함</div>
+				<div class="ddmenu">결재문서함</div>	
 				<div class="submenu" data-url="./docLists.do?state=7">결재필요문서</div>
 				<div class="submenu" data-url="./docLists.do?state=6">결재중문서</div>
 			</div>
-			<div class="menu">참조문서함</div>
+			<div class="menu" data-url="./docLists.do?state=8">참조문서함</div>
 		</div>
 	<%@include file="../header.jsp" %>
 	<script type="text/javascript" src="./js/sidebar_js.js"></script>

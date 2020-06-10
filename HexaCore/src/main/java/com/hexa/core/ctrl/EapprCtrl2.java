@@ -49,7 +49,44 @@ public class EapprCtrl2 {
 			page="0";
 		}
 		RowNumDTO row = new RowNumDTO();
-		row.setTotal(service.selectNeedApprDocCount(id));
+		int count = 0;
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("id", id);
+		switch (state) {
+		case "0":
+			map1.put("state",state);
+			count=service.selectMyDocCount(map1);
+			break;
+		case "1":
+			map1.put("state",state);
+			count=service.selectMyDocCount(map1);
+			break;
+		case "2":
+			map1.put("state",state);
+			count=service.selectMyDocCount(map1);
+			break;
+		case "3":
+			map1.put("state",state);
+			count=service.selectMyDocCount(map1);
+			break;
+		case "4":
+			map1.put("state",state);
+			count=service.selectMyDocCount(map1);
+			break;
+		case "6":
+			count=service.selectApprDocCount(id);
+			break;
+		case "7":
+			count=service.selectNeedApprDocCount(id);
+			break;
+		case "8":
+			count=service.selectReferDocCount(id);
+			break;
+
+		default:
+			break;
+		}
+		row.setTotal(count);
 		row.setPageNum(3);
 		row.setListNum(10);
 		if(row.getLastPage()-1<Integer.parseInt(page)) {
@@ -69,6 +106,9 @@ public class EapprCtrl2 {
 			log.info("********lists:{}",lists);
 		}else if(state.equalsIgnoreCase("6")) {
 			lists = service.selectApprMyDoc(map);
+			log.info("********lists:{}",lists);
+		}else if(state.equalsIgnoreCase("8")) {
+			lists = service.selectReferDoc(map);
 			log.info("********lists:{}",lists);
 		}else{
 			map.put("state", state);

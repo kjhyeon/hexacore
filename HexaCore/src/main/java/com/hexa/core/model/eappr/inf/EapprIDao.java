@@ -235,4 +235,18 @@ public interface EapprIDao {
 	 * @return 문서 리스트
 	 */
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
+	
+	/**
+	 * 참조문서함 List
+	 * @param Adto
+	 * @return 참조문서 List
+	 */
+	public List<DocumentDTO> selectReferDoc(Map<String, Object> map);
+	
+	/**
+	 * 각 문서함 갯수
+	 * @param id
+	 * @return List
+	 */
+	public List<DocumentDTO> selectDocListAll(String id);
 }

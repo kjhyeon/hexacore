@@ -1,3 +1,6 @@
+
+
+
 function apprDoc(val1,val2,val3,number){
 	ajaxapprDoc(val1,val2,val3,number);
 	$("#apprDocUp").modal();

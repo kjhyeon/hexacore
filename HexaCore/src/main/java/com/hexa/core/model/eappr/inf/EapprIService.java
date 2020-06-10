@@ -2,6 +2,7 @@ package com.hexa.core.model.eappr.inf;
 
 import java.util.List;
 import java.util.Map;
+import javax.print.Doc;
 
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
@@ -235,4 +236,20 @@ public interface EapprIService {
 	 * @return 문서 리스트
 	 */
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
+	
+	/**
+	 * 참조문서함 List
+	 * @param Adto
+	 * @return 참조문서 List
+	 */
+	public List<DocumentDTO> selectReferDoc(Map<String, Object> map);
+	
+	/**
+	 * 각 문서함 갯수
+	 * @param id
+	 * @return List
+	 */
+	public List<DocumentDTO> selectDocListAll(String id);
+	
+	
 }
