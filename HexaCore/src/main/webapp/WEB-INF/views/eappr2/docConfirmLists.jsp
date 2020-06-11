@@ -61,17 +61,17 @@
 				</c:forEach>
 			</table>
 			<input type="hidden" name="index" id="index" value="${row.index }">
-			<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }"> 
-			<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
+			<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum}"> 
+			<input type="hidden" name="listNum" id="listNum" value="${row.listNum}">
 			<div class="center" style="text-align: center; position: relative;">
 				<ul class="pagination">
-					<li><a href="./docLists.do?page=0" onclick="pageFirst()">&laquo;</a></li>
-					<li><a href="./docLists.do?page=${row.index-1}"	onclick="pagePre()">&lt;</a></li>
+					<li><a href="./docLists.do?page=0&state=${number}" onclick="pageFirst()">&laquo;</a></li>
+					<li><a href="./docLists.do?page=${row.index-1}&state=${number}"	onclick="pagePre()">&lt;</a></li>
 					<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
-						<li><a href="./docLists.do?page=${i-1}">${i }</a></li>
+						<li><a href="./docLists.do?page=${i-1}&state=${number}">${i }</a></li>
 					</c:forEach>
-					<li><a href="./docLists.do?page=${row.index+1}">&gt;</a></li>
-					<li><a href="./docLists.do?page=${row.lastPage-1}">&raquo;</a></li>
+					<li><a href="./docLists.do?page=${row.index+1}&state=${number}">&gt;</a></li>
+					<li><a href="./docLists.do?page=${row.lastPage-1}&state=${number}">&raquo;</a></li>
 				</ul>
 			</div>
 		</form>

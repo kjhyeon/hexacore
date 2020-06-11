@@ -38,10 +38,8 @@ public class EapprCtrl1 {
 		List<DocumentTypeDTO> list = service.selectDocTypeList();
 		model.addAttribute("list", list);
 		String userId = scInfo.getName();
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", userId);
-		int cnt = service.selectNeedApprDocCount(map);
-		model.addAttribute("cnt",cnt);
+		Map<String,Object> mapCount = service.selectDocListAll(userId);
+		model.addAttribute("cnt",mapCount.get("COUNT4"));
 		return "eappr/eapprMain";
 	}
 	
@@ -49,23 +47,25 @@ public class EapprCtrl1 {
 	@RequestMapping(value = "/goEapprHome.do", method = RequestMethod.GET)
 	public String EapprHome(Principal scInfo, Model model) {
 		String userId = scInfo.getName();
-		int count1 = service.selectReportCount(userId);
-		model.addAttribute("count1", count1);
-		for (int i = 0; i < 5; i++) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("id", userId);
-			map.put("state", i);
-			int count =service.selectMyDocCount(map);
-			model.addAttribute("count"+(i+2), count);
-		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id", userId);
-		int count7 = service.selectReferDocCount(map);
-		int count8 = service.selectApprDocCount(map);
-		int count9 = service.selectNeedApprDocCount(map);
-		model.addAttribute("count7", count7);
-		model.addAttribute("count8", count8);
-		model.addAttribute("count9", count9);
+//		int count1 = service.selectReportCount(userId);
+//		model.addAttribute("count1", count1);
+//		for (int i = 0; i < 5; i++) {
+//			Map<String, Object> map = new HashMap<String, Object>();
+//			map.put("id", userId);
+//			map.put("state", i);
+//			int count =service.selectMyDocCount(map);
+//			model.addAttribute("count"+(i+2), count);
+//		}
+//		for (int i = 6; i < 9; i++) {
+//			Map<String, Object> map = new HashMap<String, Object>();
+//			map.put("id", userId);
+//			map.put("state", i);
+//			int counts = service.selectNeedApprDocCount(map);
+//			model.addAttribute("count"+(i+2), counts);
+//		}
+		Map<String, Object> counts = service.selectDocListAll(userId);
+		model.addAttribute("lalala",counts.get("COUNT4"));
+		model.addAttribute("allcount",counts);
 		List<DocumentTypeDTO> list = service.selectDocTypeList();
 		model.addAttribute("list", list);
 		

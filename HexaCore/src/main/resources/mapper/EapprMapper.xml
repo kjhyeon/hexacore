@@ -269,25 +269,17 @@
 	</select>
 	
 	
-	<select id="selectDocListAll" parameterType="java.lang.String" resultType="DocumentDto">
-	SELECT * 
+	<select id="selectDocListAll" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT * 
 		FROM
-	<!--상신함 문서 총갯수  -->
-		(SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND (STATE = '1' OR STATE = '2')) A1,
-		<!--참조문서함  -->
-		(SELECT COUNT(*) FROM APPROVAL WHERE ID = #{id} AND APPR_KIND = '참조') A2,
-		<!-- 결재문서함 -->
-		(SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND (d.APPR_TURN>a.TURN)) A3,
-		<!-- 결재할 문서 -->
-		(SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F') A4,
-		<!-- 임시저장함 -->
-		(SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 0) A5,
-		<!-- 승인문서함 -->
-		(SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 3) A6,
-		<!-- 반려문서함 -->
-		(SELECT COUNT(*) FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 4) A7,
-		<!-- 결재선에 내가 포함된 문서갯수 -->
-		(SELECT COUNT(*) FROM DOCUMENT d ,APPROVAL a WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ=d.SEQ AND d.APPR_TURN>a.TURN)
+		(SELECT COUNT(*) AS COUNT1 FROM DOCUMENT WHERE AUTHOR = #{id} AND (STATE = '1' OR STATE = '2')) A1,
+		(SELECT COUNT(*) AS COUNT2 FROM APPROVAL WHERE ID = #{id} AND APPR_KIND = '참조') A2,
+		(SELECT COUNT(*) AS COUNT3 FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND (d.APPR_TURN>a.TURN)) A3,
+		(SELECT COUNT(*) AS COUNT4 FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F') A4,
+		(SELECT COUNT(*) AS COUNT5 FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 0) A5,
+		(SELECT COUNT(*) AS COUNT6 FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 3) A6,
+		(SELECT COUNT(*) AS COUNT7 FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 4) A7,
+		(SELECT COUNT(*) AS COUNT8 FROM DOCUMENT d ,APPROVAL a WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ=d.SEQ AND d.APPR_TURN>a.TURN) A8
 	</select>
 	
 	

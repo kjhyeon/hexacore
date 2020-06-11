@@ -243,12 +243,12 @@ public interface EapprIService {
 //	 */
 //	public List<DocumentDTO> selectReferDoc(Map<String, Object> map);
 //	
-//	/**
-//	 * 각 문서함 갯수
-//	 * @param id
-//	 * @return List
-//	 */
-//	public List<DocumentDTO> selectDocListAll(String id);
+	/**
+	 * 각 문서함 갯수
+	 * @param id
+	 * @return List
+	 */
+	public Map<String, Object> selectDocListAll(String id);
 	
 	/**
 	 * 상신문서함의 문서 조회

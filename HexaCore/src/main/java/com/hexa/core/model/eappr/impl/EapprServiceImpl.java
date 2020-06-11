@@ -203,7 +203,27 @@ public class EapprServiceImpl implements EapprIService{
 	@Override
 	public int selectNeedApprDocCount(Map<String, Object> map) {
 		log.info("selectNeedApprDocCount ServiceImpl 실행 : {}",map);
-		return dao.selectNeedApprDocCount(map);
+		int cnt=0;
+		
+		log.info("**** 실행 : {}",map);
+		if(Integer.parseInt((String)map.get("state"))<5) {
+			cnt = dao.selectMyDocCount(map);
+		}else {
+			switch ((String)map.get("state")) {
+				case "6":
+					cnt = dao.selectApprDocCount(map);
+					break;
+				case "7":
+					cnt = dao.selectNeedApprDocCount(map);
+					break;
+				case "8":
+					cnt = dao.selectReferDocCount(map);
+					break;
+				default:
+					break;
+			}
+		}
+		return cnt;
 	}
 
 	@Override
@@ -266,10 +286,10 @@ public class EapprServiceImpl implements EapprIService{
 //		return dao.selectReferDoc(map);
 //	}
 //
-//	@Override
-//	public List<DocumentDTO> selectDocListAll(String id) {
-//		log.info("selectDocListAll ServiceImpl 실행 : {}",id);
-//		return dao.selectDocListAll(id);
-//	}
+	@Override
+	public Map<String, Object> selectDocListAll(String id) {
+		log.info("selectDocListAll ServiceImpl 실행 : {}",id);
+		return dao.selectDocListAll(id);
+	}
 
 }

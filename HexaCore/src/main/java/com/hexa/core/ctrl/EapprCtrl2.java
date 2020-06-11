@@ -53,13 +53,8 @@ public class EapprCtrl2 {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<DocumentDTO> lists =null;
 		map.put("id", id);
-		map.put("start",row.getStart());
-		map.put("last",row.getLast());
 		map.put("state",state);
-		//문서 list 조회
-		lists = service.selectMyDocList(map);
-		log.info("문서문서문서{}",lists);
-		//결재할 문서 갯수 조회
+		log.info("카운트{}",state);
 		int count=service.selectNeedApprDocCount(map);
 		row.setTotal(count);
 		row.setPageNum(3);
@@ -71,6 +66,12 @@ public class EapprCtrl2 {
 		}else {
 			row.setIndex(Integer.parseInt(page));
 		}
+		map.put("start",row.getStart());
+		map.put("last",row.getLast());
+		//문서 list 조회
+		lists = service.selectMyDocList(map);
+		log.info("문서문서문서{}",lists);
+		//결재할 문서 갯수 조회
 		model.addAttribute("lists",lists);
 		model.addAttribute("row", row);
 		model.addAttribute("id",id);

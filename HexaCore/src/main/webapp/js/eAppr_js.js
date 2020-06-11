@@ -269,7 +269,7 @@ window.onload = function () {
 function calculate() {
    setTimeout(function () {
       notify();
-      }, 10000);
+      }, 3000);
 }
 function notify() {
      if (Notification.permission !== 'granted') {
@@ -282,7 +282,7 @@ function notify() {
                });
 
                notification.onclick = function () {
-                  $(".appr").click();
+                  $("#appr").click();
                };
            }
        }

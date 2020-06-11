@@ -248,5 +248,5 @@ public interface EapprIDao {
 	 * @param id
 	 * @return List
 	 */
-	public List<DocumentDTO> selectDocListAll(String id);
+	public Map<String, Object> selectDocListAll(String id);
 }
