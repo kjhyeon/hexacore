@@ -17,17 +17,14 @@
 <script type="text/javascript" src="./js/sweetalert.js"></script>
 <script type="text/javascript">
 	function writeForm(){
-		alert("글쓰기 작성 작동");
 		location.href="./freeBbsInsert.do";
 	}
 	
 	function multiDelete(){
-		alert("글 다중삭제 작동");
 		document.forms[0].submit();
 	}
 
 	function checkAll(bool){
-		 alert("전체 선택");
 		 var chkVals = document.getElementsByName("chkVal");
 		 for (var i = 0; i < chkVals.length; i++) {
 		      chkVals[i].checked = bool;
@@ -51,7 +48,7 @@
 	}
 	
 	function goPage(page){
-		var location = "./bbsMain.do?page="+page; 
+		var location = "./freeBbsMain.do?page="+page; 
 		if($("#ori_keyword").val()!=null&&$("#ori_keyword").val().trim()!=''){
 			location += "&keyword="+$("#ori_keyword").val()+"&type="+$("#ori_type").val();			
 		}
@@ -59,13 +56,11 @@
 	}
 	
 	function goSearch(){
-		var location = "./bbsMain.do?"; 
+		var location = "./freeBbsMain.do?"; 
 		location += "keyword="+$("#keyword_Search").val()+"&type="+$("#type_Select").val();			
 		document.location.href=location;
 	}
-	
 </script>
-
 <body>
 <div id="Main_Top_Div">
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
@@ -118,9 +113,16 @@
       			</c:if>
       			<td id="td1">${dto.seq}</td>
       			<td id="td2">${dto.id}</td>
-      			<td><a href="bbsDetail.do?seq=${dto.seq}">${dto.title}&nbsp;&nbsp;
+      			<td><a href="bbsDetail.do?seq=${dto.seq}" style="text-decoration: none; color: black; font-weight: bold;">
+      				<c:forEach begin="0" end="${dto.bbs_depth}">
+      					&nbsp;&nbsp;&nbsp;
+      				</c:forEach>
+      				<c:if test="${dto.reply_seq > 0 }">
+      					<img alt="에~~~로우" src="./image/reply_arrow.png">
+      				</c:if>
+      				${dto.title }&nbsp;&nbsp;
  	     			<c:if test="${dto.c_count != 0}">
-    		  			<b id="Main_Title_Count" >${dto.c_count}</b>
+    		  			<b id="Main_Title_Count" >✎[${dto.c_count}]</b>&nbsp;&nbsp;
       				</c:if>
       				<c:if test="${dto.f_count != 0}">
       					<img alt="FileImg" src="./image/file.png" style="width: 13px; height: 13px;">

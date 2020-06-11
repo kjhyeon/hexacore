@@ -1,7 +1,8 @@
 @charset "UTF-8";
 
-	
 
+/* ========== Main ========== */
+	
 	#Main_Top_Div{
 		width: 1400px;
 		margin: 40px auto;
@@ -43,13 +44,57 @@
 	}
 	
 	#Main_Title_Count{
-		color: red;
-		border: 1.5px solid red;
-		border-top-left-radius: 7px;
-		border-bottom-right-radius: 7px;
+		color: blue;
 	}
 	
-	#insertForm{
+	#title_Decoration{
+		color: red;
+	}
+/* ========== Detail ========== */
+
+	#Detail_Modify, #Detail_Reply{
+		margin-right: 5px;
+	}
+
+	#Detail_Modify, #Detail_Delete, #Detail_Reply{
+		position: relative;
+		float: right;	
+	}
+	
+	#write_Comment{
+		position: relative;
 		float: right;
 	}
+
+	.commnet_List{
+		height: 150px;
+		width: 1000px;
+		margin: auto;
+	}
+	input[type=image]{
+		position: absolute;
+		right: 350px;
+	}
+	.Detail_container{
+		width: 1000px;
+		margin: auto;
+	}
+
+	div > textarea {
+		width: 1000px;
+	}
 	
+	.comment_container{
+		margin-left: 350px;
+	}
+	
+	.Detail_Comment_Write{
+		width: 1000px;
+	}
+
+
+
+
+
+
+

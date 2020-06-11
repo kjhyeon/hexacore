@@ -15,10 +15,9 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
+	// 스크립트 < > 제약조건 
 	function writeComplete(){
-		alert("작성완료");
 		var temp = $("#title").val();
-		alert(temp);
 		if(temp.indexOf("<")>=0){
 			temp = temp.replace(/</g ,"&lt;");
 		}
@@ -27,16 +26,12 @@
 		}
 		$("#title").val(temp);
 		document.forms[1].submit();
-		
 	}
-	function writeCancle(){
-		alert("작성취소");
-	}
+	
 	$(document).ready(function() {
 		var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
 		$("#file_td").append(button);
 	});
-	
 	function addinput(){
 		var len = document.getElementsByName("filename").length;
 		if(len<3){
@@ -47,16 +42,9 @@
 			}
 			$("#file_td").append(input);
 		}
-// 		var file = f.files;
-// 		if(!/\.(gif|jpg|jpeg|png)$/i.test(file[0].name)) { 
-// 		alert('gif, jpg, png 파일만 선택해 주세요.\n\n현재 파일 : ' + filename[0].name);
-// 		}else{
-// 			return;
-// 		}
 	}
 	
 	function fileChk(f){
-		alert(f.value);
 	// 파일 유형 제한
 		if ($(f).val != "") {  // input에 name이 filename 불러오기
 			var ext = $(f).val().split('.').pop().toLowerCase();
@@ -69,6 +57,7 @@
 				return;
 			}
 		}
+	// 파일 용량 제한
 		if (f.value != ""){
 	 		var fileSize = f.files[0].size;
 	 		var maxSize = 108*1024*1024 // 108MB 제한
@@ -80,12 +69,9 @@
 	 	}
 	}
 	
-	// 파일 용량 제한
-// 
 	
 </script>
 <body>
-<%@include file="/WEB-INF/header.jsp"%>
 	<sec:authentication property="principal.username" var="sessionId"/>
 	${Ldto}
 	<div class="container">
@@ -146,5 +132,4 @@
 	</div>
 	
 </body>
-<%@include file="/WEB-INF/footer.jsp"%>
 </html>

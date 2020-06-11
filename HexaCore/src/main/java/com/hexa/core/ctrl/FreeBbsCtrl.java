@@ -63,8 +63,8 @@ public class FreeBbsCtrl {
 	}
 	
 	// 자유게시판 (관리자)목록 조회
-	@RequestMapping(value = "/bbsMain.do", method = RequestMethod.GET)
-	public String bbsMain(Model model, BbsDTO dto, SecurityContextHolder session, String page,String keyword,String type) {
+	@RequestMapping(value = "/freeBbsMain.do", method = RequestMethod.GET)
+	public String freeBbsMain(Model model, BbsDTO dto, SecurityContextHolder session, String page,String keyword,String type) {
 		log.info("Welcome List 목록조회, {}", new Date());
 		if(page==null) {
 			page="0";
@@ -106,7 +106,7 @@ public class FreeBbsCtrl {
 			lists = service.selectAdminBbsListRow(row);
 		}
 		model.addAttribute("lists", lists);	
-		return "bbsMain";
+		return "freeBbsMain";
 	}
 	
 	
@@ -207,7 +207,7 @@ public class FreeBbsCtrl {
 			model.addAttribute("dto", dto);
 			return "Bbs/freeBbsModify";
 		}else{
-			return "redirect:/bbsMain.do";
+			return "redirect:/freeBbsMain.do";
 		}
 	}
 	
@@ -247,7 +247,7 @@ public class FreeBbsCtrl {
 			model.addAttribute("lists", lists);
 			return "Bbs/bbsDetail";
 		}else {
-			return "redirect:/bbsMain.do";
+			return "redirect:/freeBbsMain.do";
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class FreeBbsCtrl {
 		log.info("Welcome 글 단일삭제 값 보내기, {}", seq);
 		int n = service.updateDeleteFreeBbs(seq);
 		
-		return "redirect:/bbsMain.do";
+		return "redirect:/freeBbsMain.do";
 	}
 	
 	// 자유게시판 글 다중삭제
@@ -269,7 +269,7 @@ public class FreeBbsCtrl {
 		map.put("seqs", chkVal);
 		isc = service.updateMultiDelFreeBbs(map);
 		
-		return isc?"redirect:/bbsMain.do":"redirect:/logout.do";
+		return isc?"redirect:/freeBbsMain.do":"redirect:/logout.do";
 	}
 	
 	
@@ -298,7 +298,7 @@ public class FreeBbsCtrl {
 		model.addAttribute("list", list);
 		model.addAttribute("seq",result);
 		
-		return result!=null?"redirect:/bbsDetail.do?seq="+result.getSeq():"redirect:/bbsMain.do";
+		return result!=null?"redirect:/bbsDetail.do?seq="+result.getSeq():"redirect:/freeBbsMain.do";
 	}
 	
 	@RequestMapping(value = "/download.do", method = RequestMethod.GET)

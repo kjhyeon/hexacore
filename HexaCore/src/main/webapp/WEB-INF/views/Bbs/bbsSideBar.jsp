@@ -19,13 +19,13 @@
 	<div class="wrap">
 		<div class="sidebar">
 		<div class="menu" data-url='#'>공지게시판</div>
-		<div class="menu" data-url="./bbsMain.do">자유게시판</div>
+		<div class="menu" data-url="./freeBbsMain.do">자유게시판</div>
 		<div class="menu" data-url='#'>자료실</div>
 		</div>
 	<%@include file="./../header.jsp" %>
 	<div class="container">
 		<div class="content" style="min-height: 900px; min-width: 1000px;">
-		<iframe id="iframe" src="./bbsMain.do" style="height: 100%; width: 100%; border: none;  position: relative; min-height: 800px; min-width: 1000px;"></iframe>
+		<iframe id="iframe" src="./freeBbsMain.do" style="height: 100%; width: 100%; border: none;  position: relative; min-height: 800px; min-width: 1000px;"></iframe>
 		</div>
 	</div>
 	</div>

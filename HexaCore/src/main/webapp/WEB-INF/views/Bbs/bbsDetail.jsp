@@ -10,26 +10,10 @@
 <meta charset="UTF-8">
 <title>자유게시판 상세보기</title>
 <style type="text/css">
-	textarea{
-		height: 150px;
-		width: 750px; 
-		word-break:break-all;
-	}
-	.commnet_List{
-/* 		border: 2px solid black; */
-		height: 150px;
-		width: 750px;
-		margin: auto;
-	}
-	#comment_ListTable{
-		
-	}
-	input[type=image]{
-		position: absolute;
-		left: 1400px;
-	}
+	
 </style>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="./css/bbs.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./js/sweetalert.js"></script>
@@ -65,9 +49,7 @@
 <sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"/>
 <sec:authentication property="principal.username" var="sessionId"/>
 	
-	${seq}
-	
-	<div class="container">
+	<div class="Detail_container">
 		<form action="./del.do" method="post">
 		<input type="hidden" name="auth_check" value="${auth}">
   		<table class="table table-bordered">
@@ -107,41 +89,38 @@
       			</tr>
     		</tbody>
   		</table>
-	    <div class="form-group">        
-	      <div class="col-sm-offset-2 col-sm-10">
+	    <div class="Detail_form_group">        
+	      <div class="Detail_form_Button">
 	        <input type="hidden" name="seq" value="${seq.seq}" id="seq">
 	        
 	        <c:if test="${(sessionId eq seq.id) || auth eq true}">
-	        	<input type="button" class="btn btn-default" onclick="BbsContent_modify()" value="수정">
-	        	<input type="submit" id="del" class="btn btn-default" value="삭제" onclick="del()">
+	        	<input id="Detail_Delete" type="submit" class="btn btn-default" value="삭제" onclick="del()">
+	        	<input id="Detail_Modify" type="button" class="btn btn-default" onclick="BbsContent_modify()" value="수정">
 	        </c:if>
-	        	<input type="button" class="btn btn-default" onclick="BbsReplyWrite()" value="답글">
+	        	<input id="Detail_Reply" type="button" class="btn btn-default" onclick="BbsReplyWrite()" value="답글">
 	      </div>
 	    </div>
-  		
 	   </form>
 	</div>
+	<br>
 	<hr>
-	
-	<div class="comment_container" style="text-align: center;">	
+	<div class="comment_container">	
 	<form action="./commentWrite.do" method="post">
 		<div class="reply_Comment">
-			<textarea rows="10" cols="10" name=content placeholder="댓글을 입력하라고"></textarea>
+			<textarea id="Detail_textarea" rows="10" cols="10" name=content placeholder="댓글을 입력해주세요..."></textarea>
 		</div>
 		<input type="hidden" name="parent_seq" value="${seq.seq}">
 	        
 	
-		<div class="form-group">        
-      		<div class="col-sm-offset-2 col-sm-10">
-        		<input type="button" id=write_Comment value="작성" onclick="writeComment()">
+		<div class="Detail_Comment_Write">        
+      		<div class="Detail_Comment_Button">
+        		<input type="button" class="btn btn-default" id=write_Comment value="작성" onclick="writeComment()">
       		</div>
     	</div>
 	</form>
 	</div>
-		
+	<br>
 	<hr>
-	<hr>
-	
 	<div class="commnet_List" >
 		<c:forEach items="${lists}" var="commentList">
 			<table id="comment_ListTable">
