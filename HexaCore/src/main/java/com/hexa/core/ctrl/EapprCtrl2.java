@@ -58,7 +58,7 @@ public class EapprCtrl2 {
 		map.put("state",state);
 		//문서 list 조회
 		lists = service.selectMyDocList(map);
-		
+		log.info("문서문서문서{}",lists);
 		//결재할 문서 갯수 조회
 		int count=service.selectNeedApprDocCount(map);
 		row.setTotal(count);
@@ -92,6 +92,7 @@ public class EapprCtrl2 {
 		DocumentDTO Ddto = service.selectDoc(seq);
 		//문서 결재선 전체 조회
 		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
+		log.info("문서리스트{}",listsb);
 		for (int i = 0; i < listsb.size(); i++) {
 			if(listsb.get(i).getAppr_sign()!=null) {
 				listsb.get(i).setAppr_sign(attach_path+listsb.get(i).getAppr_sign()); 
@@ -111,11 +112,11 @@ public class EapprCtrl2 {
 		
 		//결재자 코멘트 가져오기
 		List<DocCommentDTO> lists = service.selectComment(seq);
-		log.info("********commentlists:{}",lists);
-		log.info("********Adto:{}",Adto);
-		log.info("********approvalLine:{}",listsb);
-		log.info("********number:{}", number);
-		log.info("********Ddto:{}", Ddto);
+//		log.info("********commentlists:{}",lists);
+//		log.info("********Adto:{}",Adto);
+//		log.info("********approvalLine:{}",listsb);
+//		log.info("********number:{}", number);
+//		log.info("********Ddto:{}", Ddto);
 		//해당문서 코멘트 조회
 		//독타입 가져오기
 		DocumentTypeDTO TDto = service.selectDocType(Integer.toString(Ddto.getType_seq()));
@@ -131,22 +132,14 @@ public class EapprCtrl2 {
 	//문서수정 Ajax
 	@ResponseBody
 	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST)
-	public Map<String, Object> modifyDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto) {
-		Authentication auth = session.getContext().getAuthentication();
-	    LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
-	    String id = Ldto.getUsername();
+	public Map<String, Object> modifyDoc(Model model,ApprovalDTO Adto) {
 		DocumentDTO Ddto = service.selectDoc(Integer.toString(Adto.getSeq()));
 		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
 		log.info("********Adto:{}",listsb);
 		log.info("********Ddto:{}", Ddto);
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id",id);
-		map.put("seq",Ddto.getSeq());
-		map.put("author",Ddto.getAuthor());
 		map.put("title",Ddto.getTitle());
-		map.put("regdate",Ddto.getRegdate());
 		map.put("content", Ddto.getContent());
-		map.put("content2", listsb);
 //		map.put("typeDto",TDto);
 		return map;
 	}
@@ -163,16 +156,14 @@ public class EapprCtrl2 {
 	@RequestMapping(value="/saveUpDoc.do", method= RequestMethod.POST)
 	public String saveUpDoc(DocumentDTO Ddto) {
 		log.info("********Ddto:{}", Ddto);
+		log.info("********수정DdtoList:{}", Ddto.getLists());
 		Ddto.setAppr_turn(0);
 		Ddto.setState(0);
 		boolean isc = service.updateDoc(Ddto);
 		log.info("********DdtoList:{}",Ddto.getLists());
 		
 		if(Ddto.getLists()!=null) {
-			for (int i = 0; i < Ddto.getLists().size(); i++) {
-				Ddto.getLists().get(i).setChk("F");
-					service.insertApprRoot(Ddto.getLists().get(i));
-			}
+			service.insertApprRoot(Ddto);
 		}
 		return isc?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}

@@ -112,7 +112,7 @@ public class EapprCtrl1 {
 		int sseq = Integer.parseInt(seq);
 		for (int i = 0; i < dto.getLists().size(); i++) {
 			dto.getLists().get(i).setSeq(sseq);
-			service.insertApprRoot(dto.getLists().get(i));
+			service.insertApprRoot(dto);
 		}
 		DocumentDTO newDto = service.selectDoc(seq);
 		sService.addDocIndex(newDto);

@@ -73,7 +73,7 @@
 										<td>${Adto.duty}<input type="hidden" name='lists[${i.index}].duty' value='${Adto.duty}'></td>
 										<td>
 											${Adto.name}
-											<input type="hidden" name='seq' value='${Adto.seq}'>
+											
 											<input type="hidden" name='lists[${i.index}].seq' value='${Adto.seq}'>
 											<input type="hidden" name='lists[${i.index}].name' value='${Adto.name}'>
 											<input type="hidden" name='lists[${i.index}].appr_kind' value='${Adto.appr_kind}'>
@@ -103,11 +103,11 @@
 				</div>
 			</div>
 			<div class="leftBox">
-			<h1>지원이형 이거 양식 이름 어떻게 받아와??</h1>
+			<h1>${typeDto.name}<input type="hidden" name="type_seq" value="${Ddto.type_seq}"></h1>
 			<table id="docuHead">
 				<tr>
 					<th>문서번호</th>
-					<td>${Ddto.seq}<input type="hidden" name ="seq" value="${Ddto.seq}"></td>
+					<td>${Ddto.seq}<input type="hidden" class="seq" name ="seq" value="${Ddto.seq}"></td>
 				</tr>
 				<tr>
 					<th>기안자</th>

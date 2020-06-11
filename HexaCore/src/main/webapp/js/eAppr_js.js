@@ -94,12 +94,11 @@ function apprSearch() {
 }
 function setChildValue(nodes) {
 	nodes = nodeSort(nodes);
-	$(".apprtable").empty();
+	$(".apprtable > tbody").empty();
 	var ap = "<tr class='index'>"
 		   + "<td>부서직급</td><td>이름</td><td>종류</td><td>순서</td>"
 		   + "</tr>"
-		   + "<tbody>";
-	$(".apprtable").append(ap);
+	$(".apprtable > tbody").append(ap);
 	for (var i = 0; i < nodes.length; i++) {
 		var child = nodes[i].children;
 //				 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3종류 4X 5아이디 6e_rank
@@ -111,21 +110,20 @@ function setChildValue(nodes) {
 				+ "<td>"+child[3].innerHTML+"<input type='hidden' name='lists["+i+"].appr_kind' value='"+child[3].innerHTML+"'></td>"
 				+ "<td>"+(i+1)+"<input type='hidden' name='lists["+i+"].turn' value='"+(i+1)+"'>"
 				+ "<input type='hidden' name='lists["+i+"].id' value='"+child[5].innerHTML+"'>"
+				+ "<input type='hidden' name='lists["+(i)+"].seq' value='"+$(".seq").val()+"'>"
 				+ "</td>"
 				+ "</tr>";
 
-		$(".apprtable").append(app);
-		$(".apprtable").append("</tbody>");
+		$(".apprtable > tbody").append(app);
 	}
 }
 function setChildValue2(nodes1) {
 	nodes = nodeSort(nodes1);
-	$(".refertable").empty();
+	$(".refertable > tbody").empty();
 	var ap = "<tr class='index'>"
 		   + "<td>부서직급</td><td>이름</td>"
-		   + "</tr>"
-		   + "<tbody>";
-	$(".refertable").append(ap);
+		   + "</tr>";
+	$(".refertable > tbody").append(ap);
 	for (var i = 0; i < nodes.length; i++) {
 		var child = nodes[i].children;
 //				 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3종류 4X 5아이디 6e_rank
@@ -137,11 +135,11 @@ function setChildValue2(nodes1) {
 				+ "<input type='hidden' name='lists["+(i+3)+"].appr_kind' value='"+child[3].innerHTML+"'>"
 				+ "<input type='hidden' name='lists["+(i+3)+"].turn' value='"+0+"'>"
 				+ "<input type='hidden' name='lists["+(i+3)+"].id' value='"+child[5].innerHTML+"'>"
+				+ "<input type='hidden' name='lists["+(i+3)+"].seq' value='"+$(".seq").val()+"'>"
 				+ "</td>"
 				+ "</tr>";
 
-		$(".refertable").append(app);
-		$(".apprtable").append("</tbody>");
+		$(".refertable > tbody").append(app);
 	}
 }
 
@@ -179,9 +177,10 @@ function saveUpdoc(){
 	if(confirm("임시저장 하시겠습니까?\n(작성한 내용은 임시보관함에 저장됩니다.)") == true){
 		if($("#inputTitle").val()==""){
 			alert("제목을 입력하세요.");
-		}else if($(".apprtable > tbody  > tr").length != 4){
+		}else if($(".apprtable > tbody > tr").length != 4){
 			alert("결재자를 선택하세요.");
 		}else{
+			$(".leftBox").append("<input type='hidden' name='state' value='0'>");
 			$("#formDoc").attr("action", "./saveUpDoc.do");
 			$("#formDoc").attr("method", "post");
 			document.formDoc.submit();
@@ -283,7 +282,7 @@ function notify() {
                });
 
                notification.onclick = function () {
-                  $("#appr").click();
+                  $(".appr").click();
                };
            }
        }

@@ -67,9 +67,9 @@ public interface EapprIDao {
 	/**
 	 * 결재루트 입력
 	 * @param ApprovalDto 결재선 seq, id, name, duty, turn, appr_kind
-	 * @return True : 성공 / False 실패
+	 * @return int : 성공 / 실패
 	 */
-	public boolean insertApprRoot(ApprovalDTO Adto);
+	public int insertApprRoot(ApprovalDTO Adto);
 	
 	/**
 	 * 해당 문서 결재루트 조회

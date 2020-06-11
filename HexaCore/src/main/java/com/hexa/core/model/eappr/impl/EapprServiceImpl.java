@@ -69,12 +69,17 @@ public class EapprServiceImpl implements EapprIService{
 
 	@Transactional
 	@Override
-	public boolean insertApprRoot(ApprovalDTO Adto) {
+	public boolean insertApprRoot(DocumentDTO Ddto) {
 		log.info("deleteApprRoot serviceImpl 실행");
-		boolean iscD = dao.deleteApprRoot(Integer.toString(Adto.getSeq()));
-		log.info("insertApprRoot serviceImpl 실행");
-		boolean iscI = dao.insertApprRoot(Adto);
-		return (iscD || iscI)?true:false;
+		boolean iscD = dao.deleteApprRoot(Integer.toString(Ddto.getSeq()));
+		int iscI =0;
+		if(iscD == true) {
+			for (int i = 0; i < Ddto.getLists().size(); i++) {
+				log.info("insertApprRoot serviceImpl 실행");
+				iscI += dao.insertApprRoot(Ddto.getLists().get(i));
+			}
+		}
+		return (iscI>2)?true:false;
 	}
 
 	@Override
