@@ -30,7 +30,7 @@ function totalSearch(){
 	<header>
 		<div class="topmenu" style="width:12%" onclick="location.href='./result.do'"><img alt="logo" src="./image/hexa64.png"></div>
 		<div class="topmenu" style="width:200px" onclick="location.href='./goEapprMain.do'">전자결재</div>
-		<div class="topmenu" style="width:200px" onclick="location.href=''">게시판</div>
+		<div class="topmenu" style="width:200px" onclick="location.href='./goBbs.do'">게시판</div>
 		<c:choose >
 			<c:when test="${auth eq true }">
 				<div class="topmenu" style="width:200px" onclick="location.href='./mngMain.do'">관리</div>

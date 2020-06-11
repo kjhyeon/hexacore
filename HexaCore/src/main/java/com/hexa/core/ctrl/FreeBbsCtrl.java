@@ -57,6 +57,11 @@ public class FreeBbsCtrl {
 	@Autowired
 	private FreeComIService cService;
 	
+	@RequestMapping(value = "/goBbs.do", method = RequestMethod.GET)
+	public String goSideBar() {
+		return "Bbs/bbsSideBar";
+	}
+	
 	// 자유게시판 (관리자)목록 조회
 	@RequestMapping(value = "/bbsMain.do", method = RequestMethod.GET)
 	public String bbsMain(Model model, BbsDTO dto, SecurityContextHolder session, String page,String keyword,String type) {
@@ -113,10 +118,6 @@ public class FreeBbsCtrl {
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		model.addAttribute("Ldto", Ldto);
-		
-//		dto.getUsername(); → userId
-//		dto.setId(Ldto.getUsername());
-//		service.insertFreeBbs(dto);
 		
 		return "Bbs/freeBbsInsert";
 	}
@@ -188,7 +189,6 @@ public class FreeBbsCtrl {
 		List<FileDTO> list = service.selectFile(seq);
 		model.addAttribute("seq", dto);
 		model.addAttribute("list", list);
-		
 		
 		
 		return "Bbs/bbsDetail";
@@ -278,31 +278,27 @@ public class FreeBbsCtrl {
 	public String goInsertReplyBbs(SecurityContextHolder session, Model model,String seq) {
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
-		
 		model.addAttribute("Ldto", Ldto);
 		model.addAttribute("seq",seq);
+		
 		return "Bbs/freeBbsReplyInsert";
 	}
 	
 	// 자유게시판 답글 작성.POST
 	@RequestMapping(value = "/freeBbsReplyInsert.do", method = RequestMethod.POST)
-	public String insertReplyBbs(BbsDTO dto, SecurityContextHolder session, Model model) {
+	public String insertReplyBbs(BbsDTO dto, SecurityContextHolder session, Model model, MultipartFile[] filename) {
 		log.info("Welcome insertReplyBbs 답글 작성완료, {}", dto);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		dto.setId(Ldto.getUsername());
 		dto.setName(Ldto.getName());
 
-		boolean isc = false;
-		isc = service.ReplyBbs(dto);
+		BbsDTO result = service.ReplyBbs(dto, filename);
+		List<FileDTO> list = service.selectFile(String.valueOf(result.getSeq()));
+		model.addAttribute("list", list);
+		model.addAttribute("seq",result);
 		
-		if(isc) {
-			BbsDTO result = service.selectDetailFreeBbs(service.selectNewBbs());
-			model.addAttribute("seq",result);
-			sService.addBbsIndex(result, "freeBbs");
-		}
-		
-		return isc?"redirect:/bbsMain.do":"redirect:/logout";
+		return result!=null?"redirect:/bbsDetail.do?seq="+result.getSeq():"redirect:/bbsMain.do";
 	}
 	
 	@RequestMapping(value = "/download.do", method = RequestMethod.GET)

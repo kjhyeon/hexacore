@@ -36,7 +36,7 @@ public interface FreeBbsIService {
 	public boolean updateViewsBbs(String seq);
 	
 	// 7. 자유게시판 답글 달기(update, insert dao처리)
-	public boolean ReplyBbs(BbsDTO dto);
+	public BbsDTO ReplyBbs(BbsDTO dto, MultipartFile[] filename);
 	
 	// ** seq 최대값 갱신 + 자기가 쓴 글 조회
 	public String selectNewBbs();

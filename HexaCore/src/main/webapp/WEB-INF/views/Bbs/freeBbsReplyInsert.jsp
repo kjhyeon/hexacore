@@ -1,30 +1,53 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 	function replyComplete(){
 		alert("작성완료");
 		location.href="./bbsMain.do";
 	}
+	
+	$(document).ready(function() {
+		var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
+		$("#file_td").append(button);
+	});
+	
+	function addinput(){
+		var len = document.getElementsByName("filename").length;
+		if(len<3){
+			$("#addbutton").remove();
+			var input = "<input type='file' name='filename'><br>";
+			if(len<2){
+				input += "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
+			}
+			$("#file_td").append(input);
+		}
+	}
+	
 </script>
 <body>
-<%@include file="/WEB-INF/header.jsp"%>
 	<sec:authentication property="principal.username" var="sessionId"/>
-	${Ldto}
 	<div class="container">
-		<form action="#" method="post" id="replyForm" name="replyForm">
+		<form action="#" method="post" id="replyForm" name="replyForm" enctype="multipart/form-data">
 		<input type="hidden" name="seq" value="${seq }">
   		<table class="table table-bordered">
     		<thead>
       			<tr>
         			<th colspan="2">
-        				<h1>글작성</h1>
+        				<h1>답글 작성</h1>
         			</th>
       			</tr>
     		</thead>
@@ -40,6 +63,11 @@
         			<td>
         				${Ldto.username}
         			</td>
+      			</tr>
+      			<tr>
+      				<td>파일</td>
+      				<td id="file_td">
+      				</td>
       			</tr>
       			<tr>
         			<td>글내용</td>
