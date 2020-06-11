@@ -122,16 +122,17 @@
 					<td>${Ddto.title}<input type="hidden" name ="title" value="${Ddto.title}"></td>
 				</tr>
 			</table>
-			<div class="apprSignTable" style="width: 30%; position: absolute; right:450px; margin-top: 100px;">
-			<table id="approLine" style="border: 1px solid black; width: 100%">
-			
-				<c:if test="${approvalLine ne null}">
-					<tr style="text-align: right; width: 200px; height: 30px;">
+			<br>
+		<div id="contentModi" style="text-align: center; width: 100%;">
+				<div class="apprSignTable" style="width: 30%; position: absolute; right:450px; margin-top: 100px;">
+					<table id="approLine" style="border: 1px solid black; width: 100%">
+						<c:if test="${approvalLine ne null}">
+							<tr style="text-align: right; width: 200px; height: 30px;">
 						<c:forEach  var="AdtoL" items="${approvalLine}" >
 							<th style="border: 1px solid black; width: 25px;">${AdtoL.duty}</th>
 						</c:forEach>
-					</tr>
-					<tr>
+							</tr>
+							<tr>
 						<c:forEach  var="AdtoL" items="${approvalLine}" >
 						<c:choose>
 								<c:when test="${AdtoL.appr_sign ne null}">
@@ -146,12 +147,10 @@
 				</c:if>
 			</table>
 		</div>
-			<br>
-			<table  id="contentModi" style="text-align: center; width: 800px;">
-				<tr>
-					<td>${Ddto.content}</td>
-				</tr>
-			</table>
+			<div class="contentDiv">
+				${Ddto.content}
+			</div>
+			</div>
 		</div>
 		<div class="commentTable" style="position: static;">
 			<table id="commentTable" class="table">

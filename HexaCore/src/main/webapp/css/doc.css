@@ -65,3 +65,14 @@
 #inputTitle {
 	width: 95%;
 }
+
+#contentModi > .contentDiv{
+	position : relative;
+	width: 100%;
+	margin: 0 auto;
+}
+#contentModi > .apprSignTable{
+	float:right;
+	width: 30%;
+}
+

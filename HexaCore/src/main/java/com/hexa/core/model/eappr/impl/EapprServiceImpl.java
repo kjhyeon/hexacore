@@ -73,12 +73,10 @@ public class EapprServiceImpl implements EapprIService{
 		log.info("deleteApprRoot serviceImpl 실행");
 		boolean iscD = dao.deleteApprRoot(Integer.toString(Ddto.getSeq()));
 		int iscI =0;
-		if(iscD == true) {
 			for (int i = 0; i < Ddto.getLists().size(); i++) {
 				log.info("insertApprRoot serviceImpl 실행");
 				iscI += dao.insertApprRoot(Ddto.getLists().get(i));
 			}
-		}
 		return (iscI>2)?true:false;
 	}
 

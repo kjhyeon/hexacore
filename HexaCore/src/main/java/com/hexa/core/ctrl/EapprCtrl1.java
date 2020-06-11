@@ -110,10 +110,11 @@ public class EapprCtrl1 {
 		service.insertNewDoc(dto);
 		String seq = service.selectNewDoc();
 		int sseq = Integer.parseInt(seq);
+		dto.setSeq(sseq);
 		for (int i = 0; i < dto.getLists().size(); i++) {
 			dto.getLists().get(i).setSeq(sseq);
-			service.insertApprRoot(dto);
 		}
+		service.insertApprRoot(dto);
 		DocumentDTO newDto = service.selectDoc(seq);
 		sService.addDocIndex(newDto);
 		model.addAttribute("dto", newDto);
