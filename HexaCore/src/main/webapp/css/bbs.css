@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+	
+
+	#Main_Top_Div{
+		width: 1400px;
+		margin: 40px auto;
+	}
+
+	#Main_Search_Text{
+		width: 650px;
+		float: right;
+		margin-top: 100px;
+	}
+
+	#type_Select{
+		width: 120px;
+		margin-right: 5px;
+		border-radius: 4px;
+	}
+	
+	#keyword_Search{
+		width: 500px;
+		position: relative; 
+		float: left;
+		border-radius: 4px;
+		margin-right: 5px;
+	}
+	#type_Finder{
+		border-radius: 4px;
+	}
+
+	.Mainbbs_container{
+		margin-top: 50px;
+	}
+
+	.Main_Thead > th{
+		text-align: center;
+	}
+	
+	.Main_Tbody > #tdChk,#td1,#td2,#td4,#td5,#td6{
+		text-align: center;
+	}
+	
+	#Main_Title_Count{
+		color: red;
+		border: 1.5px solid red;
+		border-top-left-radius: 7px;
+		border-bottom-right-radius: 7px;
+	}
+	
+	#insertForm{
+		float: right;
+	}
+	

@@ -1,6 +1,7 @@
 package com.hexa.core.model.bbs.impl;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -86,12 +87,17 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	}
 
 	@Override
-	@Transactional
-	public boolean ReplyBbs(BbsDTO dto) {
+	public BbsDTO ReplyBbs(BbsDTO dto, MultipartFile[] filename) {
 		log.info("자유게시판 답글 달기  ReplyBbs,\t {}", dto);
 		boolean iscU = dao.updateReplyBbs(dto);
 		boolean iscI = dao.insertReplyBbs(dto);
-		return (iscU&&iscI)?true:false;
+		// 트랜잭셔널을 위해 거는 것들
+		String seq = dao.selectNewBbs();
+		saveFile(filename, Integer.parseInt(seq));
+		BbsDTO result = dao.selectDetailFreeBbs(seq);
+		sService.addBbsIndex(result, SearchIService.FREE);
+		
+		return (iscU&&iscI)?result:null;
 	}
 
 	@Override
@@ -155,6 +161,7 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	}
 
 	private boolean saveFile(MultipartFile[] files,int seq) {
+		log.info("파일 등록,\t {}", Arrays.toString(files));
 		boolean isc = false;
 		if(files!=null) {
 			for (MultipartFile file : files) {

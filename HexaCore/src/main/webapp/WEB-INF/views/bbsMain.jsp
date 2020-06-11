@@ -1,12 +1,20 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<% %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>자유게시판</title>
 </head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="./css/bbs.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/sweetalert.js"></script>
 <script type="text/javascript">
 	function writeForm(){
 		alert("글쓰기 작성 작동");
@@ -52,21 +60,41 @@
 	
 	function goSearch(){
 		var location = "./bbsMain.do?"; 
-		location += "keyword="+$("#keyword").val()+"&type="+$("#type").val();			
+		location += "keyword="+$("#keyword_Search").val()+"&type="+$("#type_Select").val();			
 		document.location.href=location;
 	}
 	
 </script>
+
 <body>
-	<%@include file="/WEB-INF/header.jsp"%>
+<div id="Main_Top_Div">
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
-	<div class="container">
+	 <div class="form-group input-group" id="Main_Search_Text">
+			<span class="input-group-btn"> 
+				<select name="type" class="form-control" id="type_Select">
+					<option value="title/con">제목+내용</option>
+					<option value="title">제목</option>
+					<option value="content">내용</option>
+					<option value="author">글쓴이</option>
+				</select>
+			</span>
+			<span> 
+				<input type="text" class="form-control" placeholder="Search.." name="keyword" id="keyword_Search" value="${keyword }"> 
+			</span>
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" onclick="goSearch()" id="type_Finder">
+					<span class="glyphicon glyphicon-search"></span>
+				</button>
+			</span>
+	</div>
+	
+	<div class="Mainbbs_container">
 	<input type="hidden" id="ori_keyword" value="${keyword }">
 	<input type="hidden" id="ori_type" value="${type }">
 	<form action="./multiDel.do" method="POST" id="List" name="List" onsubmit="return chkbox()">
 	<input type="hidden" name="auth_check" value="${auth}">
-	  <table class="table table-bordered">
-      		<tr>
+	  <table class="table table-bordered" id="Main_Table">
+      		<tr class="Main_Thead">
       			<c:if test="${auth eq true}">
 	        		<th>
     	    			<input type="checkbox" name="chkVal" onclick="checkAll(this.checked)">
@@ -82,52 +110,51 @@
         		<th>작성일</th>
       		</tr>
       <c:forEach var="dto" items="${lists}" varStatus="vr">
-      		<tr>
+      		<tr class="Main_Tbody">
       			<c:if test="${auth eq true }">
-	      			<td>
+	      			<td id="tdChk">
     	  				<input type="checkbox" name="chkVal" value="${dto.seq}">
       				</td>
       			</c:if>
-      			<td>${dto.seq}</td>
-      			<td>${dto.id}</td>
+      			<td id="td1">${dto.seq}</td>
+      			<td id="td2">${dto.id}</td>
       			<td><a href="bbsDetail.do?seq=${dto.seq}">${dto.title}&nbsp;&nbsp;
  	     			<c:if test="${dto.c_count != 0}">
-    		  			[${dto.c_count}]
+    		  			<b id="Main_Title_Count" >${dto.c_count}</b>
       				</c:if>
       				<c:if test="${dto.f_count != 0}">
       					<img alt="FileImg" src="./image/file.png" style="width: 13px; height: 13px;">
       				</c:if>
       			</a></td>
-      			<td>${dto.views}</td>
+      			<td id="td4">${dto.views}</td>
       			<c:if test="${auth eq true}">
- 	    	 		<td>${dto.state}</td>
+ 	    	 		<td id="td5">${dto.state}</td>
       			</c:if>
-      			<td>${dto.regdate}</td>
+      			<td id="td6">${dto.regdate}</td>
       		</tr>
       </c:forEach>
   		</table>
 		<input type="button" class="btn btn-default" id="insertForm" value="새 글 작성" onclick="writeForm()">
       	<c:if test="${auth eq true }">
-      		<input type="submit" class="btn btn-default" id="multidel" value="글 다중 삭제" onclick="multiDelete()">
+      		<input type="submit" class="btn btn-danger" id="multidel" value="글 다중 삭제" onclick="multiDelete()">
    		</c:if>
       </form>
-      <div class="form-group input-group">
-			<span class="input-group-btn"> 
-				<select name="type" class="form-control" id="type">
-					<option value="title/con">제목+내용</option>
-					<option value="title">제목</option>
-					<option value="content">내용</option>
-					<option value="author">글쓴이</option>
-			</select>
-			</span> 
-				<input type="text" class="form-control" placeholder="Search.." name="keyword"
-				style="position: relative; float: right;" id="keyword" value="${keyword }"> 
-			<span class="input-group-btn">
-				<button class="btn btn-default" type="button" onclick="goSearch()">
-					<span class="glyphicon glyphicon-search"></span>
-				</button>
-			</span>
-		</div>
+      
+      <script type="text/javascript">
+
+		$(document).ready(
+			function() {
+				var op = $("select[id=type]>option");
+				for (var i = 0; i < op.length; i++) {
+					if(op.eq(i).val() == '${type}')
+					{
+						op.eq(i).attr("selected",true);
+					}
+				}
+			}
+		)
+	  </script>
+     
       <input type="hidden" name="index" id="index" value="${row.index }">
 		<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
 		<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
@@ -143,19 +170,6 @@
 			</ul>
 		</div>
 	</div>
-	<script type="text/javascript">
-
-	$(document).ready(
-			function() {
-				var op = $("select[id=type]>option");
-				for (var i = 0; i < op.length; i++) {
-					if(op.eq(i).val() == '${type}')
-					{
-						op.eq(i).attr("selected",true);
-					}
-				}
-			}
-		)
-	</script>
+</div>
 </body>
 </html>

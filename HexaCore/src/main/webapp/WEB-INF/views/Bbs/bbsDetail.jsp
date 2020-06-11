@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,29 +29,29 @@
 		left: 1400px;
 	}
 </style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./js/sweetalert.js"></script>
 </head>
 <script type="text/javascript">
 	function BbsContent_modify(){
-		alert("수정하시겠습니까?");
 		location.href="./freeBbsModify.do?seq="+${seq.seq};
 	}
 	
 	function del(){
-		alert("삭제");
 		location.href="./del.do?seq="+${seq.seq};
 	}
 	
 	function BbsReplyWrite(){
-		alert("답글");
 		location.href="./freeBbsReplyInsert.do?seq="+${seq.seq};
 	}
 	
 	function writeComment(){
-		document.forms[2].submit();
+		document.forms[1].submit();
 	}
 	
 	function deleteComment(seq) {
-		alert("답글 삭제");
 		location.href="./commentDelete.do?seq="+seq+"&parent_seq="+$("#seq").val();
 	}
 	
@@ -58,7 +62,6 @@
 	
 </script>
 <body>
-	<%@include file="/WEB-INF/header.jsp"%>
 <sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"/>
 <sec:authentication property="principal.username" var="sessionId"/>
 	
@@ -176,8 +179,8 @@
 			<ul class="pagination">
 				<li><a href="#" onclick="return goPage(${0});">&laquo;</a></li>
 				<li><a href="#" onclick="return goPage(${row.index-1});">&lt;</a></li>
-				<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
-					<li><a href="#" onclick="goPage(${i-1})">${i }</a></li>
+				<c:forEach var="i" begin="${row.pageNum }" end="${row.count}" step="1">
+					<li><a href="#" onclick="goPage(${i-1})">${i}</a></li>
 				</c:forEach>
 				<li><a href="#" onclick="return goPage(${row.index+1});" >&gt;</a></li>
 				<li><a href="#" onclick="return goPage(${row.lastPage-1});" >&raquo;</a></li>
