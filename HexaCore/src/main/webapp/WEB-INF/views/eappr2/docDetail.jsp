@@ -124,8 +124,8 @@
 			</table>
 			<br>
 		<div id="contentModi" style="text-align: center; width: 100%;">
-				<div class="apprSignTable" style="width: 30%; position: absolute; right:450px; margin-top: 100px;">
-					<table id="approLine" style="border: 1px solid black; width: 100%">
+				<div class="apprSignTable">
+					<table id="approLine" style="border: 1px solid black; width: 100%; height: 100px;">
 						<c:if test="${approvalLine ne null}">
 							<tr style="text-align: right; width: 200px; height: 30px;">
 						<c:forEach  var="AdtoL" items="${approvalLine}" >
