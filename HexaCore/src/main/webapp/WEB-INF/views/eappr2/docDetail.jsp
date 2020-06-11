@@ -23,6 +23,7 @@
 					<h3>결재자</h3>
 					<div class="apprs">
 						<table class="apprtable">
+						<tbody>
 							<tr class="index">
 								<td>부서직급</td>
 								<td>이름</td>
@@ -57,12 +58,14 @@
 									</tr>
 								</c:if>
 							</c:forEach>
+							</tbody>
 						</table>
 					</div>
 					<br><hr>
 					<h3>참조자</h3>
 					<div class="refers">
 						<table class="refertable">
+						</tbody>
 							<tr class="index">
 								<td>부서직급</td>
 								<td>이름</td>
@@ -83,6 +86,7 @@
 									</tr>
 								</c:if>
 							</c:forEach>
+							</tbody>
 						</table>
 					</div>
 				</div>
