@@ -97,14 +97,14 @@ public interface EapprIService {
 	 * @param Adto chk, appr_sign, seq, id
 	 * @return True : 성공 / False 실패
 	 */
-	public boolean updateApprChk(ApprovalDTO Adto);
+//	public boolean updateApprChk(ApprovalDTO Adto);
 	
 	/**
 	 * 코멘트 입력
 	 * @param DCdto seq, turn, id, name, content
 	 * @return True : 성공 / False 실패
 	 */
-	public boolean insertComment(DocCommentDTO DCdto);
+//	public boolean insertComment(DocCommentDTO DCdto);
 	
 	/**
 	 * 코멘트 조회
@@ -236,19 +236,19 @@ public interface EapprIService {
 //	 */
 //	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
 	
-	/**
-	 * 참조문서함 List
-	 * @param Adto
-	 * @return 참조문서 List
-	 */
-	public List<DocumentDTO> selectReferDoc(Map<String, Object> map);
-	
-	/**
-	 * 각 문서함 갯수
-	 * @param id
-	 * @return List
-	 */
-	public List<DocumentDTO> selectDocListAll(String id);
+//	/**
+//	 * 참조문서함 List
+//	 * @param Adto
+//	 * @return 참조문서 List
+//	 */
+//	public List<DocumentDTO> selectReferDoc(Map<String, Object> map);
+//	
+//	/**
+//	 * 각 문서함 갯수
+//	 * @param id
+//	 * @return List
+//	 */
+//	public List<DocumentDTO> selectDocListAll(String id);
 	
 	/**
 	 * 상신문서함의 문서 조회
@@ -256,4 +256,6 @@ public interface EapprIService {
 	 * @return 문서 리스트
 	 */
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
+	
+	public boolean confirmUpdate(Map<String,Object> map);
 }

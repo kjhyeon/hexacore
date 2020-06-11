@@ -87,9 +87,10 @@ public class EapprCtrl2 {
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		String id = Ldto.getUsername();
 		String seq = Integer.toString(Adto.getSeq());
+		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
+		//믄사 내용 조회
 		DocumentDTO Ddto = service.selectDoc(seq);
 		//문서 결재선 전체 조회
-		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
 		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
 		for (int i = 0; i < listsb.size(); i++) {
 			if(listsb.get(i).getAppr_sign()!=null) {
@@ -216,7 +217,7 @@ public class EapprCtrl2 {
 	}
 	
 	//승인,반려 기능
-	@Transactional
+
 	@RequestMapping(value="/confirmDoc.do", method= RequestMethod.POST)
 	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto,String state,SecurityContextHolder session) {
 		log.info("********confirm Test Adto:{}",Adto);
@@ -225,11 +226,14 @@ public class EapprCtrl2 {
 		Authentication auth = session.getContext().getAuthentication();
 	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		DCdto.setName(dto.getName());
+		DCdto.setComment_seq(Adto.getTurn());
 		Adto.setName(dto.getName());
 		Adto.setAppr_sign(service.selectSignImg(dto.getUsername()));
-		DCdto.setComment_seq(Adto.getTurn());
+		
 		int appr_turn = Ddto.getAppr_turn();
-			if(Adto.getChk().equalsIgnoreCase("T")) {//승인일경우
+		Map<String, Object> map = new HashMap<String, Object>();
+		boolean isc = false;
+		if(Adto.getChk().equalsIgnoreCase("T")) {//승인일경우
 				if(Adto.getTurn()<3) {
 					Ddto.setAppr_turn(appr_turn+1);
 					Ddto.setState(2);
@@ -238,9 +242,13 @@ public class EapprCtrl2 {
 					Ddto.setState(3);
 					Adto.setAppr_kind("승인");
 				}
-				service.updateDoc(Ddto);//appr_turn 수정 / state 수정
-				service.updateApprChk(Adto);//chk 업데이트 사인 업데이트
-				service.insertComment(DCdto);//코멘트 입력
+				map.put("Ddto", Ddto);
+				map.put("Adto", Adto);
+				map.put("DCdto", DCdto);
+				isc = service.confirmUpdate(map);
+//				service.updateDoc(Ddto);//appr_turn 수정 / state 수정
+//				service.updateApprChk(Adto);//chk 업데이트 사인 업데이트
+//				service.insertComment(DCdto);//코멘트 입력
 				
 			}else if(Adto.getChk().equalsIgnoreCase("R")){
 				Adto.setAppr_kind("반려");
@@ -248,10 +256,14 @@ public class EapprCtrl2 {
 				log.info("********confirm Test2R Adto:{}",Adto);
 				log.info("********confirm Test2R Ddto:{}",Ddto);
 				log.info("********confirm Test2R DCdto:{}",DCdto);
-				service.updateDoc(Ddto);
-				service.updateApprChk(Adto);
-				service.insertComment(DCdto);//코멘트 입력
+				map.put("Ddto", Ddto);
+				map.put("Adto", Adto);
+				map.put("DCdto", DCdto);
+				isc = service.confirmUpdate(map);
+//				service.updateDoc(Ddto);
+//				service.updateApprChk(Adto);
+//				service.insertComment(DCdto);//코멘트 입력
 			}
-		return "redirect:/docLists.do?state="+state;
+		return isc?"redirect:/docLists.do?state="+state:"redirec:/eApprmain.do";
 	}
 }

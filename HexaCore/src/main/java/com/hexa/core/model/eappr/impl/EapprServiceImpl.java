@@ -74,7 +74,7 @@ public class EapprServiceImpl implements EapprIService{
 		boolean iscD = dao.deleteApprRoot(Integer.toString(Adto.getSeq()));
 		log.info("insertApprRoot serviceImpl 실행");
 		boolean iscI = dao.insertApprRoot(Adto);
-		return (iscD||iscI)?true:false;
+		return (iscD || iscI)?true:false;
 	}
 
 	@Override
@@ -95,17 +95,17 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.deleteFile(seq);
 	}
 
-	@Override
-	public boolean updateApprChk(ApprovalDTO Adto) {
-		log.info("updateApprChk serviceImpl 실행");
-		return dao.updateApprChk(Adto);
-	}
+//	@Override
+//	public boolean updateApprChk(ApprovalDTO Adto) {
+//		log.info("updateApprChk serviceImpl 실행");
+//		return dao.updateApprChk(Adto);
+//	}
 
-	@Override
-	public boolean insertComment(DocCommentDTO DCdto) {
-		log.info("insertComment serviceImpl 실행");
-		return dao.insertComment(DCdto);
-	}
+//	@Override
+//	public boolean insertComment(DocCommentDTO DCdto) {
+//		log.info("insertComment serviceImpl 실행");
+//		return dao.insertComment(DCdto);
+//	}
 
 	@Override
 	public boolean updateDocTurn(ApprovalDTO Adto) {
@@ -221,7 +221,6 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectApprMyDoc(map);
 	}
 
-	@Transactional
 	@Override
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map) {
 		log.info("selectMyDoc ServiceImpl 실행 : {}",map);
@@ -232,32 +231,42 @@ public class EapprServiceImpl implements EapprIService{
 			lists = dao.selectMyDocList(map);
 		}else {
 			switch ((String)map.get("state")) {
-			case "6":
-				lists = dao.selectApprMyDoc(map);
-				break;
-			case "7":
-				lists = dao.selectNeedApprDoc(map);
-				break;
-			case "8":
-				lists = dao.selectReferDoc(map);
-				break;
-			default:
-				break;
+				case "6":
+					lists = dao.selectApprMyDoc(map);
+					break;
+				case "7":
+					lists = dao.selectNeedApprDoc(map);
+					break;
+				case "8":
+					lists = dao.selectReferDoc(map);
+					break;
+				default:
+					break;
 			}
 		}
 		return lists;
 	}
 
+	@Transactional
 	@Override
-	public List<DocumentDTO> selectReferDoc(Map<String, Object> map) {
-		log.info("selectReferDoc ServiceImpl 실행 : {}",map);
-		return dao.selectReferDoc(map);
+	public boolean confirmUpdate(Map<String, Object> map) {
+		
+		boolean iscD = dao.updateDoc((DocumentDTO)map.get("Ddto"));
+		boolean iscA = dao.updateApprChk((ApprovalDTO)map.get("Adto"));
+		boolean iscDC = dao.insertComment((DocCommentDTO)map.get("DCdto"));
+		return (iscD||iscA||iscDC)?true:false;
 	}
 
-	@Override
-	public List<DocumentDTO> selectDocListAll(String id) {
-		log.info("selectDocListAll ServiceImpl 실행 : {}",id);
-		return dao.selectDocListAll(id);
-	}
+//	@Override
+//	public List<DocumentDTO> selectReferDoc(Map<String, Object> map) {
+//		log.info("selectReferDoc ServiceImpl 실행 : {}",map);
+//		return dao.selectReferDoc(map);
+//	}
+//
+//	@Override
+//	public List<DocumentDTO> selectDocListAll(String id) {
+//		log.info("selectDocListAll ServiceImpl 실행 : {}",id);
+//		return dao.selectDocListAll(id);
+//	}
 
 }
