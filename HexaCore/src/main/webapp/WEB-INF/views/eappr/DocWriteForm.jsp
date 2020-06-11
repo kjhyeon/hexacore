@@ -16,11 +16,11 @@
 	}
 	function setChildValue(nodes) {
 		nodes = nodeSort(nodes);
-		$(".apprtable").empty();
+		$(".apprtable > tbody").empty();
 		var ap = "<tr class='index'>"
 			   + "<td>부서직급</td><td>이름</td><td>종류</td><td>순서</td>"
 			   + "</tr>";
-		$(".apprtable").append(ap);
+		$(".apprtable > tbody").append(ap);
 		for (var i = 0; i < nodes.length; i++) {
 			var child = nodes[i].children;
 // 				 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3종류 4X 5아이디 6e_rank
@@ -35,17 +35,17 @@
 					+ "</td>"
 					+ "</tr>";
 
-			$(".apprtable").append(app);
+			$(".apprtable > tbody").append(app);
 
 		}
 	}
 	function setChildValue2(nodes1) {
 		nodes = nodeSort(nodes1);
-		$(".refertable").empty();
+		$(".refertable > tbody").empty();
 		var ap = "<tr class='index'>"
 			   + "<td>부서직급</td><td>이름</td>"
 			   + "</tr>";
-		$(".refertable").append(ap);
+		$(".refertable > tbody").append(ap);
 		for (var i = 0; i < nodes.length; i++) {
 			var child = nodes[i].children;
 // 				 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3종류 4X 5아이디 6e_rank
@@ -60,7 +60,7 @@
 					+ "</td>"
 					+ "</tr>";
 
-			$(".refertable").append(app);
+			$(".refertable > tbody").append(app);
 
 		}
 	}
@@ -85,7 +85,7 @@
 	function report() {
 		if($("#inputTitle").val()==""){
 			alert("제목을 입력하세요.");
-		}else if($(".apprtable > tr").length != 4){
+		}else if($(".apprtable > tbody > tr").length != 4){
 			alert("결재자를 선택하세요.");
 		}else{
 			$(".leftBox").append("<input type='hidden' name='state' value='1'>");
@@ -97,7 +97,7 @@
 	function savedoc() {
 		if($("#inputTitle").val()==""){
 			alert("제목을 입력하세요.");
-		}else if($(".apprtable > tr").length != 4){
+		}else if($(".apprtable > tbody > tr").length != 4){
 			alert("결재자를 선택하세요.");
 		}else{
 			$(".leftBox").append("<input type='hidden' name='state' value='0'>");
@@ -133,18 +133,22 @@
 				
 				<div class="apprs">
 					<table class="apprtable">
-						<tr class="index">
-							<td>부서직급</td><td>이름</td><td>종류</td><td>순서</td>
-						</tr>
+						<tbody>
+							<tr class="index">
+								<td>부서직급</td><td>이름</td><td>종류</td><td>순서</td>
+							</tr>
+						</tbody>
 					</table>	
 				</div>
 				<br><hr>
 				<h3>참조자</h3>
 				<div class="refers">
 					<table class="refertable">
-						<tr class="index">
-							<td>부서직급</td><td>이름</td>
-						</tr>
+						</tbody>
+							<tr class="index">
+								<td>부서직급</td><td>이름</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
