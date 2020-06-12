@@ -248,62 +248,58 @@ function deleteDocc(seq,state){
 	$("#formDoc").submit();
 }
 
-function upApprDocc(seq){
-	$("#formDoc").attr("action",'./upApprDoc.do?seq='+seq);
+function upApprDocc(seq,state){
+	$("#formDoc").attr("action",'./upApprDoc.do?seq='+seq+"&state="+state);
 	$("#formDoc").attr("method","GET");
 	$("#formDoc").submit();
 }
 
-//////
+///////////
+window.onload = function () {
+    if (window.Notification) {
+        Notification.requestPermission();
+    }
+	var beforeCnt = $("#cnt").val();
+	cntCheck(beforeCnt);
+}
 
-//window.onload = function () {
-//    if (window.Notification) {
-//       Notification.requestPermission();
-//   }
-//    if($(".cnt")!=0){
-//    	calculate();
-//    }
-//}
-//
-//function calculate() {
-//   setTimeout(function () {
-//      notify();
-//      }, 3000);
-//}
-//function notify() {
-//     if (Notification.permission !== 'granted') {
-//          alert('notification is disabled');
-//     }
-//     else {
-//     var notification = new Notification('결재문서하실 문서가 있습니다.', {
-//                   icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-//                   body: '결재하실 문서 확인 요청드립니다.',
-//               });
-//
-//               notification.onclick = function () {
-//                  $("#appr").click();
-//               };
-//           }
-//       }
-
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $.ajax({
-    	url : "./searchDoc.do",
+//아작스실행
+function cntCheck() {
+	$.ajax({
+		url:"./needCnt.do",
 		type : "post",
-		data : {"contents":value},
 		dataType : "json",
 		async : true,
 		success : function(msg) {
-			$("#myTable tr").filter(function() {
-				$(this).toggle($(this).text().toLowerCase().indexOf(msg) > -1)
-			});
-			
-		},
-		error : function() {
+//			if(parseInt(msg)>parseInt(val)){
+				alert(msg);
+//				calculate();
+//				reload();
+//			}
+		},error: function() {
 			alert("실패");
 		}
-    });
-  });
 });
+}	
+
+function calculate() {
+   setTimeout(function () {
+      notify();
+      }, 3000);
+}
+function notify() {
+     if (Notification.permission !== 'granted') {
+          alert('notification is disabled');
+     }
+     else {
+     var notification = new Notification('결재문서하실 문서가 있습니다.', {
+                   icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                   body: '결재하실 문서 확인 요청드립니다.',
+               });
+
+               notification.onclick = function () {
+                  $("#appr").click();
+               };
+           }
+       }
+

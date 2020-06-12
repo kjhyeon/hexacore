@@ -29,7 +29,7 @@ function totalSearch(){
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
 	<header>
 		<div class="topmenu" style="width:12%" onclick="location.href='./result.do'"><img alt="logo" src="./image/hexa64.png"></div>
-		<div class="topmenu" style="width:200px" onclick="location.href='./goEapprMain.do'">전자결재</div>
+		<div class="topmenu" style="width:200px" onclick="location.href='./goEapprMain.do'" id="cntChk">전자결재(${cnt})</div>
 		<div class="topmenu" style="width:200px" onclick="location.href='./goBbs.do'">게시판</div>
 		<c:choose >
 			<c:when test="${auth eq true }">
@@ -49,6 +49,7 @@ function totalSearch(){
 						<option value="author">글쓴이</option>
 					</select>
 					<input type="text" class="form-control" style="width:300px;  margin:1px" name="keyword">
+					<input id="cnt" type="button" value="${cnt}" onclick="cntCheck(1)">
 						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;" onclick="totalSearch()">
 							<span class="glyphicon glyphicon-search"></span>
 						</button>

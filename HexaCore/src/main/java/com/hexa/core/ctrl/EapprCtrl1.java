@@ -37,12 +37,9 @@ public class EapprCtrl1 {
 	
 	// 전자결재 메인 화면으로 이동(사이드바 관련 데이터 가져오기)
 	@RequestMapping(value="/goEapprMain.do")
-	public String mngMain(Model model,Principal scInfo) {
+	public String mngMain(Model model) {
 		List<DocumentTypeDTO> docTypeList = service.selectDocTypeList(); // 문서 양식 리스트 가져오기
 		model.addAttribute("docTypeList", docTypeList);
-		String userId = scInfo.getName();
-		Map<String,Object> docCount = service.selectDocListAll(userId); // 결재 필요 문서 개수 가져오기
-		model.addAttribute("cnt", docCount.get("COUNT4"));
 		return "eappr/eapprMain";
 	}
 	

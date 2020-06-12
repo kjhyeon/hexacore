@@ -90,7 +90,9 @@ public class EapprCtrl2 {
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		String id = Ldto.getUsername();
 		String seq = Integer.toString(Adto.getSeq());
+		//도장 주소 결합
 		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
+		attach_path +=Adto.getAppr_sign();
 		//믄사 내용 조회
 		DocumentDTO Ddto = service.selectDoc(seq);
 		//문서 결재선 전체 조회
