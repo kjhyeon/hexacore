@@ -17,19 +17,6 @@
 <body>
 <div class="container">
   <input class="form-control" id="myInput" type="text" placeholder="Search..">
-
-
-<script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script>
-
 	<c:choose>
 		<c:when test="${state eq '0'}"><h1>임시보관함</h1></c:when>
 		<c:when test="${state eq '1'}"><h1>결재대기문서함</h1></c:when>

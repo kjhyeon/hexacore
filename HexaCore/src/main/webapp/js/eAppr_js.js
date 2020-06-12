@@ -256,32 +256,54 @@ function upApprDocc(seq){
 
 //////
 
-window.onload = function () {
-    if (window.Notification) {
-       Notification.requestPermission();
-   }
-    if($(".cnt")!=0){
-    	calculate();
-    }
-}
+//window.onload = function () {
+//    if (window.Notification) {
+//       Notification.requestPermission();
+//   }
+//    if($(".cnt")!=0){
+//    	calculate();
+//    }
+//}
+//
+//function calculate() {
+//   setTimeout(function () {
+//      notify();
+//      }, 3000);
+//}
+//function notify() {
+//     if (Notification.permission !== 'granted') {
+//          alert('notification is disabled');
+//     }
+//     else {
+//     var notification = new Notification('결재문서하실 문서가 있습니다.', {
+//                   icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+//                   body: '결재하실 문서 확인 요청드립니다.',
+//               });
+//
+//               notification.onclick = function () {
+//                  $("#appr").click();
+//               };
+//           }
+//       }
 
-function calculate() {
-   setTimeout(function () {
-      notify();
-      }, 3000);
-}
-function notify() {
-     if (Notification.permission !== 'granted') {
-          alert('notification is disabled');
-     }
-     else {
-     var notification = new Notification('결재문서하실 문서가 있습니다.', {
-                   icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
-                   body: '결재하실 문서 확인 요청드립니다.',
-               });
-
-               notification.onclick = function () {
-                  $("#appr").click();
-               };
-           }
-       }
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $.ajax({
+    	url : "./searchDoc.do",
+		type : "post",
+		data : {"contents":value},
+		dataType : "json",
+		async : true,
+		success : function(msg) {
+			$("#myTable tr").filter(function() {
+				$(this).toggle($(this).text().toLowerCase().indexOf(msg) > -1)
+			});
+			
+		},
+		error : function() {
+			alert("실패");
+		}
+    });
+  });
+});
