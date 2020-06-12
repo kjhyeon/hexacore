@@ -36,7 +36,14 @@ window.onload = function(){
 	$("#deptTree").on("click", ".jstree-anchor", function(e) {	//노드 클릭 시 콜백함수
 		var node = $("#deptTree").jstree(true).get_node($(this));	//클릭한 노드 정보 갖고오기
 		var type = node.type;	// 노드의 타입
-		alert("asdf");
+		var id = node.id; // 클릭한 노드의 id
+		if(node.id !=0){ //루트는 선택 못함
+			if(type!='folder'){
+				opener.document.getElementById("receiver_id").value = node.id;
+				//id와 부서명만 갖고오고 종료
+				window.close();
+			}
+		}
 	});
 
 }

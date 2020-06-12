@@ -106,7 +106,7 @@ public class FreeBbsCtrl {
 			lists = service.selectAdminBbsListRow(row);
 		}
 		model.addAttribute("lists", lists);	
-		return "freeBbsMain";
+		return "Bbs/freeBbsMain";
 	}
 	
 	
@@ -322,6 +322,7 @@ public class FreeBbsCtrl {
 	}
 	
 }
+
 
 
 

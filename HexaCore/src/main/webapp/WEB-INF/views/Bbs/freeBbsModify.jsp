@@ -83,7 +83,7 @@
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <body>
 	<div class="container">
-		<form action="./bbsDetail.do?seq=${dto.seq}" method="post" enctype="multipart/form-data">
+		<form action="./freeBbsDetail.do?seq=${dto.seq}" method="post" enctype="multipart/form-data">
   		<table class="table table-bordered">
     		<thead>
     			<tr>
@@ -138,7 +138,7 @@
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
 	        <button type="submit" class="btn btn-default" onclick="BbsContent_modify_complete()">수정완료</button>
-	        <a href="./bbsMain.do">
+	        <a href="./freeBbsMain.do">
 	        	<button type="button" class="btn btn-default" onclick="BbsContent_modify_cancle()">작성취소</button>
 	        </a>
 	      </div>

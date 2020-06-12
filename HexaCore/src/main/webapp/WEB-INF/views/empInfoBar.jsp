@@ -16,7 +16,9 @@
   <h3 class="w3-bar-item">Menu</h3>
   <a href="./empInfo.do" class="w3-bar-item w3-button">정보</a>
   <a href="./empInfoUpdate.do" class="w3-bar-item w3-button">정보수정</a>
-  <a href="#" class="w3-bar-item w3-button">쪽지함</a>
+  <a href="./msgSendForm.do" class="w3-bar-item w3-button">메세지 보내기</a>
+  <a href="./msgReceiveList.do" class="w3-bar-item w3-button">메세지 수신함</a>
+  <a href="./msgSendList.do" class="w3-bar-item w3-button">메세지 발신함</a>
 </div>
 </body>
 </html>

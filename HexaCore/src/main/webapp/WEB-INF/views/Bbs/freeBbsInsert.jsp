@@ -25,7 +25,7 @@
 			temp = temp.replace(/>/g ,"&gt;");
 		}
 		$("#title").val(temp);
-		document.forms[1].submit();
+		document.forms[0].submit();
 	}
 	
 	$(document).ready(function() {
@@ -73,7 +73,6 @@
 </script>
 <body>
 	<sec:authentication property="principal.username" var="sessionId"/>
-	${Ldto}
 	<div class="container">
 		<form action="#" method="post" id="writeForm" name="writeForm" enctype="multipart/form-data">
   		<table class="table table-bordered">
@@ -123,13 +122,12 @@
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
 	        <input type="button" class="btn btn-default" onclick="writeComplete()" value="작성완료">
-	        <a href="./bbsMain.do">
+	        <a href="./freeBbsMain.do">
 		        <input type="button" class="btn btn-default" value="작성취소" onclick="writeCancle()">
 	        </a>
 	      </div>
 	    </div>
 	    </form>
 	</div>
-	
 </body>
 </html>

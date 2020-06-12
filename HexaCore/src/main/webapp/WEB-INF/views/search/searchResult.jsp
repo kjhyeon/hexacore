@@ -9,7 +9,7 @@
 <script type="text/javascript">
 	function moreInfo(category) {
 		if(category == "freeBbs"){
-			document.location.href= "./bbsMain.do?keyword="+$("#keyword").val()+"&type="+$("#type").val();
+			document.location.href= "./freeBbsMain.do?keyword="+$("#keyword").val()+"&type="+$("#type").val();
 		}
 	} 
 </script>
@@ -50,7 +50,7 @@
 				<c:forEach items="${freeBbsList }" var="free">
 					<tr>
 						<td>${free.seq }</td>
-						<td><a href="./bbsDetail.do?seq=${free.seq}">${free.title }</a></td>
+						<td><a href="./freeBbsDetail.do?seq=${free.seq}">${free.title }</a></td>
 						<td>${free.name }</td><td>${free.regdate }</td>
 					</tr>
 					<tr style="background-color: #EEEEEE;"><td colspan="4">${free.content }</td></tr>

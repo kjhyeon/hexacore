@@ -40,7 +40,7 @@
 	}
 	
 	function goPage(page){
-		var location = "./bbsDetail.do?seq="+${seq.seq}+"&page="+page; 
+		var location = "./freeBbsDetail.do?seq="+${seq.seq}+"&page="+page; 
 		document.location.href=location;
 	}
 	

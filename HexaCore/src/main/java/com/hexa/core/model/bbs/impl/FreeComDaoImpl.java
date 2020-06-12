@@ -20,7 +20,7 @@ public class FreeComDaoImpl implements FreeComIDao {
 	@Autowired
 	private SqlSessionTemplate session;
 	
-	private String NS = "com.hexa.core.notice.freec.";
+	private String NS = "com.hexa.core.free.freec.";
 	
 	@Override
 	public List<CommentDTO> selectFreeCommentList(CommentDTO cDto) {
