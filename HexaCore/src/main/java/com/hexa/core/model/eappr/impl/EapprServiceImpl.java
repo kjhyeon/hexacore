@@ -62,16 +62,11 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.updateDoc(Ddto);
 	}
 
-//	@Override
-//	public boolean deleteApprRoot(String seq) {
-//		return
-//	}
-
 	@Transactional
 	@Override
 	public boolean insertApprRoot(DocumentDTO Ddto) {
 		log.info("deleteApprRoot serviceImpl 실행");
-		boolean iscD = dao.deleteApprRoot(Integer.toString(Ddto.getSeq()));
+		dao.deleteApprRoot(Integer.toString(Ddto.getSeq()));
 		int iscI =0;
 			for (int i = 0; i < Ddto.getLists().size(); i++) {
 				log.info("insertApprRoot serviceImpl 실행");
@@ -98,18 +93,6 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.deleteFile(seq);
 	}
 
-//	@Override
-//	public boolean updateApprChk(ApprovalDTO Adto) {
-//		log.info("updateApprChk serviceImpl 실행");
-//		return dao.updateApprChk(Adto);
-//	}
-
-//	@Override
-//	public boolean insertComment(DocCommentDTO DCdto) {
-//		log.info("insertComment serviceImpl 실행");
-//		return dao.insertComment(DCdto);
-//	}
-
 	@Override
 	public boolean updateDocTurn(ApprovalDTO Adto) {
 		log.info("updateDocTurn serviceImpl 실행");
@@ -132,12 +115,6 @@ public class EapprServiceImpl implements EapprIService{
 	public boolean deleteDoc(String seq) {
 		log.info("deleteDoc serviceImpl 실행 seq : {}", seq);
 		return dao.deleteDoc(seq);
-	}
-
-	@Override
-	public List<DocumentDTO> selectNeedApprDoc(Map<String, Object> map) {
-		log.info("selectNeedApprDoc serviceImpl 실행 id : {}", map);
-		return dao.selectNeedApprDoc(map);
 	}
 
 	@Override
@@ -201,7 +178,7 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public int selectNeedApprDocCount(Map<String, Object> map) {
+	public int selectAllApprDocCount(Map<String, Object> map) {
 		log.info("selectNeedApprDocCount ServiceImpl 실행 : {}",map);
 		int cnt=0;
 		
@@ -239,12 +216,6 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public List<DocumentDTO> selectApprMyDoc(Map<String, Object> map) {
-		log.info("selectApprMyDoc ServiceImpl 실행 : {}",map);
-		return dao.selectApprMyDoc(map);
-	}
-
-	@Override
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map) {
 		log.info("selectMyDoc ServiceImpl 실행 : {}",map);
 		List<DocumentDTO> lists = null;
@@ -273,23 +244,31 @@ public class EapprServiceImpl implements EapprIService{
 	@Transactional
 	@Override
 	public boolean confirmUpdate(Map<String, Object> map) {
-		
-		boolean iscD = dao.updateDoc((DocumentDTO)map.get("Ddto"));
-		boolean iscA = dao.updateApprChk((ApprovalDTO)map.get("Adto"));
-		boolean iscDC = dao.insertComment((DocCommentDTO)map.get("DCdto"));
+		boolean iscD=false;
+		boolean iscA=false;
+		boolean iscDC=false;
+		if(map.get("Ddto")!=null) {
+			iscD = dao.updateDoc((DocumentDTO)map.get("Ddto"));
+		}
+		if(iscD=true && map.get("Adto")!=null) {
+			iscA = dao.updateApprChk((ApprovalDTO)map.get("Adto"));
+		}
+		if((iscD && iscA) ==true && map.get("DCdto")!=null) {
+			iscDC = dao.insertComment((DocCommentDTO)map.get("DCdto"));
+		}
 		return (iscD||iscA||iscDC)?true:false;
 	}
 
-//	@Override
-//	public List<DocumentDTO> selectReferDoc(Map<String, Object> map) {
-//		log.info("selectReferDoc ServiceImpl 실행 : {}",map);
-//		return dao.selectReferDoc(map);
-//	}
-//
 	@Override
 	public Map<String, Object> selectDocListAll(String id) {
 		log.info("selectDocListAll ServiceImpl 실행 : {}",id);
 		return dao.selectDocListAll(id);
+	}
+
+	@Override
+	public boolean updateSaveToAppr(String seq) {
+		log.info("updateSaveToAppr ServiceImpl 실행 : {}",seq);
+		return dao.updateSaveToAppr(seq);
 	}
 
 }

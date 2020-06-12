@@ -249,4 +249,11 @@ public interface EapprIDao {
 	 * @return List
 	 */
 	public Map<String, Object> selectDocListAll(String id);
+	
+	/**
+	 * 임시저장 -> 상신 기능
+	 * @param seq
+	 * @return TRUE : 성공 / FALSE : 실패
+	 */
+	public boolean updateSaveToAppr(String seq);
 }

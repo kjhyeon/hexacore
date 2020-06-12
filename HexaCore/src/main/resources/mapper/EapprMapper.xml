@@ -110,7 +110,7 @@
 			(SELECT 
 				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.CONTENT, d.STATE, d.REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
 					FROM DOCUMENT d ,APPROVAL a 
-						WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ=d.SEQ AND d.APPR_TURN>a.TURN
+						WHERE a.ID=#{id} AND d.STATE != 0 AND a.SEQ=d.SEQ AND d.APPR_TURN>=a.TURN AND (a.CHK IN ('T','R'))
 							ORDER BY ROW_NUM ASC)
 			WHERE ROW_NUM BETWEEN #{start} AND #{last}
 	</select>
@@ -216,7 +216,7 @@
 	
 	<!-- 결재문서함-문서의 총 개수 -->
 	<select id="selectApprDocCount" parameterType="java.util.Map" resultType="java.lang.Integer">
-		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE BETWEEN 1 AND 2 AND a.SEQ = d.SEQ AND (d.APPR_TURN>a.TURN)
+		SELECT COUNT(*) FROM APPROVAL a ,DOCUMENT d WHERE a.ID=#{id} AND d.STATE != 0 AND a.SEQ = d.SEQ AND (d.APPR_TURN>=a.TURN) AND (a.CHK IN ('T','R'))
 	</select>
 	
 	<!-- 결재문서함-결재해야할 문서의 개수 -->
@@ -228,7 +228,7 @@
 	
 	<!-- 문서 상신(임시보관함에서 상신하는 경우) -->
 	<update id="updateSaveToAppr" parameterType="java.lang.String">
-		UPDATE DOCUMENT SET APPR_TURN = '1' WHERE SEQ = #{seq}
+		UPDATE DOCUMENT SET STATE = '1' WHERE SEQ = #{seq}
 	</update>
 	
 	<!-- 문서에 첨부된 파일 정보 가져오기 -->
