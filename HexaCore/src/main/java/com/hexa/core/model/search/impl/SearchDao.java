@@ -267,6 +267,10 @@ public class SearchDao implements SearchIDao{
 					item.setReply_seq(Integer.parseInt(doc.get("reply_seq")));
 					item.setBbs_depth(Integer.parseInt(doc.get("bbs_depth")));
 					item.setViews(Integer.parseInt(doc.get("views")));
+					int c_count = doc.get("c_count")==null?0:Integer.parseInt(doc.get("c_count"));
+					item.setC_count(c_count);
+					int f_count = doc.get("f_count")==null?0:Integer.parseInt(doc.get("f_count"));
+					item.setF_count(f_count);
 					System.out.println(item.toString());
 					list.add(item);	//결과로 보낼 리스트에 담음
 					if(total-1==i) {
@@ -431,7 +435,7 @@ public class SearchDao implements SearchIDao{
 			e.printStackTrace();
 		}		
 	}
-
+	
 	private Document createDoc(DocumentDTO docDto, BbsDTO bbsDto,FieldType fieldType) {
 		Document doc = new Document();
 		if(docDto!=null) {
@@ -459,6 +463,8 @@ public class SearchDao implements SearchIDao{
 			doc.add(new Field("bbs_depth", String.valueOf(bbsDto.getBbs_depth()), fieldType));
 			doc.add(new Field("views", String.valueOf(bbsDto.getViews()), fieldType));
 			doc.add(new Field("state", String.valueOf(bbsDto.getState()), fieldType));
+			doc.add(new Field("c_count", String.valueOf(bbsDto.getC_count()), fieldType));
+			doc.add(new Field("f_count", String.valueOf(bbsDto.getF_count()), fieldType));
 		}
 		return doc;
 	}

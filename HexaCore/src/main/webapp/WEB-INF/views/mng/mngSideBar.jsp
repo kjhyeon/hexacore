@@ -5,6 +5,17 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="./css/sidebar.css">
+<style type="text/css">
+	#iframe{
+		position : relative; 
+		overflow-x:hidden; 
+		overflow:auto; 
+		border: none; 
+		min-height: 900px;
+		min-width: 1000px;
+		width: 100%;
+	}
+</style>
 <title>Insert title here</title>
 </head>
 <body>
@@ -14,9 +25,10 @@
 		<div class="menu" data-url='./updateDepartment.do'>부서 관리</div>
 		</div>
 	<%@include file="./../header.jsp" %>
+	
 	<div class="container">
-		<div class="content" style="min-height: 900px; min-width: 1000px;">
-		<iframe id="iframe" src="./employeeList.do" style="height: 100%; width: 100%; border: none;  position: relative; min-height: 800px; min-width: 1000px;"></iframe>
+		<div class="content" style="min-height: 900px; min-width: 1000px; height: auto;">
+			<iframe id="iframe" src="./employeeList.do"  onload="calcHeight();"></iframe>
 		</div>
 	</div>
 	</div>
@@ -29,6 +41,19 @@ $(document).ready(function(e) {
 	        })
 	});
 
-</script>
+		//<![CDATA[
+		function calcHeight() {
+			//find the height of the internal page
+
+			var the_height = document.getElementById('iframe').contentWindow.document.body.scrollHeight;
+
+			//change the height of the iframe
+			document.getElementById('iframe').height = the_height;
+
+			//document.getElementById('the_iframe').scrolling = "no";
+			document.getElementById('iframe').style.overflow = "hidden";
+		}
+		//
+	</script>
 </body>
 </html>
