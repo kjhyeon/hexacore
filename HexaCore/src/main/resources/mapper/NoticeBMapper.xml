@@ -3,34 +3,34 @@
 <mapper namespace="com.hexa.core.notice.noticeb">
 	
 	<!-- 1. 자유게시판 글 작성 -->
-	<insert id="insertFreeBbs" parameterType="BbsDto">
-	INSERT INTO FREE_BBS 
+	<insert id="insertNoticeBbs" parameterType="BbsDto">
+	INSERT INTO NOTICE_BBS 
 		(SEQ, 		ID, 		NAME, 
 		 TITLE, 	CONTENT, 	STATE, 
 		 REGDATE, 	VIEWS, 		ROOT, 
 		 REPLY_SEQ, BBS_DEPTH)
-	  VALUES (FREE_BBS_SEQ.NEXTVAL, #{id}, 		#{name}, 	#{title}, 
+	  VALUES (NOTICE_BBS_SEQ.NEXTVAL, #{id}, 		#{name}, 	#{title}, 
 	  		  #{content}, 			0, 			SYSDATE, 	0, 
-			  (SELECT NVL(MAX(ROOT),0)+1 FROM FREE_BBS), 0, 0)
+			  (SELECT NVL(MAX(ROOT),0)+1 FROM NOTICE_BBS), 0, 0)
 	</insert>
 
 	<!-- 2. 자유게시판 글 수정 -->
-	<update id="updateModifyFreeBbs" parameterType="BbsDto">
-	UPDATE FREE_BBS
+	<update id="updateModifyNoticeBbs" parameterType="BbsDto">
+	UPDATE NOTICE_BBS
 		SET TITLE=#{title}, CONTENT=#{content}
 			WHERE SEQ=#{seq}
 	</update>
 	
 	<!-- 3. 자유 게시판 글 단일삭제 -->
-	<update id="updateDeleteFreeBbs" parameterType="java.lang.String">
-	UPDATE FREE_BBS
+	<update id="updateDeleteNoticeBbs" parameterType="java.lang.String">
+	UPDATE NOTICE_BBS
 		SET STATE = 1
 			WHERE STATE = 0 AND SEQ = #{seq}
 	</update>
 	
 	<!-- 4. 자유 게시판 글 다중삭제 -->
-	<update id="updateMultiDelFreeBbs" parameterType="java.util.Map">
- 	UPDATE FREE_BBS 
+	<update id="updateMultiDelNoticeBbs" parameterType="java.util.Map">
+ 	UPDATE NOTICE_BBS 
  		SET STATE = 1
       		WHERE STATE = 0 AND SEQ IN 
       		<foreach collection="seqs" item="seq" open="(" separator="," close=")">
@@ -39,80 +39,80 @@
 	</update>
 	
 	<!-- 5. (유저) 자유 게시판 글 조회 -->
-	<select id="selectUserFreeBbsList" resultType="BbsDto">
+	<select id="selectUserNoticeBbsList" resultType="BbsDto">
 	SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
-		FROM FREE_BBS
+		FROM NOTICE_BBS
 			WHERE STATE = 0
 				ORDER BY ROOT DESC, REPLY_SEQ
 	</select>
 	
 	<!-- 6. (관리자) 자유 게시판 글 조회 -->
-	<select id="selectAdminFreeBbsList" resultType="BbsDto">
+	<select id="selectAdminNoticeBbsList" resultType="BbsDto">
 	 SELECT * FROM
 					(
 					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
 					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
 					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	f.CONTENT
-						FROM FREE_BBS f LEFT JOIN 
+						FROM NOTICE_BBS f LEFT JOIN 
 						(
 						 SELECT SEQ,COUNT(*) F_COUNT 
-						 	FROM FILES WHERE CATEGORY=0 GROUP BY SEQ
+						 	FROM FILES WHERE CATEGORY=1 GROUP BY SEQ
 						 ) f2 ON f.SEQ = f2.SEQ
 					 ) j1 LEFT JOIN (
 					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
-					 				 	FROM FREE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				 	FROM NOTICE_COMMENTS fc GROUP BY PARENT_SEQ
 					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
 						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
 	</select>
 	
 	<!-- 7. 자유 게시판 상세글 보기 -->
-	<select id="selectDetailFreeBbs" parameterType="java.lang.String"
+	<select id="selectDetailNoticeBbs" parameterType="java.lang.String"
 							   		 resultType="BbsDto"> 
 		SELECT * FROM
 					(
 					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
 					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
 					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	NVL(f.CONTENT, ' ') CONTENT
-						FROM FREE_BBS f LEFT JOIN 
+						FROM NOTICE_BBS f LEFT JOIN 
 						(
 						 SELECT SEQ,COUNT(*) F_COUNT 
 						 	FROM FILES WHERE CATEGORY=0 GROUP BY SEQ
 						 ) f2 ON f.SEQ = f2.SEQ
 					 ) j1 LEFT JOIN (
 					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
-					 				 	FROM FREE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				 	FROM NOTICE_COMMENTS fc GROUP BY PARENT_SEQ
 					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
 						WHERE SEQ = #{seq}
 	</select>
 	
 	<!-- 8. 자유 게시판 조회수 증가  -->
 	<!-- 유저에만 해당하는 사항 -->
-	<update id="updateViewsBbs" parameterType="java.lang.String">
-	UPDATE FREE_BBS 
+	<update id="updateViewsNoticeBbs" parameterType="java.lang.String">
+	UPDATE NOTICE_BBS 
 		SET VIEWS = VIEWS+1
 			WHERE SEQ = #{seq}
 	</update>
 	
 	<!-- 9. 자유 게시판 답글 -->
-	<update id="updateReplyBbs" parameterType="BbsDto">
-		UPDATE FREE_BBS 
+	<update id="updateReplyNoticeBbs" parameterType="BbsDto">
+		UPDATE NOTICE_BBS 
 			SET REPLY_SEQ = REPLY_SEQ+1
-				WHERE ROOT =(SELECT ROOT FROM FREE_BBS WHERE SEQ = #{seq})
-					AND REPLY_SEQ > (SELECT REPLY_SEQ FROM FREE_BBS WHERE SEQ =#{seq})
+				WHERE ROOT =(SELECT ROOT FROM NOTICE_BBS WHERE SEQ = #{seq})
+					AND REPLY_SEQ > (SELECT REPLY_SEQ FROM NOTICE_BBS WHERE SEQ =#{seq})
 	</update>
 	
-	<insert id="insertReplyBbs" parameterType="BbsDto">
-	INSERT INTO FREE_BBS 
+	<insert id="insertReplyNoticeBbs" parameterType="BbsDto">
+	INSERT INTO NOTICE_BBS 
 	(SEQ, ID, NAME, TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH)
-	VALUES (FREE_BBS_SEQ.NEXTVAL, #{id}, #{name}, #{title}, #{content},
+	VALUES (NOTICE_BBS_SEQ.NEXTVAL, #{id}, #{name}, #{title}, #{content},
 			0, SYSDATE, 0,
-			(SELECT ROOT FROM FREE_BBS WHERE SEQ = #{seq}),
-			(SELECT REPLY_SEQ FROM FREE_BBS WHERE SEQ = #{seq}) +1,
-			(SELECT BBS_DEPTH FROM FREE_BBS WHERE SEQ = #{seq}) +1)
+			(SELECT ROOT FROM NOTICE_BBS WHERE SEQ = #{seq}),
+			(SELECT REPLY_SEQ FROM NOTICE_BBS WHERE SEQ = #{seq}) +1,
+			(SELECT BBS_DEPTH FROM NOTICE_BBS WHERE SEQ = #{seq}) +1)
 	</insert>
 	
 	<!-- 10. 유저 자유게시판 페이징 처리 -->
-	<select id="selectUserBbsListRow" parameterType="RowNum"
+	<select id="selectUserNoticeBbsListRow" parameterType="RowNum"
 									  resultType="BbsDto">
 	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
 		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
@@ -126,28 +126,28 @@
 			(
 			 SELECT * FROM
 					(
-					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
-					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
-					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	f.CONTENT
-						FROM FREE_BBS f LEFT JOIN 
+					 SELECT nb.SEQ, 	nb.NAME, 	nb.REGDATE, 	nb.REPLY_SEQ,
+					 		nb.ROOT, 	nb.STATE,	nb.TITLE ,		nb.ID,
+					 		nb.VIEWS, 	nb2.F_COUNT,	nb.BBS_DEPTH, 	nb.CONTENT
+						FROM NOTICE_BBS nb LEFT JOIN 
 						(
 						 SELECT SEQ,COUNT(*) F_COUNT 
-						 	FROM FILES WHERE CATEGORY=0 GROUP BY SEQ
-						 ) f2 ON f.SEQ = f2.SEQ
+						 	FROM FILES WHERE CATEGORY=1 GROUP BY SEQ
+						 ) nb2 ON nb.SEQ = nb2.SEQ
 					 ) j1 LEFT JOIN (
 					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
-					 				 	FROM FREE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				 	FROM NOTICE_COMMENTS nc GROUP BY PARENT_SEQ
 					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
 					 	WHERE STATE = 0
 						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
 			)
 		)
 		WHERE
-			RNUM BETWEEN #{start} AND #{last}
+			RNUM BETWEEN #{start} AND #{last};
 	</select>
 	
 	<!-- 11. 관리자 자유게시판 페이징 처리 -->
-	<select id="selectAdminBbsListRow" parameterType="RowNum"
+	<select id="selectAdminNoticeBbsListRow" parameterType="RowNum"
 									  resultType="BbsDto">
 	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
 		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
@@ -161,17 +161,17 @@
 			(
 			 SELECT * FROM
 					(
-					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
-					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
-					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	f.CONTENT
-						FROM FREE_BBS f LEFT JOIN 
+					 SELECT nb.SEQ, 	nb.NAME, 	nb.REGDATE, 	nb.REPLY_SEQ,
+					 		nb.ROOT, 	nb.STATE,	nb.TITLE ,		nb.ID,
+					 		nb.VIEWS, 	nb2.F_COUNT,	nb.BBS_DEPTH, 	nb.CONTENT
+						FROM NOTICE_BBS nb LEFT JOIN 
 						(
 						 SELECT SEQ,COUNT(*) F_COUNT 
-						 	FROM FILES WHERE CATEGORY=0 GROUP BY SEQ
-						 ) f2 ON f.SEQ = f2.SEQ
+						 	FROM FILES WHERE CATEGORY=1 GROUP BY SEQ
+						 ) nb2 ON nb.SEQ = nb2.SEQ
 					 ) j1 LEFT JOIN (
 					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
-					 				 	FROM FREE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				 	FROM NOTICE_COMMENTS nc GROUP BY PARENT_SEQ
 					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
 						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
 			)
@@ -181,32 +181,35 @@
 	</select>
 	
 	<!-- 12. 유저 자유게시판 글 전체 갯수 -->
-	<select id="selectUserBoardListTotal" resultType="java.lang.Integer">
+	<select id="selectUserNoticeBoardistTotal" resultType="java.lang.Integer">
 	SELECT COUNT(*) 
-		FROM FREE_BBS
+		FROM NOTICE_BBS
 			WHERE STATE = 0
 	</select>
 	
 	<!-- 13. 관리자 자유게시판 글 전체 갯수 -->
-	<select id="selectAdminBoardListTotal" resultType="java.lang.Integer">
+	<select id="selectAdminNoticeBoardListTotal" resultType="java.lang.Integer">
 	SELECT COUNT(*) 
-		FROM FREE_BBS
+		FROM NOTICE_BBS
 	</select>
 	
 	<!-- 14. seq최대값 가져오기(검색엔진 + 자기가 쓴글 상세보기) -->
-	<select id="selectNewBbs" resultType="java.lang.String">
-		SELECT SEQ FROM FREE_BBS WHERE SEQ=(SELECT MAX(SEQ) FROM FREE_BBS)
+	<select id="selectNewNoticeBbs" resultType="java.lang.String">
+		SELECT SEQ FROM NOTICE_BBS WHERE SEQ=(SELECT MAX(SEQ) FROM NOTICE_BBS)
 	</select>
 	
 	<!-- 15. 파일 추가 -->
-	<insert id="insertFile" parameterType="FileDto">
+	<insert id="insertNoticeBbsFile" parameterType="FileDto">
 	INSERT INTO HEXA.FILES
 		(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE, CATEGORY)
 			VALUES(#{name}, #{seq}, #{f_path}, #{ori_name}, #{f_size}, #{category})
 	</insert>
 	
 	<!-- 16. 파일 삭제 -->
-	<delete id="deleteFile" parameterType="java.util.Map">
+	<!-- CATEGORY = 0 → 자유 게시판
+		 CATEGORY = 1 → 공지 게시판
+		 CATEGORY = 2 → 파일 게시판 -->
+	<delete id="deleteNoticeBbsFile" parameterType="java.util.Map">
 	DELETE FROM FILES 
 		WHERE
 			<if test="files != null">
@@ -216,15 +219,15 @@
 				</foreach> 
 				AND
 			</if>
-				SEQ = #{seq} AND CATEGORY = 0
+				SEQ = #{seq} AND CATEGORY = 1
 	</delete>
 	
 	<!-- 17. 파일 조회 -->
-	<select id="selectFile" parameterType="java.lang.String"
-							resultType="FileDto">
+	<select id="selectNoticeBbsFile" parameterType="java.lang.String"
+									 resultType="FileDto">
 	SELECT NAME ,F_SIZE, ORI_NAME, F_PATH 
 		FROM FILES 
-			WHERE SEQ=#{seq} AND CATEGORY = 0
+			WHERE SEQ=#{seq} AND CATEGORY = 1
 	</select>
 	
 </mapper>
