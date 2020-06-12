@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.dto.RowNumDTO;
 
 public interface SearchIService {
@@ -17,6 +18,7 @@ public interface SearchIService {
 	public void freeBbsIndex();
 	public void noticeBbsIndex();
 	public void fileBbsIndex();
+	public void msgIndex();
 	
 	/**
 	 * 전자문서 추가
@@ -34,6 +36,11 @@ public interface SearchIService {
 	public void addBbsIndex(BbsDTO dto,String type);
 	
 	/**
+	 * 메세지 인덱스 추가
+	 */
+	public void addMsgIndex(MessageDTO dto);
+	
+	/**
 	 * 전자문서 업데이트
 	 * @param dto 전자문서dto
 	 * @return
@@ -48,7 +55,7 @@ public interface SearchIService {
 	 */
 	public void updateBbsIndex(BbsDTO dto,String type);
 	
-	
+	public void updateMsgIndex(MessageDTO dto);
 	/**
 	 * 전자문서 서치
 	 * @param keyword 검색어
@@ -81,9 +88,16 @@ public interface SearchIService {
 	 */
 	public List<BbsDTO> fileBbsSearch(String keyword,String type,RowNumDTO row,String auth);
 	
+	public List<MessageDTO> receiveMsgSearch(String keyword,RowNumDTO row,String type,String id);
+	
+	public List<MessageDTO> senderMsgSearch(String keyword,RowNumDTO row,String type,String id);
+	
 	public int eDocTotal(String keyword,String type);
 	public int freeBbsTotal(String keyword,String type,String auth);
 	public int fileBbsTotal(String keyword,String type,String auth);
 	public int noticeBbsTotal(String keyword,String type,String auth);
+	
+	public int receiveMsgTotal(String keyword,String type,String id);
+	public int senderMsgTotal(String keyword,String type,String id);
 	
 }

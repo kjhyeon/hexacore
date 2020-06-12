@@ -179,12 +179,14 @@ public class MngCtrl {
 	@RequestMapping(value = "/loginPage.do", method = RequestMethod.GET)
 	public String login(@RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "logout", required = false) String logout, Model model) {
-
+		log.info("유저 로그인/로그아웃 처리 : {}/{}",error,logout);
 		if (error != null) {
+			log.info("유저 로그인 에러 발생");
 			model.addAttribute("msg", "로그인 에러");
 		}
 
 		if (logout != null) {
+			log.info("유저 로그아웃");
 			model.addAttribute("msg", "로그아웃 성공");
 		}
 		return "../login";

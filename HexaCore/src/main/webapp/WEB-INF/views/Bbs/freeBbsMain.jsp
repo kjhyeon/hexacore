@@ -155,6 +155,14 @@
 				}
 			}
 		)
+		
+		document.onkeydown = function(e){
+			/* F5, Ctrl+r, Ctrl+F5 */
+			    if(e.keyCode == 116 || e.ctrlKey == true && (e.keyCode == 82)){
+			    	location.reload(location.href);
+			 		   return false;
+			    }
+		 }
 	  </script>
      
       <input type="hidden" name="index" id="index" value="${row.index }">

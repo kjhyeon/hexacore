@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
 import com.hexa.core.model.eappr.inf.EapprIService;
+import com.hexa.core.model.msg.inf.MessageIDao;
 import com.hexa.core.model.search.inf.SearchIDao;
 import com.hexa.core.model.search.inf.SearchIService;
 
@@ -23,6 +25,9 @@ public class SearchService implements SearchIService{
 
 	@Autowired
 	private FreeBbsIService frService;
+	
+	@Autowired
+	private MessageIDao mDao;
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -107,6 +112,36 @@ public class SearchService implements SearchIService{
 	public int noticeBbsTotal(String keyword, String type,String auth) {
 		return dao.noticeBbsTotal(keyword, type,auth);
 	}
+	@Override
+	public void msgIndex() {
+		log.info("SearchService Msg 인덱싱 작업 시작");
+		dao.msgIndex(mDao.selectAllMsg());
+	}
+	@Override
+	public void addMsgIndex(MessageDTO dto) {
+		log.info("SearchService 메시지 추가 {}",dto);
+		dao.addMsgIndex(dto);
+	}
+	@Override
+	public List<MessageDTO> receiveMsgSearch(String keyword, RowNumDTO row,String type,String id) {
+		return dao.receiveMsgSearch(keyword, row, type,id);
+	}
+	@Override
+	public List<MessageDTO> senderMsgSearch(String keyword, RowNumDTO row,String type,String id) {
+		return dao.senderMsgSearch(keyword, row, type, id);
+	}
+	@Override
+	public int receiveMsgTotal(String keyword,String type,String id) {
+		return dao.receiveMsgTotal(keyword, type,id);
+	}
+	@Override
+	public int senderMsgTotal(String keyword,String type,String id) {
+		return dao.senderMsgTotal(keyword, type,id);
+	}
+	@Override
+	public void updateMsgIndex(MessageDTO dto) {
+	}
+
 
 
 }

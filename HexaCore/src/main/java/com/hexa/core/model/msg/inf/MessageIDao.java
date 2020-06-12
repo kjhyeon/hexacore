@@ -35,7 +35,7 @@ public interface MessageIDao {
 	 * @param msdto
 	 * @return 수신한 메세지 내용
 	 */
-	public MessageDTO selectDetailMessage(MessageDTO msdto);
+	public MessageDTO selectDetailMessage(String seq);
 	
 	/**
 	 * 수신한 메세지 삭제
@@ -71,4 +71,6 @@ public interface MessageIDao {
 	public boolean insertFile(FileDTO dto);
 	
 	public List<FileDTO> selectFile(int seq);
+	
+	public List<MessageDTO> selectAllMsg();
 }

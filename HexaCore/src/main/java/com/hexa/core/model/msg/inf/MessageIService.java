@@ -41,7 +41,7 @@ public interface MessageIService {
 	 * @param msdto
 	 * @return 수신한 메세지 내용
 	 */
-	public MessageDTO selectDetailMessage(MessageDTO msdto);
+	public MessageDTO selectDetailMessage(String seq);
 	
 	/**
 	 * 수신한 메세지 삭제

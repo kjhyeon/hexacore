@@ -9,9 +9,25 @@
 <script type="text/javascript">
 	function moreInfo(category) {
 		if(category == "freeBbs"){
-			document.location.href= "./freeBbsMain.do?keyword="+$("#keyword").val()+"&type="+$("#type").val();
+			document.location.href= "./goBbs.do?keyword="+$("#keyword").val()+"&type="+$("#type").val()+"&category=0";
+		}else if(category == "noticeBbs"){
+			document.location.href= "./goBbs.do?keyword="+$("#keyword").val()+"&type="+$("#type").val()+"&category=1";
+		}else if(category == "fileBbs"){
+			document.location.href= "./goBbs.do?keyword="+$("#keyword").val()+"&type="+$("#type").val()+"&category=2";
+		}else if(category == 'msg'){
+			window.open("./msgReceiveList.do?keyword="+$("#keyword").val()+"&type="+$("#type").val(), "사원 정보", "width=1024,height=760")
 		}
-	} 
+	}
+	
+	function detail(seq,category){
+		if(category == "freeBbs"){
+			document.location.href= "./goBbs.do?seq="+seq+"&category=0";
+		}else if(category == "noticeBbs"){
+			document.location.href= "./goBbs.do?seq="+seq+"&category=1";
+		}else if(category == "fileBbs"){
+			document.location.href= "./goBbs.do?seq="+seq+"&category=2";
+		}
+	}
 </script>
 <body>
 	<%@include file="./../header.jsp" %>
@@ -50,7 +66,7 @@
 				<c:forEach items="${freeBbsList }" var="free">
 					<tr>
 						<td>${free.seq }</td>
-						<td><a href="./freeBbsDetail.do?seq=${free.seq}">${free.title }</a></td>
+						<td><a href="#" onclick="detail(${free.seq},'freeBbs')">${free.title }</a></td>
 						<td>${free.name }</td><td>${free.regdate }</td>
 					</tr>
 					<tr style="background-color: #EEEEEE;"><td colspan="4">${free.content }</td></tr>
@@ -62,6 +78,24 @@
 			<table class="table table-bordered">
 			</table>
 		</div>
+		
+		<div id="MsgContainer">
+			<h3>메세지 수신함</h3>
+			<button class="btn" style="float: right;" onclick="moreInfo('msg')">더 보기</button>
+			<table class="table table-bordered" id="freeBbs">
+				<tr><th>번호</th><th>제목</th><th>보낸사람</th><th>작성일</th></tr>
+				<c:forEach items="${msgList }" var="msg">
+					<tr>
+						<td>${msg.seq }</td>
+						<td>${msg.title }</a></td>
+						<td>${msg.sender_id }</td><td>${msg.regdate }</td>
+					</tr>
+					<tr style="background-color: #EEEEEE;"><td colspan="4">${msg.content }</td></tr>
+				</c:forEach>
+			</table>
+		</div>
+		<hr>
+		
 	</div>
 		</div>
 	

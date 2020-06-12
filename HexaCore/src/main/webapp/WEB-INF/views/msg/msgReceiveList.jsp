@@ -50,10 +50,48 @@ ul.pagination li a:active{
 	border: 1px solid pink;
 	
 }
+
+
+	#Main_Search_Text{
+		width: 450px;
+		float: right;
+	}
+
+
+#type_Select{
+		width: 120px;
+		margin-right: 5px;
+		border-radius: 4px;
+	}
+	
+	#keyword_Search{
+		width: 300px;
+		position: relative; 
+		float: left;
+		border-radius: 4px;
+		margin-right: 5px;
+	}
+	#type_Finder{
+		border-radius: 4px;
+	}
+
 </style>
 <script type="text/javascript">
 	function gotoSend() {
 		location.href = "./msgSendForm.do";
+	}
+	function goPage(page){
+		var location = "./msgReceiveList.do?page="+page; 
+		if($("#ori_keyword").val()!=null&&$("#ori_keyword").val().trim()!=''){
+			location += "&keyword="+$("#ori_keyword").val()+"&type="+$("#ori_type").val();			
+		}
+		document.location.href=location;
+	}
+	
+	function goSearch(){
+		var location = "./msgReceiveList.do?"; 
+		location += "keyword="+$("#keyword_Search").val()+"&type="+$("#type_Select").val();			
+		document.location.href=location;
 	}
 </script>
 </head>
@@ -64,6 +102,24 @@ ul.pagination li a:active{
 			onsubmit="return chkbox()">
 			<div class="panel-group" id="accordion">
 			<div style="font-size: 20pt; margin-left: 280px; padding: 20px;">메세지 수신함</div>
+				<div class="form-group input-group" id="Main_Search_Text">
+					<span class="input-group-btn"> <select name="type"
+						class="form-control" id="type_Select">
+							<option value="title/con">제목+내용</option>
+							<option value="title">제목</option>
+							<option value="content">내용</option>
+							<option value="author">글쓴이</option>
+					</select>
+					</span> <span> <input type="text" class="form-control"
+						placeholder="Search.." name="keyword" id="keyword_Search"
+						value="${keyword }">
+					</span> <span class="input-group-btn">
+						<button class="btn btn-default" type="button" onclick="goSearch()"
+							id="type_Finder">
+							<span class="glyphicon glyphicon-search"></span>
+						</button>
+					</span>
+				</div>
 				<table class="table table-boardered">
 					<thead>
 						<tr>
@@ -117,19 +173,22 @@ ul.pagination li a:active{
 				<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">
 		
 				<div class="center" style="text-align: center; margin-left: 300px; position: relative;">
-					<ul class="pagination">
-						<li><a href="./msgReceiveList.do?page=0">&laquo;</a></li>
-						<li><a href="./msgReceiveList.do?page=${row.index-1}">&lt;</a></li>
-						<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
-							<li><a href="./msgReceiveList.do?page=${i-1}">${i }</a></li>
-						</c:forEach>
-						<li><a href="./msgReceiveList.do?page=${row.index+1}" >&gt;</a></li>
-						<li><a href="./msgReceiveList.do?page=${row.lastPage-1}" >&raquo;</a></li>
-					</ul>
-				</div>
+				<ul class="pagination">
+					<li><a href="#" onclick="return goPage(${0});">&laquo;</a></li>
+					<li><a href="#" onclick="return goPage(${row.index-1});">&lt;</a></li>
+					<c:forEach var="i" begin="${row.pageNum }" end="${row.count }"
+						step="1">
+						<li><a href="#" onclick="goPage(${i-1})">${i }</a></li>
+					</c:forEach>
+					<li><a href="#" onclick="return goPage(${row.index+1});">&gt;</a></li>
+					<li><a href="#" onclick="return goPage(${row.lastPage-1});">&raquo;</a></li>
+				</ul>
+			</div>
 			<input class="btn btn-info" style="margin-left: 50px;" type="button" value="메세지 보내기" onclick="gotoSend()">
 			<input class="btn btn-danger" style="margin-left: 20px;" type="submit" value="다중삭제">
 		</form>
+		<input type="hidden" id="ori_keyword" value="${keyword }">
+		<input type="hidden" id="ori_type" value="${type }">
 	</div>
 <script type="text/javascript" src="./js/message.js"></script>
 </body>

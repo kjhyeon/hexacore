@@ -51,6 +51,7 @@ import org.springframework.stereotype.Repository;
 import com.google.common.collect.Lists;
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.search.inf.SearchIDao;
 
@@ -249,7 +250,11 @@ public class SearchDao implements SearchIDao{
 					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
 						int idx = con.indexOf(keyword);
 						if(idx-15>0) {
-							con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
+							if(idx+15>con.length()) {
+								con = "ㆍㆍㆍ"+con.substring(idx-15);
+							}else {
+								con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
+							}
 						}else {
 							con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
 						}
@@ -628,5 +633,373 @@ public class SearchDao implements SearchIDao{
 		}
 		return 0;
 	}
+
+	@Override
+	public void msgIndex(List<MessageDTO> list) {
+		File indexFolder = new File(INDEX_PATH+"/Message");
+		if(indexFolder.isDirectory() == false){
+			indexFolder.mkdirs();
+		}
+
+		FSDirectory directory;
+		try {
+			//인덱싱된 파일을 내보낼 경로를 얻음
+			directory = FSDirectory.open(Paths.get(INDEX_PATH+"/Message"));
+
+			//한글 형태소 분석기
+			Analyzer analyzer = new StandardAnalyzer();
+
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
+			//기존 인덱스 파일 삭제
+			writer.deleteAll();
+			FieldType fieldType = getFieldType();
+			//저장할 데이터 목록 가져오기
+			for(MessageDTO dto : list){
+				Document doc = new Document();
+				doc.add(new NumericDocValuesField("sorted_seq", dto.getSeq()));
+				doc.add(new Field("seq", String.valueOf(dto.getSeq()), fieldType));
+				doc.add(new Field("sender_id", dto.getSender_id(), fieldType));
+				doc.add(new Field("receiver_id", dto.getReceiver_id(), fieldType));
+				doc.add(new Field("title", dto.getTitle(), fieldType));
+				doc.add(new Field("content", dto.getContent(), fieldType));
+				doc.add(new Field("regdate", dto.getRegdate(),fieldType));
+				doc.add(new Field("state", String.valueOf(dto.getState()), fieldType));
+				writer.addDocument(doc);
+			}
+			
+			writer.commit();
+			writer.close();
+			analyzer.close();
+			directory.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void addMsgIndex(MessageDTO dto) {
+		File indexFolder = new File(INDEX_PATH+"/Message");
+		if(indexFolder.isDirectory() == false){
+			indexFolder.mkdirs();
+		}
+
+		FSDirectory directory;
+		try {
+			//인덱싱된 파일을 내보낼 경로를 얻음
+			directory = FSDirectory.open(Paths.get(INDEX_PATH+"/Message"));
+
+			//한글 형태소 분석기
+			Analyzer analyzer = new StandardAnalyzer();
+
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
+
+			FieldType fieldType = getFieldType();
+			//저장할 데이터 목록 가져오기
+			Document doc = new Document();
+			doc.add(new NumericDocValuesField("sorted_seq", dto.getSeq()));
+			doc.add(new Field("seq", String.valueOf(dto.getSeq()), fieldType));
+			doc.add(new Field("sender_id", dto.getSender_id(), fieldType));
+			doc.add(new Field("receiver_id", dto.getReceiver_id(), fieldType));
+			doc.add(new Field("title", dto.getTitle(), fieldType));
+			doc.add(new Field("content", dto.getContent(), fieldType));
+			doc.add(new Field("regdate", dto.getRegdate(),fieldType));
+			doc.add(new Field("state", String.valueOf(dto.getState()), fieldType));
+			writer.addDocument(doc);
+			
+			writer.commit();
+			writer.close();
+			analyzer.close();
+			directory.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public List<MessageDTO> receiveMsgSearch(String keyword, RowNumDTO row,String type,String id) {
+		FSDirectory directory;
+		if(row==null) {
+			row = new RowNumDTO();
+			row.setListNum(5);
+			row.setIndex(0);
+		}
+		List<MessageDTO> list = Lists.newArrayList();
+		try {
+			String indexPath = INDEX_PATH+"/Message";
+			File indexFolder = new File(indexPath);
+			if(indexFolder.isDirectory() == false){ //폴더가 있는지 탐색해서 없을경우
+				log.info("Lucene Search : NOT FOUND FOLDER {}",INDEX_PATH);
+				return null;
+			}
+			System.out.println(indexFolder.list().length); 
+			if(indexFolder.list().length == 0){ //폴더 내 파일이 없을경우
+				log.info("Lucene Search : NOT FOUND FILE IN {}",INDEX_PATH);
+				return null;
+			}
+			directory = FSDirectory.open(Paths.get(indexPath)); //경로에 있는 폴더를 연다
+			IndexReader reader = DirectoryReader.open(directory); //디렉터리 안 파일들을 읽어옴
+
+			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
+			Analyzer analyzer = new StandardAnalyzer();
+
+			BooleanQuery query = createMsgQuery(type, keyword,analyzer,true,id); //찾을 키워드로 쿼리 생성
+			SortField sortField = null;	// 정렬용 필드
+			boolean reverse = true;	//역정렬용 플래그
+			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
+			Sort sort = new Sort(sortField);
+			Document doc = new Document();	//찾아온 결과를 읽어올 문서
+			int total = searcher.count(query);
+			log.info("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% {}",total);
+			if(total>0) {
+				TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
+				System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+				System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+				row.setTotal(total);
+				System.out.println(row.getStart() + " ~ " + row.getLast());
+				for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서를 페ㅇ징처리
+				{
+					doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
+					MessageDTO item = new MessageDTO();	//담아올 객체 생성
+					item.setSeq(Integer.parseInt(doc.get("seq")));
+					item.setTitle(doc.get("title"));
+					item.setContent(doc.get("content"));
+					item.setReceiver_id(doc.get("receiver_id"));
+					item.setSender_id(doc.get("sender_id"));
+					item.setRegdate(doc.get("regdate"));
+					item.setState(Integer.parseInt(doc.get("state")));
+					System.out.println(item.toString());
+					list.add(item);	//결과로 보낼 리스트에 담음
+					if(total-1==i) {
+						break;
+					}
+				}
+			}
+			reader.close();
+			analyzer.close();   
+			return list;
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			log.error("전자문서 검색중에 에러 발생");
+		}
+		return null;
+	}
+
+	@Override
+	public List<MessageDTO> senderMsgSearch(String keyword, RowNumDTO row,String type,String id) {
+		FSDirectory directory;
+		if(row==null) {
+			row = new RowNumDTO();
+			row.setListNum(5);
+			row.setIndex(0);
+		}
+		List<MessageDTO> list = Lists.newArrayList();
+		try {
+			String indexPath = INDEX_PATH+"/Message";
+			File indexFolder = new File(indexPath);
+			if(indexFolder.isDirectory() == false){ //폴더가 있는지 탐색해서 없을경우
+				log.info("Lucene Search : NOT FOUND FOLDER {}",INDEX_PATH);
+				return null;
+			}
+			System.out.println(indexFolder.list().length); 
+			if(indexFolder.list().length == 0){ //폴더 내 파일이 없을경우
+				log.info("Lucene Search : NOT FOUND FILE IN {}",INDEX_PATH);
+				return null;
+			}
+			directory = FSDirectory.open(Paths.get(indexPath)); //경로에 있는 폴더를 연다
+			IndexReader reader = DirectoryReader.open(directory); //디렉터리 안 파일들을 읽어옴
+
+			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
+			Analyzer analyzer = new StandardAnalyzer();
+
+			BooleanQuery query = createMsgQuery(type, keyword,analyzer,false,id); //찾을 키워드로 쿼리 생성
+			SortField sortField = null;	// 정렬용 필드
+			boolean reverse = true;	//역정렬용 플래그
+			sortField = new SortField("sorted_seq", SortField.Type.INT, reverse);
+			Sort sort = new Sort(sortField);
+			Document doc = new Document();	//찾아온 결과를 읽어올 문서
+			int total = searcher.count(query);
+			if(total>0) {
+				TopFieldDocs results = searcher.search(query,total,sort);	//해당하는 결과 상위 5개를 가져옴
+				System.out.println("hits : "+results.totalHits); //검색어랑 맞는 갯수
+				System.out.println("docLength : "+results.scoreDocs.length); // 검색된 갯수
+				row.setTotal(total);
+				System.out.println(row.getStart() + " ~ " + row.getLast());
+				for(int i = row.getStart()-1; i < row.getLast(); i++)	//읽어온 문서를 페ㅇ징처리
+				{
+					doc = searcher.doc(results.scoreDocs[i].doc);	//찾은 결과 1행을 담읆 문서
+					MessageDTO item = new MessageDTO();	//담아올 객체 생성
+					item.setSeq(Integer.parseInt(doc.get("seq")));
+					item.setTitle(doc.get("title"));
+					item.setContent(doc.get("content"));
+					item.setReceiver_id(doc.get("receiver_id"));
+					item.setSender_id(doc.get("sender_id"));
+					item.setRegdate(doc.get("regdate"));
+					item.setState(Integer.parseInt(doc.get("state")));
+					System.out.println(item.toString());
+					list.add(item);	//결과로 보낼 리스트에 담음
+					if(total-1==i) {
+						break;
+					}
+				}
+			}
+			reader.close();
+			analyzer.close();   
+			return list;
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			log.error("전자문서 검색중에 에러 발생");
+		}
+		return null;
+	}
+
+	@Override
+	public int receiveMsgTotal(String keyword,String type,String id) {
+		FSDirectory directory;
+		try {
+			String indexPath = INDEX_PATH+"/Message";
+			File indexFolder = new File(indexPath);
+			if(indexFolder.isDirectory() == false){ //폴더가 있는지 탐색해서 없을경우
+				log.info("Lucene Search : NOT FOUND FOLDER {}",INDEX_PATH);
+				return 0;
+			}
+			System.out.println(indexFolder.list().length); 
+			if(indexFolder.list().length == 0){ //폴더 내 파일이 없을경우
+				log.info("Lucene Search : NOT FOUND FILE IN {}",INDEX_PATH);
+				return 0;
+			}
+			directory = FSDirectory.open(Paths.get(indexPath)); //경로에 있는 폴더를 연다
+			IndexReader reader = DirectoryReader.open(directory); //디렉터리 안 파일들을 읽어옴
+
+			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
+			Analyzer analyzer = new StandardAnalyzer();
+
+			BooleanQuery query = createMsgQuery(type, keyword,analyzer,true,id); //찾을 키워드로 쿼리 생성
+			int total = searcher.count(query);
+			reader.close();
+			analyzer.close();   
+			return total;
+		}catch (Exception e) {
+			e.printStackTrace();
+			log.error("전자문서 검색중에 에러 발생");
+		}
+		return 0;
+	}
+
+	@Override
+	public int senderMsgTotal(String keyword,String type,String id) {
+		FSDirectory directory;
+		try {
+			String indexPath = INDEX_PATH+"/Message";
+			File indexFolder = new File(indexPath);
+			if(indexFolder.isDirectory() == false){ //폴더가 있는지 탐색해서 없을경우
+				log.info("Lucene Search : NOT FOUND FOLDER {}",INDEX_PATH);
+				return 0;
+			}
+			System.out.println(indexFolder.list().length); 
+			if(indexFolder.list().length == 0){ //폴더 내 파일이 없을경우
+				log.info("Lucene Search : NOT FOUND FILE IN {}",INDEX_PATH);
+				return 0;
+			}
+			directory = FSDirectory.open(Paths.get(indexPath)); //경로에 있는 폴더를 연다
+			IndexReader reader = DirectoryReader.open(directory); //디렉터리 안 파일들을 읽어옴
+
+			IndexSearcher searcher = new IndexSearcher(reader);	//읽어온 파일들을 서칭할 서쳐
+			Analyzer analyzer = new StandardAnalyzer();
+
+			BooleanQuery query = createMsgQuery(type, keyword,analyzer,false,id); //찾을 키워드로 쿼리 생성
+			int total = searcher.count(query);
+			reader.close();
+			analyzer.close();   
+			return total;
+		}catch (Exception e) {
+			e.printStackTrace();
+			log.error("전자문서 검색중에 에러 발생");
+		}
+		return 0;
+	}
 	
+	private BooleanQuery createMsgQuery(String category,String keyword,Analyzer analyzer,boolean isReceiveList,String id) {
+		if(category==null)
+			category = "title";
+		BooleanQuery query = null;
+		try {
+			Query qq = null;
+			Query state=null;
+			Query idquery = null;
+			if(isReceiveList) {
+				BytesRef lower = new BytesRef(Integer.toBinaryString(0));
+				BytesRef upper = new BytesRef(Integer.toBinaryString(1));
+				state = new TermRangeQuery("state", lower, upper, true, true);
+				idquery = new QueryParser("receiver_id",analyzer).parse(id);
+			}else {
+				idquery = new QueryParser("sender_id",analyzer).parse(id);
+			}
+			
+			if(category.trim().equals("title")) {
+				String[] field = {"title"};
+				MultiFieldQueryParser parser = new MultiFieldQueryParser(field, analyzer);
+				qq = parser.parse(keyword+"*");
+			}else if(category.trim().equals("content")) {
+				String[] field = {"content"};
+				MultiFieldQueryParser parser = new MultiFieldQueryParser(field, analyzer);
+				qq = parser.parse(keyword+"*");
+			}else if(category.trim().equals("author")) {
+				String field = null;
+				if(isReceiveList) {
+					field = "sender_id";
+				}else {
+					field = "receiver_id";
+				}
+				QueryParser parser = new QueryParser(field, analyzer);
+				qq = parser.parse(keyword+"*");
+			}else if(category.trim().equals("title/con")) {
+				String[] field = {"title","content"};
+				MultiFieldQueryParser parser = new MultiFieldQueryParser(field, analyzer);
+				qq = parser.parse(keyword+"*");
+			}
+			
+			if(isReceiveList) {
+				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(state, Occur.MUST).add(idquery, Occur.MUST).build();
+			}else {
+				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(idquery, Occur.MUST).build();
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return query;
+	}
+
+	@Override
+	public void updateMsgIndex(String seq) {
+		FSDirectory directory;
+		try {
+			//인덱싱된 파일을 내보낼 경로를 얻음
+			directory = FSDirectory.open(Paths.get(INDEX_PATH+"/Message"));
+
+			//한글 형태소 분석기
+			Analyzer analyzer = new StandardAnalyzer();
+			IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+			indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+			IndexWriter writer = new IndexWriter(directory, indexWriterConfig);
+
+			FieldType fieldType = getFieldType();
+			//저장할 데이터 목록 가져오기
+			Document doc = new Document();
+			doc.add(new Field("state", "-1", fieldType));
+			
+			writer.updateDocument(new Term("seq", seq), doc);
+			writer.commit();
+			writer.close();
+			analyzer.close();
+			directory.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
 }

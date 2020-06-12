@@ -12,7 +12,7 @@
   <select id="selectReceiveList" parameterType="java.util.Map" resultType="MessageDTO">
   	SELECT SEQ, SENDER_ID , TITLE, CONTENT, REGDATE, STATE
 	FROM (
-		SELECT ROW_NUMBER () OVER(ORDER BY SEQ DESC) AS ROW_NUM, SEQ, SENDER_ID, TITLE, CONTENT, REGDATE, STATE 
+		SELECT ROW_NUMBER () OVER(ORDER BY SEQ DESC) AS ROW_NUM, SEQ, SENDER_ID, TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-dd hh:mm:ss') REGDATE, STATE 
 			FROM MESSAGES 
 				WHERE RECEIVER_ID = #{receiver_id} AND (STATE = 0 OR STATE = 1)
 				) 
@@ -23,7 +23,7 @@
   <select id="selectSendList" parameterType="java.util.Map" resultType="MessageDTO">
   	SELECT SEQ, RECEIVER_ID , TITLE, CONTENT, REGDATE, STATE
 	FROM (
-		SELECT ROW_NUMBER () OVER(ORDER BY SEQ DESC) AS ROW_NUM, SEQ, RECEIVER_ID , TITLE, CONTENT, REGDATE, STATE 
+		SELECT ROW_NUMBER () OVER(ORDER BY SEQ DESC) AS ROW_NUM, SEQ, RECEIVER_ID , TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-dd hh:mm:ss') REGDATE, STATE 
 			FROM MESSAGES 
 				WHERE  SENDER_ID = #{sender_id}
 				) 
@@ -31,10 +31,10 @@
 	</select>
   
   <!-- 수신한 메세지 상세보기 -->
-  <select id="selectDetailMessage" parameterType="MessageDTO" resultType="MessageDTO">
-  	SELECT SEQ, SENDER_ID , RECEIVER_ID , TITLE, CONTENT , REGDATE, STATE 
+  <select id="selectDetailMessage" parameterType="java.lang.String" resultType="MessageDTO">
+  	SELECT SEQ, SENDER_ID , RECEIVER_ID , TITLE, CONTENT , TO_CHAR(REGDATE,'YYYY-MM-dd hh:mm:ss') REGDATE, STATE 
         FROM MESSAGES
-                WHERE SEQ = #{seq} AND RECEIVER_ID = #{receiver_id} AND STATE >=0
+                WHERE SEQ = #{seq}
   </select>
   
   <!-- 수신한 메세지 삭제 -->
@@ -84,5 +84,10 @@
 	SELECT NAME ,F_SIZE, ORI_NAME, F_PATH 
 		FROM FILES 
 			WHERE SEQ=#{seq} AND CATEGORY = 3
+	</select>
+	
+	<!-- 모든 메시지 리스트 -->
+	<select id="selectAllMsg" resultType="MessageDTO">
+		SELECT  SEQ, SENDER_ID, RECEIVER_ID, TITLE, CONTENT, TO_CHAR(REGDATE,'YYYY-MM-dd hh:mm:ss') REGDATE, STATE FROM MESSAGES
 	</select>
 </mapper>

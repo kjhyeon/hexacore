@@ -64,6 +64,7 @@ public class SearchCtrl {
 //		model.addAttribute("noticeBbsList", service.noticeBbsSearch(keyword, type));
 		model.addAttribute("freeBbsList", service.freeBbsSearch(keyword, type,null,role));
 //		model.addAttribute("fileBbsList", service.fileBbsSearch(keyword, type));
+		model.addAttribute("msgList", service.receiveMsgSearch(keyword,null, type,dto.getUsername()));
 		return "search/searchResult";
 	}
 	
@@ -74,6 +75,7 @@ public class SearchCtrl {
 		service.freeBbsIndex();
 		service.noticeBbsIndex();
 		service.fileBbsIndex();
+		service.msgIndex();
 		return null;
 	}
 }

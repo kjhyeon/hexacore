@@ -27,12 +27,16 @@ import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.msg.inf.MessageIService;
+import com.hexa.core.model.search.inf.SearchIService;
 
 @Controller
 public class MsgCtrl {
 
 	@Autowired
 	private MessageIService mService;
+	
+	@Autowired
+	private SearchIService sService;
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -65,7 +69,7 @@ public class MsgCtrl {
 	}
 	//메세지 수신함 리스트 조회
 	@RequestMapping(value = "/msgReceiveList.do", method = RequestMethod.GET)
-	public String msgReceiveList(Model model, SecurityContextHolder session, String page) {
+	public String msgReceiveList(Model model, SecurityContextHolder session, String page,String keyword,String type) {
 		log.info("MsgCtrl /msgReceiveList 실행{}", page);
 		if(page==null) {
 			page="0";
@@ -73,7 +77,11 @@ public class MsgCtrl {
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		RowNumDTO row = new RowNumDTO();
-		row.setTotal(mService.messageReceiveListTotal(dto.getUsername()));
+		if(keyword!=null&&!keyword.equals("")){
+			row.setTotal(sService.receiveMsgTotal(keyword, type, dto.getUsername()));
+		}else {
+			row.setTotal(mService.messageReceiveListTotal(dto.getUsername()));
+		}
 		row.setPageNum(3);
 		row.setListNum(5);
 		if(row.getLastPage()-1<Integer.parseInt(page)) {
@@ -83,19 +91,23 @@ public class MsgCtrl {
 		}else {
 			row.setIndex(Integer.parseInt(page));
 		}
-		Map<String, Object> map = Maps.newHashMap();
-		map.put("receiver_id", dto.getUsername());
-		map.put("start", row.getStart());
-		map.put("last",row.getLast());
+		if(keyword!=null&&!keyword.equals("")) {
+			model.addAttribute("lists",sService.receiveMsgSearch(keyword, row, type, dto.getUsername()));
+		}else {
+			Map<String, Object> map = Maps.newHashMap();
+			map.put("receiver_id", dto.getUsername());
+			map.put("start", row.getStart());
+			map.put("last",row.getLast());
+			model.addAttribute("lists", mService.selectReceiveList(map));
+		}
 		
-		model.addAttribute("lists", mService.selectReceiveList(map));
 		model.addAttribute("row", row);
 		
 		return "msg/msgReceiveList";
 	}
 	//메세지 발신함 리스트 조회
 	@RequestMapping(value = "/msgSendList.do", method = RequestMethod.GET)
-	public String msgSendList(Model model, SecurityContextHolder session, String page) {
+	public String msgSendList(Model model, SecurityContextHolder session, String page,String keyword,String type) {
 		log.info("MsgCtrl /msgSendList 실행{}", page);
 		if(page==null) {
 			page="0";
@@ -103,7 +115,11 @@ public class MsgCtrl {
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		RowNumDTO row = new RowNumDTO();
-		row.setTotal(mService.messageSenderListTotal(dto.getUsername()));
+		if(keyword!=null&&!keyword.equals("")){
+			row.setTotal(sService.senderMsgTotal(keyword, type, dto.getUsername()));
+		}else {
+			row.setTotal(mService.messageSenderListTotal(dto.getUsername()));
+		}
 		row.setPageNum(3);
 		row.setListNum(5);
 		if(row.getLastPage()-1<Integer.parseInt(page)) {
@@ -113,12 +129,17 @@ public class MsgCtrl {
 		}else {
 			row.setIndex(Integer.parseInt(page));
 		}
-		Map<String, Object> map = Maps.newHashMap();
-		map.put("sender_id", dto.getUsername());
-		map.put("start", row.getStart());
-		map.put("last",row.getLast());
 		
-		model.addAttribute("list", mService.selectSendList(map));
+		if(keyword!=null&&!keyword.equals("")) {
+			model.addAttribute("list",sService.senderMsgSearch(keyword, row, type, dto.getUsername()));
+		}else {
+			Map<String, Object> map = Maps.newHashMap();
+			map.put("sender_id", dto.getUsername());
+			map.put("start", row.getStart());
+			map.put("last",row.getLast());
+			model.addAttribute("list", mService.selectSendList(map));
+		}
+		
 		model.addAttribute("row", row);
 		
 		return "msg/msgSendList";

@@ -29,6 +29,9 @@
 		</div>
 	</div>
 	</div>
+	<c:choose>
+		<c:when test=""></c:when>
+	</c:choose>
 	<script type="text/javascript">
 $(document).ready(function(e) {
 	/* a요소를 클릭 했을 시 */
@@ -37,6 +40,51 @@ $(document).ready(function(e) {
 	        $('#iframe').attr('src',$(this).attr('data-url'));
 	        })
 	});
+
+	$(document).ready(function() {
+		<c:if test="${not empty param.keyword && param.keyword != ''}">
+			<c:choose>
+				<c:when test="${param.category eq 0}">
+					$('#iframe').attr('src','./freeBbsMain.do?keyword=${param.keyword}&type=${param.type}');
+				</c:when>
+				<c:when test="${param.category eq 1}">
+					$('#iframe').attr('src','./noticeBbsMain.do?keyword=${param.keyword}&type=${param.type}');
+				</c:when>
+				<c:when test="${param.category eq 2}">
+					$('#iframe').attr('src','./fileBbsMain.do?keyword=${param.keyword}&type=${param.type}');
+				</c:when>
+			</c:choose>
+		</c:if>
+		<c:if test="${not empty param.seq && param.seq != ''}">
+			<c:choose>
+				<c:when test="${param.category eq 0}">
+					$('#iframe').attr('src','./freeBbsDetail.do?seq=${param.seq}');
+				</c:when>
+				<c:when test="${param.category eq 1}">
+					$('#iframe').attr('src','./noticeBbsDetail.do?seq=${param.seq}');
+				</c:when>
+				<c:when test="${param.category eq 2}">
+					$('#iframe').attr('src','./fileBbsDetail.do?seq=${param.seq}');
+				</c:when>
+			</c:choose>
+		</c:if>
+});
+// 		 document.onkeydown = function(e) {
+// 		  var evtK = (e) ? e.which : window.event.keyCode;
+// 		  var isCtrl = ((typeof isCtrl != 'undefiend' && isCtrl) || ((e && evtK == 17) || (!e && event.ctrlKey))) ? true : false;
+		  
+// 		  if((isCtrl && evtK == 82) || evtK == 116) {
+// 		   if(e) { evtK = 505; } else { event.keyCode = evtK = 505; }
+// 		  }
+		  
+// 		  if(evtK == 505) {
+// 		   alert("ASfsaffas");
+// 			  // 자바스크립트에서 현재 경로는 받아내는 메소드로 대치.
+// 		   location.reload(location.href);
+// 		   return false;
+// 		  }
+// 		 }
+		 
 
 </script>
 </body>

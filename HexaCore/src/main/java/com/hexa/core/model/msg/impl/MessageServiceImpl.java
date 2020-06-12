@@ -16,6 +16,7 @@ import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.model.msg.inf.MessageIDao;
 import com.hexa.core.model.msg.inf.MessageIService;
+import com.hexa.core.model.search.inf.SearchIDao;
 
 @Service
 public class MessageServiceImpl implements MessageIService {
@@ -25,15 +26,20 @@ public class MessageServiceImpl implements MessageIService {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
+	@Autowired
+	private SearchIDao sDao;
+	
 	@Override
 	public boolean insertMessage(MessageDTO msdto, MultipartFile[] filename) {
 		log.info("insertMessage serviceImpl 실행 {}", msdto);
 		dao.insertMessage(msdto);
 		int seq = dao.selectLatestMessage();
 		log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  {}",filename[0].getOriginalFilename());
+		sDao.addMsgIndex(dao.selectDetailMessage(String.valueOf(seq)));
 		if(filename[0].getOriginalFilename()!=null && !filename[0].getOriginalFilename().equals("")) {
 			return saveFile(filename, seq);
 		}
+		
 		return true;
 	}
 
@@ -66,20 +72,25 @@ public class MessageServiceImpl implements MessageIService {
 	}
 
 	@Override
-	public MessageDTO selectDetailMessage(MessageDTO msdto) {
-		log.info("selectDetailMessage serviceImpl 실행 {}", msdto);
-		return dao.selectDetailMessage(msdto);
+	public MessageDTO selectDetailMessage(String seq) {
+		log.info("selectDetailMessage serviceImpl 실행 {}", seq);
+		return dao.selectDetailMessage(seq);
 	}
 
 	@Override
 	public boolean updateDelMessage(String seq) {
 		log.info("updateDelMessage serviceImpl 실행 {}", seq);
+		sDao.updateMsgIndex(seq);
 		return dao.updateDelMessage(seq);
 	}
 
 	@Override
 	public boolean updateMultiDelMessage(Map<String, String[]> map) {
 		log.info("updateMultiDelMessage serviceImpl 실행 {}", map);
+		String[] seqs = map.get("seqs");
+		for (int i = 0; i < seqs.length; i++) {
+			sDao.updateMsgIndex(seqs[i]);
+		}
 		return dao.updateMultiDelMessage(map);
 	}
 

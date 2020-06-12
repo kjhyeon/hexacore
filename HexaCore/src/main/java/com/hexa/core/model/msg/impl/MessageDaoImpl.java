@@ -43,9 +43,9 @@ public class MessageDaoImpl implements MessageIDao {
 	}
 
 	@Override
-	public MessageDTO selectDetailMessage(MessageDTO msdto) {
-		log.info("selectDetailMessage daoImpl 실행 {}", msdto);
-		return sqlSession.selectOne(NS+"selectDetailMessage", msdto);
+	public MessageDTO selectDetailMessage(String seq) {
+		log.info("selectDetailMessage daoImpl 실행 {}", seq);
+		return sqlSession.selectOne(NS+"selectDetailMessage", seq);
 	}
 
 	@Override
@@ -97,6 +97,12 @@ public class MessageDaoImpl implements MessageIDao {
 	public List<FileDTO> selectFile(int seq) {
 		log.info("selectFile daoImpl 실행 : {} ", seq);
 		return sqlSession.selectList(NS+"selectFile",seq);
+	}
+
+	@Override
+	public List<MessageDTO> selectAllMsg() {
+		log.info("selectAllMsg daoImpl 실행 ");
+		return sqlSession.selectList(NS+"selectAllMsg");
 	}
 	
 

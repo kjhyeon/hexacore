@@ -25,7 +25,6 @@
 		<div class="menu" data-url='./updateDepartment.do'>부서 관리</div>
 		</div>
 	<%@include file="./../header.jsp" %>
-	
 	<div class="container">
 		<div class="content" style="min-height: 900px; min-width: 1000px; height: auto;">
 			<iframe id="iframe" src="./employeeList.do"  onload="calcHeight();"></iframe>
@@ -53,7 +52,8 @@ $(document).ready(function(e) {
 			//document.getElementById('the_iframe').scrolling = "no";
 			document.getElementById('iframe').style.overflow = "hidden";
 		}
-		//
+		
+		});
 	</script>
 </body>
 </html>
