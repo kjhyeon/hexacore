@@ -135,11 +135,11 @@ public class FreeBbsCtrl {
 		List<FileDTO> list = service.selectFile(String.valueOf(result.getSeq()));
 		model.addAttribute("list", list);
 		model.addAttribute("seq",result);
-		return result!=null?"redirect:/bbsDetail.do?seq="+result.getSeq():"redirect:/logdout.do";
+		return result!=null?"redirect:/freeBbsDetail.do?seq="+result.getSeq():"redirect:/logdout.do";
 	}
 	
 	// 자유게시판 글 상세보기.GET
-	@RequestMapping(value = "/bbsDetail.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/freeBbsDetail.do", method = RequestMethod.GET)
 	public String selectDetailFreeBbs(Model model, String page, String seq, SecurityContextHolder session) {
 		log.info("Welcome 글 상세보기, {}", seq);
 		log.info("Welcome 글 조회수 여부, {}", seq);
@@ -191,7 +191,7 @@ public class FreeBbsCtrl {
 		model.addAttribute("list", list);
 		
 		
-		return "Bbs/bbsDetail";
+		return "Bbs/freeBbsDetail";
 	}
 	
 	// 자유게시판 글 수정.GET
@@ -212,7 +212,7 @@ public class FreeBbsCtrl {
 	}
 	
 	// 자유게시판 글 수정.POST
-	@RequestMapping(value = "/bbsDetail.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/freeBbsDetail.do", method = RequestMethod.POST)
 	public String updateModifyFreeBbs(BbsDTO dto, Model model, MultipartFile[] filename,String[] files) {
 		log.info("Welcome 글 수정 값 보내기, {},{}", dto,Arrays.toString(files));
 		
@@ -245,7 +245,7 @@ public class FreeBbsCtrl {
 			map.put("last", row.getLast());
 			lists = cService.selectFreeCommentListRow(map);
 			model.addAttribute("lists", lists);
-			return "Bbs/bbsDetail";
+			return "Bbs/freeBbsDetail";
 		}else {
 			return "redirect:/freeBbsMain.do";
 		}
@@ -298,7 +298,7 @@ public class FreeBbsCtrl {
 		model.addAttribute("list", list);
 		model.addAttribute("seq",result);
 		
-		return result!=null?"redirect:/bbsDetail.do?seq="+result.getSeq():"redirect:/freeBbsMain.do";
+		return result!=null?"redirect:/freeBbsDetail.do?seq="+result.getSeq():"redirect:/freeBbsMain.do";
 	}
 	
 	@RequestMapping(value = "/download.do", method = RequestMethod.GET)
