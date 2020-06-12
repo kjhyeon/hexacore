@@ -13,7 +13,7 @@
 	<div id="wrap" class="wrap">
 	
 		<div class="subside">
-			<c:forEach var="docType" items="${list}">
+			<c:forEach var="docType" items="${docTypeList}">
 				<p onclick="previewAjax(${docType.type_seq})">${docType.name}</p>
 			</c:forEach>
 		</div>

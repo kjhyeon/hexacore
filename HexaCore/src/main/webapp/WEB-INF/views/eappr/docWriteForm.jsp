@@ -14,8 +14,8 @@
 		var treeWindow = window.open("./goApprTree.do", "결재루트 선택",
 				"width=1000, height=750");
 	}
-	function setChildValue(nodes) {
-		nodes = nodeSort(nodes);
+	function setChildValue(nodes2) {
+		nodes = nodeSort(nodes2);
 		$(".apprtable > tbody").empty();
 		var ap = "<tr class='index'>"
 			   + "<td>부서직급</td><td>이름</td><td>종류</td><td>순서</td>"
@@ -67,11 +67,11 @@
 
 	function nodeSort(nodes){
 		var tempNode;
-		for (var i = 0; i < nodes.length; i++) {
+		for (var i = 0; i < nodes.length-1; i++) {
 			var child1 = nodes[i].children;
-			for (var j = 0; j < nodes.length; j++) {
+			for (var j = i; j < nodes.length; j++) {
 				var child2 = nodes[j].children;
-				if((i < j)&&(child1[6].innerHTML < child2[6].innerHTML)){
+				if((i!=j)&&(parseInt(child1[6].innerHTML) < parseInt(child2[6].innerHTML))){
 					tempNode = nodes[j];
 					nodes[j] = nodes[i];
 					nodes[i] = tempNode;
