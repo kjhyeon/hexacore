@@ -60,7 +60,7 @@ public class EapprCtrl2 {
 		int count=service.selectAllApprDocCount(map);
 			row.setTotal(count);
 			row.setPageNum(3);
-			row.setListNum(10);
+			row.setListNum(15);
 		if(row.getLastPage()-1<Integer.parseInt(page)) {
 			row.setIndex(row.getLastPage()-1);
 		}else if(Integer.parseInt(page)<0) {

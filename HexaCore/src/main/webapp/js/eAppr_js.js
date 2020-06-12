@@ -143,20 +143,19 @@ function setChildValue2(nodes1) {
 }
 
 function nodeSort(nodes){
-//	var tempNode;
-	for (var i = 0; i <3; i++) {
-//		var child1 = nodes[i].children;
-		alert("야호");
-		for (var j = 0; j < 3; j++) {
-//			var child2 = nodes[j].children;
-			alert("야호");
-//			if((i < j)&&(child1[6].innerHTML < child2[6].innerHTML)){
-//				tempNode = nodes[j];
-//				nodes[j] = nodes[i];
-//				nodes[i] = tempNode;
-//			}
+	var tempNode;
+	for (var i = 0; i < nodes.length-1; i++) {
+		var child1 = nodes[i].children;
+		for (var j = i; j < nodes.length; j++) {
+			var child2 = nodes[j].children;
+			if((i!=j)&&(parseInt(child1[6].innerHTML) < parseInt(child2[6].innerHTML))){
+				tempNode = nodes[j];
+				nodes[j] = nodes[i];
+				nodes[i] = tempNode;
+			}
 		}
 	}
+	
 	return nodes;
 }
 

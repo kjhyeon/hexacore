@@ -121,31 +121,37 @@
 					<td>${Ddto.title}<input type="hidden" name ="title" value="${Ddto.title}"></td>
 				</tr>
 			</table>
-			<h1>${typeDto.name}<input type="hidden" name="type_seq" value="${Ddto.type_seq}"></h1>
+			<hr style="border-top : 1px solid black;">
 			<br>
+			<h1>${typeDto.name}<input type="hidden" name="type_seq" value="${Ddto.type_seq}"></h1>
+			<br><br><br><br><br><br>
 		<div id="contentModi" style="text-align: center; width: 100%;">
 				<div class="apprSignTable">
 					<table id="approLine" style="border: 1px solid black; width: 100%; height: 100px;">
 						<c:if test="${apprList ne null}">
 							<tr style="text-align: right; width: 200px; height: 30px;">
 						<c:forEach  var="AdtoL" items="${apprList}" >
+						<c:if test="${AdtoL.appr_kind ne '참조'}">
 							<th style="border: 1px solid black; width: 25px;">${AdtoL.duty}</th>
+						</c:if>
 						</c:forEach>
 							</tr>
 							<tr>
-						<c:forEach  var="AdtoL" items="${apprList}" >
-						<c:choose>
-								<c:when test="${AdtoL.appr_sign ne null}">
-									<td style="border: 1px solid black; width:25px; "><img src="./image/도장1.png" style="width: 30px; height: 30px;"></td>
-								</c:when>
-								<c:when test="${AdtoL.appr_sign eq null}">
-									<td  style="border: 1px solid black; width:25px; ">""</td>
-								</c:when>
-						</c:choose>
-						</c:forEach>
-					</tr>
-				</c:if>
-			</table>
+								<c:forEach  var="AdtoL" items="${apprList}" >
+						<c:if test="${AdtoL.appr_kind ne '참조'}">
+								<c:choose>
+										<c:when test="${AdtoL.appr_sign ne null}">
+											<td style="border: 1px solid black; width:25px; "><img src="./image/도장1.png" style="width: 30px; height: 30px;"></td>
+										</c:when>
+										<c:when test="${AdtoL.appr_sign eq null}">
+											<td  style="border: 1px solid black; width:25px; ">""</td>
+										</c:when>
+								</c:choose>
+						</c:if>
+								</c:forEach>
+							</tr>
+							</c:if>
+					</table>
 		</div>
 			<div class="contentDiv">
 				${Ddto.content}

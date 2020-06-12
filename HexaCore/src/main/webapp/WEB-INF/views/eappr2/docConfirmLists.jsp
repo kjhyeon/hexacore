@@ -15,14 +15,37 @@
   <script type="text/javascript" src="./js/sweetalert.js"></script>
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
 <body>
+<div class="container">
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+
+	<c:choose>
+		<c:when test="${state eq '0'}"><h1>임시보관함</h1></c:when>
+		<c:when test="${state eq '1'}"><h1>결재대기문서함</h1></c:when>
+		<c:when test="${state eq '2' || (state eq '6')}"><h1>결재중문서함</h1></c:when>
+		<c:when test="${state eq '3'}"><h1>승인문서함</h1></c:when>
+		<c:when test="${state eq '4'}"><h1>반려문서함</h1></c:when>
+		<c:when test="${state eq '7'}"><h1>결재필요문서함</h1></c:when>
+	</c:choose>
 		<form  method="post">
-			<table class="table table-bordered" style="width: 75%">
+			<table id="myTable" class="table table-bordered table-striped" style="width: 80%; margin: 50px auto 0px auto; text-align: center; ">
 				<tr>
 					<th>문서번호</th>
 					<th>기안자</th>
 					<th>제목</th>
 					<th>기안일</th>
-					<th>결재</th>
+					<th>문서상태</th>
 				</tr>
 				<c:if test="${empty lists}">
 					<tr>
@@ -63,10 +86,10 @@
 			<input type="hidden" name="index" id="index" value="${row.index }">
 			<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum}"> 
 			<input type="hidden" name="listNum" id="listNum" value="${row.listNum}">
-			<div class="center" style="text-align: center; position: relative;">
+			<div class="center" style="text-align: center; position: relative; ">
 				<ul class="pagination">
-					<li><a href="./docLists.do?page=0&state=${state}" onclick="pageFirst()">&laquo;</a></li>
-					<li><a href="./docLists.do?page=${row.index-1}&state=${state}"	onclick="pagePre()">&lt;</a></li>
+					<li><a href="./docLists.do?page=0&state=${state}">&laquo;</a></li>
+					<li><a href="./docLists.do?page=${row.index-1}&state=${state}">&lt;</a></li>
 					<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
 						<li><a href="./docLists.do?page=${i-1}&state=${state}">${i }</a></li>
 					</c:forEach>
@@ -90,6 +113,7 @@
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 </body>
 </html>
