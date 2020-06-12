@@ -21,7 +21,7 @@ public class FreeBbsDaoImpl implements FreeBbsIDao {
 	
 	@Autowired
 	private SqlSessionTemplate session;
-	private String NS = "com.hexa.core.notice.freeb.";
+	private String NS = "com.hexa.core.free.freeb.";
 	
 	@Override
 	public boolean insertFreeBbs(BbsDTO dto) {

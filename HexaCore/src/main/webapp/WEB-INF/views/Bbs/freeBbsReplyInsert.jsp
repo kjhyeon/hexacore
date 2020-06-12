@@ -16,7 +16,7 @@
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 	function replyComplete(){
-		location.href="./bbsMain.do";
+		location.href="./freeBbsMain.do";
 	}
 	
 	$(document).ready(function() {
@@ -132,4 +132,3 @@
 	
 </body>
 </html>
-bbsMain
