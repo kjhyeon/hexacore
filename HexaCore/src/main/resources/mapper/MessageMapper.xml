@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hexa.core.msg">
+  
+  <!-- 메세지 보내기 -->
+  <insert id="insertMessage" parameterType="MessageDTO">
+  	INSERT INTO MESSAGES (SEQ, SENDER_ID , RECEIVER_ID , TITLE , CONTENT , REGDATE, STATE )
+        VALUES(MESSAGES_SEQ.NEXTVAL,#{sender_id},#{receiver_id},#{title},#{content},SYSDATE,0)
+  </insert>
+  
+  <!-- 메세지 수신함 조회 -->
+  <select id="selectReceiveList" parameterType="java.util.Map" resultType="MessageDTO">
+  	SELECT SEQ, SENDER_ID , TITLE, CONTENT, REGDATE, STATE
+	FROM (
+		SELECT ROW_NUMBER () OVER(ORDER BY SEQ DESC) AS ROW_NUM, SEQ, SENDER_ID, TITLE, CONTENT, REGDATE, STATE 
+			FROM MESSAGES 
+				WHERE RECEIVER_ID = #{receiver_id} AND (STATE = 0 OR STATE = 1)
+				) 
+				WHERE ROW_NUM BETWEEN #{start} AND #{last}
+  </select>
+  
+  <!-- 메세지 발신함 조회 -->
+  <select id="selectSendList" parameterType="java.util.Map" resultType="MessageDTO">
+  	SELECT SEQ, RECEIVER_ID , TITLE, CONTENT, REGDATE, STATE
+	FROM (
+		SELECT ROW_NUMBER () OVER(ORDER BY SEQ DESC) AS ROW_NUM, SEQ, RECEIVER_ID , TITLE, CONTENT, REGDATE, STATE 
+			FROM MESSAGES 
+				WHERE  SENDER_ID = #{sender_id}
+				) 
+				WHERE ROW_NUM BETWEEN #{start} AND #{last}
+	</select>
+  
+  <!-- 수신한 메세지 상세보기 -->
+  <select id="selectDetailMessage" parameterType="MessageDTO" resultType="MessageDTO">
+  	SELECT SEQ, SENDER_ID , RECEIVER_ID , TITLE, CONTENT , REGDATE, STATE 
+        FROM MESSAGES
+                WHERE SEQ = #{seq} AND RECEIVER_ID = #{receiver_id} AND STATE >=0
+  </select>
+  
+  <!-- 수신한 메세지 삭제 -->
+  <update id="updateDelMessage" parameterType="java.lang.String">  
+  	UPDATE MESSAGES SET STATE = -1 WHERE SEQ=#{seq}
+  </update>
+  
+  <!-- 메세지 다중삭제 -->
+  <update id="updateMultiDelMessage" parameterType="java.util.Map">
+  	UPDATE MESSAGES SET STATE = -1 WHERE STATE>=0 AND SEQ IN
+  		<foreach collection="seqs" item="seq" open="(" separator="," close=")">
+      		#{seq}
+      	</foreach>
+  </update>
+  
+  <!-- 메세지 확인하면 읽음 표시 -->
+  <update id="updateStateMessage" parameterType="java.lang.String">
+  	UPDATE MESSAGES SET STATE = 1 WHERE SEQ=#{seq} AND STATE = 0
+  </update>
+  
+  <!-- 메세지 수신함 전체 갯수 -->
+  <select id="messageReceiveListTotal" resultType="java.lang.Integer" parameterType="java.lang.String">
+     SELECT COUNT(*) FROM
+     MESSAGES WHERE RECEIVER_ID = #{receiver_id} AND (STATE = 0 OR STATE = 1)
+  </select>
+  
+  <!-- 메세지 발신함 전체 갯수 -->
+  <select id="messageSenderListTotal" resultType="java.lang.Integer" parameterType="java.lang.String">
+     SELECT COUNT(*) FROM
+     MESSAGES WHERE SENDER_ID = #{sender_id}
+  </select>
+  
+  <select id="selectLatestMessage" resultType="java.lang.Integer">
+  	SELECT MAX(SEQ) FROM MESSAGES
+  </select>
+  
+  <!-- 파일 업로드 추가 -->
+	<insert id="insertFile" parameterType="FileDto">
+	INSERT INTO HEXA.FILES
+		(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE, CATEGORY)
+			VALUES(#{name}, #{seq}, #{f_path}, #{ori_name}, #{f_size}, 3)
+	</insert>
+	
+	<!-- 파일 업로드 조회 -->
+	<select id="selectFile" parameterType="java.lang.Integer"
+							resultType="FileDto">
+	SELECT NAME ,F_SIZE, ORI_NAME, F_PATH 
+		FROM FILES 
+			WHERE SEQ=#{seq} AND CATEGORY = 3
+	</select>
+</mapper>

@@ -14,6 +14,7 @@
 		<typeAlias type="com.hexa.core.dto.CommentDTO" alias="CommentDto"/>
 		<typeAlias type="com.hexa.core.dto.RowNumDTO" alias="RowNum"/>
 		<typeAlias type="com.hexa.core.dto.FileDTO" alias="FileDto"/>
+		<typeAlias type="com.hexa.core.dto.MessageDTO" alias="MessageDTO"/>
 	</typeAliases>
 	
 	<mappers>
@@ -22,5 +23,6 @@
 		<mapper resource="/mapper/DepartmentMapper.xml"/>
 		<mapper resource="/mapper/FreeBMapper.xml"/>
 		<mapper resource="/mapper/FreeCMapper.xml"/>
+		<mapper resource="/mapper/MessageMapper.xml"/>
 	</mappers>
 </configuration>
