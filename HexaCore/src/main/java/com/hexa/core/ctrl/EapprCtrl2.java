@@ -42,10 +42,17 @@ public class EapprCtrl2 {
 	
 	@ResponseBody
 	@RequestMapping(value="/needCnt",method=RequestMethod.POST)
-	public String needCnt(Principal principal) {
+	public String needCnt(Principal principal,int val) {
 		String userId = principal.getName();
+		int a = val;
 		Map<String,Object> docCount = service.selectDocListAll(userId); // 결재 필요 문서 개수 가져오기
-		return docCount.get("COUNT4").toString();
+		int b = Integer.parseInt(docCount.get("COUNT3").toString());
+		log.info("랄랄{}",b+":"+a);
+		if(a<b) {
+			return docCount.get("COUNT3").toString(); 
+		}else {
+			return Integer.toString(val);
+		}
 	}
 	
 	//문서함 List 조회 (분기)

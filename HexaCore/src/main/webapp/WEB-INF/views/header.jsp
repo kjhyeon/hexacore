@@ -14,6 +14,67 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="./js/sweetalert.js"></script>
+  <script type="text/javascript">
+  window.setInterval('asdfasdf()',3000);
+  function asdfasdf () {
+      if (window.Notification) {
+          Notification.requestPermission();
+      }
+  	aa();
+  }
+  window.onbeforeunload = function() {
+  	clearInterval();
+  };
+  function aa(){
+  	var beforeCnt = $("#cnt").val();
+  	cntCheck(beforeCnt);
+  }
+  //아작스실행
+  function cntCheck(val) {
+  	$.ajax({
+  		url:"./needCnt.do",
+  		type : "post",
+  		data : {"val":parseInt(val)},
+  		async : true,
+  		success : function(msg) {
+  			if(msg!=val){
+  				calculate();
+  				$("#cntChkk").html("전자결재("+msg+")");
+  				$("#cnt").val(msg);
+  			}else{
+  				$("#cntChkk").html("전자결재("+msg+")");
+  				$("#cnt").val(msg);
+  			}
+  			if(msg=="0"){
+  				$("#cntChkk").html("전자결재");
+  			}
+  		},error: function() {
+  			alert("실패");
+  		}
+  });
+  }	
+  function calculate() {
+     setTimeout(function () {
+        notify();
+        }, 3000);
+  }
+  function notify() {
+       if (Notification.permission !== 'granted') {
+            alert('notification is disabled');
+       }
+       else {
+       var notification = new Notification('결재문서하실 문서가 있습니다.', {
+                     icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
+                     body: '결재하실 문서 확인 요청드립니다.',
+                 });
+
+                 notification.onclick = function () {
+                    $("#appr").click();
+                 };
+             }
+         }
+
+  </script>
 	<title>Home</title>
 </head>
 <script type="text/javascript">
@@ -29,7 +90,7 @@ function totalSearch(){
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
 	<header>
 		<div class="topmenu" style="width:12%" onclick="location.href='./result.do'"><img alt="logo" src="./image/hexa64.png"></div>
-		<div class="topmenu" style="width:200px" onclick="location.href='./goEapprMain.do'" id="cntChk">전자결재(${cnt})</div>
+		<div class="topmenu" style="width:200px" onclick="location.href='./goEapprMain.do'" id="cntChkk">전자결재</div>
 		<div class="topmenu" style="width:200px" onclick="location.href='./goBbs.do'">게시판</div>
 		<c:choose >
 			<c:when test="${auth eq true }">
@@ -49,7 +110,7 @@ function totalSearch(){
 						<option value="author">글쓴이</option>
 					</select>
 					<input type="text" class="form-control" style="width:300px;  margin:1px" name="keyword">
-					<input id="cnt" type="button" value="${cnt}" onclick="cntCheck(1)">
+					<input id="cnt" type="hidden" value="0">
 						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;" onclick="totalSearch()">
 							<span class="glyphicon glyphicon-search"></span>
 						</button>
