@@ -14,6 +14,7 @@ body {
 	padding: 10px;
 	border: 1px solid gray;
 	height: 700px;
+	overflow: scroll;
 }
 
 .centerBox {
@@ -49,6 +50,7 @@ table {
 	width: 100%;
 	border: 2px solid #E1E2E1;
 	margin-bottom: 50px;
+	overflow: scroll;
 }
 
 .bottombtn {
