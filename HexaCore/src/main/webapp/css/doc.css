@@ -26,6 +26,10 @@
 	width: 100%;
 }
 
+.refers {
+	overflow: scroll;
+}
+
 .index {
 	background: #E1E2E1;
 	height: 30px;
