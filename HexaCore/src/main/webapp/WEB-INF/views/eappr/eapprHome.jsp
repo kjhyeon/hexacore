@@ -12,16 +12,14 @@
 </style>
 </head>
 <body>
-	문서요약보기${docCounts}
-	<br> 상신문서함에 있는 문서의 총 개수 : ${count1}
-	<br> 임시저장된 문서의 개수 : ${count2}
-	<br> 상신한 문서 중 결재대기중인 문서의 개수 : ${count3}
-	<br> 상신한 문서 중 결재중인 문서의 개수 : ${count4}
-	<br> 상신한 문서 중 결재완료된 문서의 개수 : ${count5}
-	<br> 상신한 문서 중 반려된 문서의 개수 : ${count6}
-	<br> 참조문서함에 있는 문서의 개수 : ${count7}
-	<br> 결재문서함에 있는 문서의 총 개수 : ${count8}
-	<br> 내가 결재해야할 문서의 개수 : ${count9}
-	<br>
+	문서요약보기${docCounts}<br>
+	COUNT1: 참조문서함 개수 : ${docCounts.get("COUNT1")}<br>
+	COUNT2: 결재문서함-결재중문서 개수 : ${docCounts.get("COUNT2")}<br>
+	COUNT3: 결재문서함-결재필요문서개수 : ${docCounts.get("COUNT3")}<br>
+	COUNT4: 상신문서함-임시저장문서 : ${docCounts.get("COUNT4")}<br>
+	COUNT5:	상신문서함-결재대기문서 개수 : ${docCounts.get("COUNT5")}<br>
+	COUNT6: 상신문서함-결재중문서 개수 : ${docCounts.get("COUNT6")}<br>
+	COUNT7: 상신문서함-승인문서개수 : ${docCounts.get("COUNT7")}<br>
+	COUNT8: 상신문서함-반려문서개수 : ${docCounts.get("COUNT8")}<br>
 </body>
 </html>

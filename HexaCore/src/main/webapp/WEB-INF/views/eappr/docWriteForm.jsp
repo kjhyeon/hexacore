@@ -155,7 +155,6 @@
 		</div>	
 
 		<div class="leftBox">	
-			<h1>${typeDto.name}</h1>	
 			<table id="docuHead">	
 				<tr>	
 					<th>기안자</th>	
@@ -170,10 +169,10 @@
 					<th>제목</th>	
 					<td><input id="inputTitle" type="text" name="title"></td>	
 				</tr>	
-			</table>	
-			<table id="apprSign">	
-			</table>	
-			<br>	
+			</table>
+			<br>
+			<hr>	
+			<h1>${typeDto.name}</h1>
 			<textarea id="p_content" name="content" rows="5" cols="50">${typeDto.content}</textarea>	
 			<script type="text/javascript">CKEDITOR.replace('p_content', {height : 700});</script>	
 		</div>	

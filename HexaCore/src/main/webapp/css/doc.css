@@ -64,6 +64,7 @@
 
 #docuHead th {
 	background: #E1E2E1;
+	text-align: center;
 }
 
 #inputTitle {
@@ -84,3 +85,10 @@
 	width: 100%;
 }
 
+hr {
+	 border-top: 1px solid black;
+}
+
+h1 {
+	margin-bottom: 50px; 
+}
