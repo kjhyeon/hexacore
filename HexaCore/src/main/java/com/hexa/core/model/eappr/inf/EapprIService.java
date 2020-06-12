@@ -222,4 +222,11 @@ public interface EapprIService {
 	 * @return TRUE : 성공 / FALSE : 실패
 	 */
 	public boolean updateSaveToAppr(String seq);
+	
+	/**
+	 * 상신 -> 임시저장 기능
+	 * @param seq
+	 * @return TRUE : 성공 / FALSE : 실패
+	 */
+	public boolean reportCancel(String seq);
 }

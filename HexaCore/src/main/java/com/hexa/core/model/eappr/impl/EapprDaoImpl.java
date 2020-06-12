@@ -252,5 +252,11 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("updateSaveToAppr DaoImpl 실행 : {}",seq);
 		return sqlSession.update(NS+"updateSaveToAppr", seq)>0?true:false;
 	}
+	
+	@Override
+	public boolean reportCancel(String seq) {
+		log.info("reportCancel DaoImpl 실행 : {}",seq);
+		return sqlSession.update(NS+"reportCancel", seq)>0?true:false;
+	}
 
 }

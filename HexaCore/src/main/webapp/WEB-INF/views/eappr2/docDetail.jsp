@@ -95,8 +95,11 @@
 					test="${name eq Ddto.author && (Ddto.state eq '0' || Ddto.state eq '1') && (Ddto.appr_turn ne '2')}">
 					<input type="button" id="modifyDoc" value="수정"		onclick="modifyFormDoc('${Ddto.seq}')">
 					<input type="button" id="deleteDoc" value="삭제"		onclick="deleteDocc('${Ddto.seq}','${Ddto.state}')">
-						<c:if test="${Ddto.state eq '0'}">
-						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDocc('${Ddto.seq}')">
+					<c:if test="${Ddto.state eq '0'}">
+						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDocc('${Ddto.seq}','${Ddto.state}')">
+					</c:if>
+					<c:if test="${Ddto.state eq '1'}">
+						<input type="button" id="upApprDoc" value="상신취소"	onclick="upApprDocc('${Ddto.seq}','${Ddto.state}')">
 					</c:if>
 				</c:if>
 				<c:if
@@ -121,18 +124,16 @@
 					<td>${Ddto.title}<input type="hidden" name ="title" value="${Ddto.title}"></td>
 				</tr>
 			</table>
-			<hr style="border-top : 1px solid black;">
-			<br>
+			<hr>
 			<h1>${typeDto.name}<input type="hidden" name="type_seq" value="${Ddto.type_seq}"></h1>
-			<br><br><br><br><br><br>
 		<div id="contentModi" style="text-align: center; width: 100%;">
 				<div class="apprSignTable">
-					<table id="approLine" style="border: 1px solid black; width: 100%; height: 100px;">
+					<table id="approLine" style="border: 3px solid black; width: 100%; height: 100px;">
 						<c:if test="${apprList ne null}">
 							<tr style="text-align: right; width: 200px; height: 30px;">
 						<c:forEach  var="AdtoL" items="${apprList}" >
 						<c:if test="${AdtoL.appr_kind ne '참조'}">
-							<th style="border: 1px solid black; width: 25px;">${AdtoL.duty}</th>
+							<th style="border: 1px solid black; width: 25px; text-align: center;">${AdtoL.duty}</th>
 						</c:if>
 						</c:forEach>
 							</tr>
@@ -158,18 +159,19 @@
 			</div>
 			</div>
 		</div>
-		<div class="commentTable" style="position: static;">
-			<table id="commentTable" class="table">
-				<tr>
-					<th>Comment</th>
+		<div class="commentTable" style="float: left; width: 100%;">
+			<hr>
+			<table id="commentTable" class="table" style="text-align: center;">
+				<tr style="background: #E1E2E1;">
+					<th colspan="4" style="border-top: none; text-align: center;">Comment</th>
 				</tr>
-				<c:forEach var="Cdto" items="${comment}" varStatus="status">
-					<tr>
-						<th>No.</th>
-						<th>Name</th>
-						<th>Comment</th>
-						<th>Confirm-Date</th>
+				<tr style="text-align: center;">
+						<th style="text-align: center;">번호</th>
+						<th style="text-align: center;">작성자</th>
+						<th style="text-align: center;">댓글</th>
+						<th style="text-align: center;">작성일</th>
 					</tr>
+				<c:forEach var="Cdto" items="${comment}" varStatus="status">
 					<tr>
 						<td>${Cdto.comment_seq}</td>
 						<td>${Cdto.name}</td>

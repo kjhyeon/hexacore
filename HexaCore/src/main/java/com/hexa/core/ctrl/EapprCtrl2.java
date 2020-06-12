@@ -1,5 +1,6 @@
 package com.hexa.core.ctrl;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,13 @@ public class EapprCtrl2 {
 	private BCryptPasswordEncoder passwordEncoder;
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
+	@ResponseBody
+	@RequestMapping(value="/needCnt",method=RequestMethod.POST)
+	public String needCnt(Principal principal) {
+		String userId = principal.getName();
+		Map<String,Object> docCount = service.selectDocListAll(userId); // 결재 필요 문서 개수 가져오기
+		return docCount.get("COUNT4").toString();
+	}
 	
 	//문서함 List 조회 (분기)
 	@RequestMapping(value = "/docLists.do", method = RequestMethod.GET,produces = "applicaton/text; charset=UTF-8;")
@@ -90,7 +98,9 @@ public class EapprCtrl2 {
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		String id = Ldto.getUsername();
 		String seq = Integer.toString(Adto.getSeq());
+		//도장 주소 결합
 		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
+		attach_path +=Adto.getAppr_sign();
 		//믄사 내용 조회
 		DocumentDTO Ddto = service.selectDoc(seq);
 		//문서 결재선 전체 조회
@@ -162,8 +172,12 @@ public class EapprCtrl2 {
 	}
 	
 	@RequestMapping(value="/upApprDoc.do", method=RequestMethod.GET)
-	public String upApprDoc(String seq) {
-		service.updateSaveToAppr(seq);
+	public String upApprDoc(String seq,String state) {
+		if(state.equalsIgnoreCase("0")) {
+			service.updateSaveToAppr(seq);
+		}else {
+			service.reportCancel(seq);
+		}
 		return "redirect:/docDetail.do?seq="+seq;
 	}
 	//문서승인 Modal

@@ -270,5 +270,11 @@ public class EapprServiceImpl implements EapprIService{
 		log.info("updateSaveToAppr ServiceImpl 실행 : {}",seq);
 		return dao.updateSaveToAppr(seq);
 	}
+	
+	@Override
+	public boolean reportCancel(String seq) {
+		log.info("reportCancel ServiceImpl 실행 : {}",seq);
+		return dao.reportCancel(seq);
+	}
 
 }

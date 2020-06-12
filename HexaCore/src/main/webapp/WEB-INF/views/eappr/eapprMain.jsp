@@ -29,8 +29,7 @@
 				<div class="submenu" data-url="./docLists.do?state=4">반려문서</div>
 			</div>
 			<div>
-				<div class="ddmenu" >결재문서함(${cnt})</div>
-				<div><input id="cnt" type="hidden" value="${cnt}"></div>
+				<div class="ddmenu" >결재문서함</div>
 				<div class="submenu" id="appr" data-url="./docLists.do?state=7">결재필요문서</div>
 				<div class="submenu" data-url="./docLists.do?state=6">결재중문서</div>
 			</div>
