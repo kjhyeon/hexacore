@@ -3,9 +3,7 @@ package com.hexa.core.dto;
 import java.io.Serializable;
 
 public class MessageDTO implements Serializable{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -8214217492746279685L;
 	private int seq        ;
 	private String sender_id  ;
@@ -14,6 +12,23 @@ public class MessageDTO implements Serializable{
 	private String content    ;
 	private String regdate    ;
 	private int state      ;
+	private FileDTO file;
+	
+	public MessageDTO() {
+	}
+	
+	public MessageDTO(int seq, String sender_id, String receiver_id, String title, String content, String regdate,
+			int state) {
+		super();
+		this.seq = seq;
+		this.sender_id = sender_id;
+		this.receiver_id = receiver_id;
+		this.title = title;
+		this.content = content;
+		this.regdate = regdate;
+		this.state = state;
+	}
+
 	public int getSeq() {
 		return seq;
 	}
@@ -60,5 +75,13 @@ public class MessageDTO implements Serializable{
 	public String toString() {
 		return "MessageDTO [seq=" + seq + ", sender_id=" + sender_id + ", receiver_id=" + receiver_id + ", title="
 				+ title + ", content=" + content + ", regdate=" + regdate + ", state=" + state + "]";
+	}
+
+	public FileDTO getFile() {
+		return file;
+	}
+
+	public void setFile(FileDTO file) {
+		this.file = file;
 	}
 }                             

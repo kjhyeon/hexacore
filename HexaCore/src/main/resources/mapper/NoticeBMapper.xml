@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hexa.core.free.freeb">
+<mapper namespace="com.hexa.core.notice.noticeb">
 	
 	<!-- 1. 자유게시판 글 작성 -->
 	<insert id="insertFreeBbs" parameterType="BbsDto">
@@ -14,7 +14,7 @@
 			  (SELECT NVL(MAX(ROOT),0)+1 FROM FREE_BBS), 0, 0)
 	</insert>
 
-	<!-- 2. 자유게시판 글 수정 -->	
+	<!-- 2. 자유게시판 글 수정 -->
 	<update id="updateModifyFreeBbs" parameterType="BbsDto">
 	UPDATE FREE_BBS
 		SET TITLE=#{title}, CONTENT=#{content}

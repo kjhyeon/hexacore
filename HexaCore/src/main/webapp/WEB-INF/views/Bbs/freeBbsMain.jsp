@@ -113,7 +113,7 @@
       			</c:if>
       			<td id="td1">${dto.seq}</td>
       			<td id="td2">${dto.id}</td>
-      			<td><a href="bbsDetail.do?seq=${dto.seq}" style="text-decoration: none; color: black; font-weight: bold;">
+      			<td><a href="freeBbsDetail.do?seq=${dto.seq}" style="text-decoration: none; color: black; font-weight: bold;">
       				<c:forEach begin="0" end="${dto.bbs_depth}">
       					&nbsp;&nbsp;&nbsp;
       				</c:forEach>
