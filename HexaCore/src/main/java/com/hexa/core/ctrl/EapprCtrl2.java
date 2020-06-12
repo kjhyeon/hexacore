@@ -52,13 +52,15 @@ public class EapprCtrl2 {
 		RowNumDTO row = new RowNumDTO();
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<DocumentDTO> lists =null;
-		map.put("id", id);
-		map.put("state",state);
+			map.put("id", id);
+			map.put("state",state);
 		log.info("카운트{}",state);
-		int count=service.selectNeedApprDocCount(map);
-		row.setTotal(count);
-		row.setPageNum(3);
-		row.setListNum(10);
+		
+		//문서갯수 조회
+		int count=service.selectAllApprDocCount(map);
+			row.setTotal(count);
+			row.setPageNum(3);
+			row.setListNum(10);
 		if(row.getLastPage()-1<Integer.parseInt(page)) {
 			row.setIndex(row.getLastPage()-1);
 		}else if(Integer.parseInt(page)<0) {
@@ -66,23 +68,23 @@ public class EapprCtrl2 {
 		}else {
 			row.setIndex(Integer.parseInt(page));
 		}
-		map.put("start",row.getStart());
-		map.put("last",row.getLast());
+			map.put("start",row.getStart());
+			map.put("last",row.getLast());
+			
 		//문서 list 조회
 		lists = service.selectMyDocList(map);
-		log.info("문서문서문서{}",lists);
-		//결재할 문서 갯수 조회
+		
 		model.addAttribute("lists",lists);
 		model.addAttribute("row", row);
 		model.addAttribute("id",id);
-		model.addAttribute("number",state);
+		model.addAttribute("state",state);
 		return "eappr2/docConfirmLists";
 	}
 	
 	//문서 상세조회
 	@Transactional
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
-	public String updateDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto,String number) {
+	public String updateDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto) {
 		log.info("받아온 seq 값: {}", Adto.getSeq());
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
@@ -92,18 +94,18 @@ public class EapprCtrl2 {
 		//믄사 내용 조회
 		DocumentDTO Ddto = service.selectDoc(seq);
 		//문서 결재선 전체 조회
-		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
-		log.info("문서리스트{}",listsb);
-		for (int i = 0; i < listsb.size(); i++) {
-			if(listsb.get(i).getAppr_sign()!=null) {
-				listsb.get(i).setAppr_sign(attach_path+listsb.get(i).getAppr_sign()); 
+		List<ApprovalDTO> apprList = service.selectApprRoot(Adto);
+		log.info("문서리스트{}",apprList);
+		for (int i = 0; i < apprList.size(); i++) {
+			if(apprList.get(i).getAppr_sign()!=null) {
+				apprList.get(i).setAppr_sign(attach_path+apprList.get(i).getAppr_sign()); 
 			}
 		}
+		
 		//문서 나의 결재선 조회
 		Adto.setId(id);
 		List<ApprovalDTO> listsa = service.selectApprRoot(Adto);
 		log.info("********listsa:{}",listsa);
-		log.info("********listsa Size:{}",listsa.size());
 		int turn = 0;
 		if(listsa!=null && listsa.size()!=0) {
 			turn = listsa.get(0).getTurn();
@@ -113,20 +115,13 @@ public class EapprCtrl2 {
 		
 		//결재자 코멘트 가져오기
 		List<DocCommentDTO> lists = service.selectComment(seq);
-//		log.info("********commentlists:{}",lists);
-//		log.info("********Adto:{}",Adto);
-//		log.info("********approvalLine:{}",listsb);
-//		log.info("********number:{}", number);
-//		log.info("********Ddto:{}", Ddto);
-		//해당문서 코멘트 조회
 		//독타입 가져오기
 		DocumentTypeDTO TDto = service.selectDocType(Integer.toString(Ddto.getType_seq()));
 		model.addAttribute("typeDto",TDto);
 		model.addAttribute("comment",lists);
 		model.addAttribute("Ddto",Ddto);
 		model.addAttribute("name",id);
-		model.addAttribute("approvalLine",listsb);
-		model.addAttribute("number",number);
+		model.addAttribute("apprList",apprList);
 		return "eappr2/docDetail";
 	}	
 	
@@ -135,21 +130,18 @@ public class EapprCtrl2 {
 	@RequestMapping(value="/modifyFormDoc.do", method= RequestMethod.POST)
 	public Map<String, Object> modifyDoc(Model model,ApprovalDTO Adto) {
 		DocumentDTO Ddto = service.selectDoc(Integer.toString(Adto.getSeq()));
-		List<ApprovalDTO> listsb = service.selectApprRoot(Adto);
-		log.info("********Adto:{}",listsb);
 		log.info("********Ddto:{}", Ddto);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("title",Ddto.getTitle());
 		map.put("content", Ddto.getContent());
-//		map.put("typeDto",TDto);
 		return map;
 	}
 	
 	//문서 삭제
-	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.POST)
-	public String deleteDoc(String seq) {
-		service.deleteDoc(seq);
-		return "docLists.do";//리스트로 보내자
+	@RequestMapping(value="/deleteDoc.do", method= RequestMethod.GET)
+	public String deleteDoc(String seq,String state) {
+		boolean isc = service.deleteDoc(seq);
+		return isc?"docLists.do?state="+state:"redirect:/eApprMain.do";
 	}
 	
 	//임시저장
@@ -157,23 +149,28 @@ public class EapprCtrl2 {
 	@RequestMapping(value="/saveUpDoc.do", method= RequestMethod.POST)
 	public String saveUpDoc(DocumentDTO Ddto) {
 		log.info("********Ddto:{}", Ddto);
-		log.info("********수정DdtoList:{}", Ddto.getLists());
 		Ddto.setAppr_turn(0);
 		Ddto.setState(0);
 		boolean isc = service.updateDoc(Ddto);
-		log.info("********DdtoList:{}",Ddto.getLists());
-		
-		if(Ddto.getLists()!=null) {
-			service.insertApprRoot(Ddto);
+		boolean isc2=false;
+		if(isc==true) {
+			if(Ddto.getLists()!=null) {
+				isc2 = service.insertApprRoot(Ddto);
+			}
 		}
-		return isc?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
+		return (isc||isc2)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
 	
-	//문서승인 Modal Ajax
+	@RequestMapping(value="/upApprDoc.do", method=RequestMethod.GET)
+	public String upApprDoc(String seq) {
+		service.updateSaveToAppr(seq);
+		return "redirect:/docDetail.do?seq="+seq;
+	}
+	//문서승인 Modal
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/apprDoc.do", method= RequestMethod.POST ,produces = "applicaton/text; charset=UTF-8;")
 	@ResponseBody
-	public String apprDoc(ApprovalDTO Adto, int appr_turn, int a_turn ,String number, SecurityContextHolder session) {
+	public String apprDoc(ApprovalDTO Adto, DocumentDTO Ddto, SecurityContextHolder session) {
 		JSONObject json = new JSONObject();
 		log.info("********Adto:{}",Adto);
 		Authentication auth = session.getContext().getAuthentication();
@@ -185,9 +182,9 @@ public class EapprCtrl2 {
 		json.put("id", lists.get(0).getId());
 		json.put("name", lists.get(0).getName());
 		json.put("turn", lists.get(0).getTurn());
-		json.put("appr_turn",appr_turn);
-		json.put("a_turn",a_turn);
-		json.put("number",number);
+		json.put("appr_turn",Ddto.getAppr_turn());
+		json.put("a_turn",Ddto.getA_turn());
+		json.put("number",Ddto.getState());
 		log.info("Welcome apprDoc 결과, {}",json.toString());
 		return json.toString();
 	}
@@ -209,53 +206,31 @@ public class EapprCtrl2 {
 	}
 	
 	//승인,반려 기능
-
 	@RequestMapping(value="/confirmDoc.do", method= RequestMethod.POST)
-	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto,String state,SecurityContextHolder session) {
+	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto) {
 		log.info("********confirm Test Adto:{}",Adto);
 		log.info("********confirm Test Ddto:{}",Ddto);
 		log.info("********confirm Test DCdto:{}",DCdto);
-		Authentication auth = session.getContext().getAuthentication();
-	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
-		DCdto.setName(dto.getName());
-		DCdto.setComment_seq(Adto.getTurn());
-		Adto.setName(dto.getName());
-		Adto.setAppr_sign(service.selectSignImg(dto.getUsername()));
+		Adto.setAppr_sign(service.selectSignImg(Adto.getId()));
 		
-		int appr_turn = Ddto.getAppr_turn();
 		Map<String, Object> map = new HashMap<String, Object>();
 		boolean isc = false;
 		if(Adto.getChk().equalsIgnoreCase("T")) {//승인일경우
+			Adto.setAppr_kind("승인");
 				if(Adto.getTurn()<3) {
-					Ddto.setAppr_turn(appr_turn+1);
+					Ddto.setAppr_turn(Ddto.getAppr_turn()+1);
 					Ddto.setState(2);
-					Adto.setAppr_kind("승인");
 				}else if(Adto.getTurn()==3){
 					Ddto.setState(3);
-					Adto.setAppr_kind("승인");
 				}
-				map.put("Ddto", Ddto);
-				map.put("Adto", Adto);
-				map.put("DCdto", DCdto);
-				isc = service.confirmUpdate(map);
-//				service.updateDoc(Ddto);//appr_turn 수정 / state 수정
-//				service.updateApprChk(Adto);//chk 업데이트 사인 업데이트
-//				service.insertComment(DCdto);//코멘트 입력
-				
-			}else if(Adto.getChk().equalsIgnoreCase("R")){
+		}else if(Adto.getChk().equalsIgnoreCase("R")){
 				Adto.setAppr_kind("반려");
 				Ddto.setState(4);
-				log.info("********confirm Test2R Adto:{}",Adto);
-				log.info("********confirm Test2R Ddto:{}",Ddto);
-				log.info("********confirm Test2R DCdto:{}",DCdto);
-				map.put("Ddto", Ddto);
-				map.put("Adto", Adto);
-				map.put("DCdto", DCdto);
-				isc = service.confirmUpdate(map);
-//				service.updateDoc(Ddto);
-//				service.updateApprChk(Adto);
-//				service.insertComment(DCdto);//코멘트 입력
 			}
-		return isc?"redirect:/docLists.do?state="+state:"redirec:/eApprmain.do";
+			map.put("Ddto", Ddto);
+			map.put("Adto", Adto);
+			map.put("DCdto", DCdto);
+		isc = service.confirmUpdate(map);
+		return isc?"redirect:/docLists.do?state=7":"redirec:/eApprmain.do";
 	}
 }

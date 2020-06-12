@@ -1,6 +1,3 @@
-
-
-
 function apprDoc(val1,val2,val3,number){
 	ajaxapprDoc(val1,val2,val3,number);
 	$("#apprDocUp").modal();
@@ -11,7 +8,7 @@ function apprDoc(val1,val2,val3,number){
 	      url : "./apprDoc.do",
 	      type:"post",
 	      dataType:"json",
-	      data:{"seq":val1,"appr_turn":val2,"a_turn":val3,"number":number},
+	      data:{"seq":val1,"appr_turn":val2,"a_turn":val3,"state":number},
 	      success:function(msg){
 	         var html="";
 	         html += "<div class='form-group'>                   ";
@@ -19,6 +16,8 @@ function apprDoc(val1,val2,val3,number){
 	         html += "<input type='hidden' class='form-control' name='appr_turn' value='"+msg.appr_turn+"'> ";
 	         html += "<input type='hidden' class='form-control' name='id' value='"+msg.id+"'> ";
 	         html += "<input type='hidden' class='form-control' name='turn' value='"+msg.turn+"'> ";
+	         html += "<input type='hidden' class='form-control' name='comment_seq' value='"+msg.appr_turn+"'> ";
+	         html += "<input type='hidden' class='form-control' name='name' value='"+msg.name+"'> ";
 	         html += "<label for='name'>성함</label>                   ";
 	         html += "<p class='form-control'><strong>"+msg.name+"</strong></p>                    ";
 	         html += "</div> ";
@@ -144,19 +143,20 @@ function setChildValue2(nodes1) {
 }
 
 function nodeSort(nodes){
-	var tempNode;
-	for (var i = 0; i < nodes.length; i++) {
-		var child1 = nodes[i].children;
-		for (var j = 0; j < nodes.length; j++) {
-			var child2 = nodes[j].children;
-			if((i < j)&&(child1[6].innerHTML < child2[6].innerHTML)){
-				tempNode = nodes[j];
-				nodes[j] = nodes[i];
-				nodes[i] = tempNode;
-			}
+//	var tempNode;
+	for (var i = 0; i <3; i++) {
+//		var child1 = nodes[i].children;
+		alert("야호");
+		for (var j = 0; j < 3; j++) {
+//			var child2 = nodes[j].children;
+			alert("야호");
+//			if((i < j)&&(child1[6].innerHTML < child2[6].innerHTML)){
+//				tempNode = nodes[j];
+//				nodes[j] = nodes[i];
+//				nodes[i] = tempNode;
+//			}
 		}
 	}
-	
 	return nodes;
 }
 
@@ -243,15 +243,15 @@ function btnInsert() {
 	return result;
 }
 
-function deleteDocc(val){
-	$("#formDoc").attr("action",'./deleteDoc.do?seq='+val);
-	$("#formDoc").attr("method","post");
+function deleteDocc(seq,state){
+	$("#formDoc").attr("action",'./deleteDoc.do?seq='+seq+"&state="+state);
+	$("#formDoc").attr("method","GET");
 	$("#formDoc").submit();
 }
 
-function upApprDoc(){
-	$("#formDoc").attr("action",'./upApprDoc.do?state=1');
-	$("#formDoc").attr("method","post");
+function upApprDocc(seq){
+	$("#formDoc").attr("action",'./upApprDoc.do?seq='+seq);
+	$("#formDoc").attr("method","GET");
 	$("#formDoc").submit();
 }
 

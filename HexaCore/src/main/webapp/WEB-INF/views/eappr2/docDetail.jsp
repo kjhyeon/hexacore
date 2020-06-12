@@ -30,7 +30,7 @@
 								<td>종류</td>
 								<td>상태</td>
 							</tr>
-							<c:forEach var="Adto" items="${approvalLine}" varStatus="i">
+							<c:forEach var="Adto" items="${apprList}" varStatus="i">
 								<c:if test="${i.index < 3}">
 									<tr>
 										<td>${Adto.duty}<input type="hidden" name='lists[${i.index}].duty' value='${Adto.duty}'></td>
@@ -70,7 +70,7 @@
 								<td>부서직급</td>
 								<td>이름</td>
 							</tr>
-							<c:forEach var="Adto" items="${approvalLine}" varStatus="i">
+							<c:forEach var="Adto" items="${apprList}" varStatus="i">
 								<c:if test="${i.index > 2}">
 									<tr>
 										<td>${Adto.duty}<input type="hidden" name='lists[${i.index}].duty' value='${Adto.duty}'></td>
@@ -91,23 +91,22 @@
 					</div>
 				</div>
 				<div class="btnBox">
-					<input type="button" id="modifyDoc" value="수정"		onclick="modifyFormDoc('${Ddto.seq}')">
 				<c:if
 					test="${name eq Ddto.author && (Ddto.state eq '0' || Ddto.state eq '1') && (Ddto.appr_turn ne '2')}">
-					<input type="button" id="deleteDoc" value="삭제"		onclick="deleteDocc(${Ddto.seq})">
+					<input type="button" id="modifyDoc" value="수정"		onclick="modifyFormDoc('${Ddto.seq}')">
+					<input type="button" id="deleteDoc" value="삭제"		onclick="deleteDocc('${Ddto.seq}','${Ddto.state}')">
 						<c:if test="${Ddto.state eq '0'}">
-						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDoc()">
+						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDocc('${Ddto.seq}')">
 					</c:if>
 				</c:if>
 				<c:if
 					test="${name ne Ddto.author && turn != '0' && turn eq Ddto.appr_turn}">
 					<input type="button" value="결재" data-toggle="modal"		data-target="#apprDoc" data-backdrop='static' data-keyboard='false'	
-																		onclick="apprDoc('${Ddto.seq}','${Ddto.appr_turn}','${Ddto.a_turn}','${number}')">
+																		onclick="apprDoc('${Ddto.seq}','${Ddto.appr_turn}','${Ddto.a_turn}','${Ddto.state}')">
 				</c:if>
 				</div>
 			</div>
 			<div class="leftBox">
-			<h1>${typeDto.name}<input type="hidden" name="type_seq" value="${Ddto.type_seq}"></h1>
 			<table id="docuHead">
 				<tr>
 					<th>문서번호</th>
@@ -122,18 +121,19 @@
 					<td>${Ddto.title}<input type="hidden" name ="title" value="${Ddto.title}"></td>
 				</tr>
 			</table>
+			<h1>${typeDto.name}<input type="hidden" name="type_seq" value="${Ddto.type_seq}"></h1>
 			<br>
 		<div id="contentModi" style="text-align: center; width: 100%;">
 				<div class="apprSignTable">
 					<table id="approLine" style="border: 1px solid black; width: 100%; height: 100px;">
-						<c:if test="${approvalLine ne null}">
+						<c:if test="${apprList ne null}">
 							<tr style="text-align: right; width: 200px; height: 30px;">
-						<c:forEach  var="AdtoL" items="${approvalLine}" >
+						<c:forEach  var="AdtoL" items="${apprList}" >
 							<th style="border: 1px solid black; width: 25px;">${AdtoL.duty}</th>
 						</c:forEach>
 							</tr>
 							<tr>
-						<c:forEach  var="AdtoL" items="${approvalLine}" >
+						<c:forEach  var="AdtoL" items="${apprList}" >
 						<c:choose>
 								<c:when test="${AdtoL.appr_sign ne null}">
 									<td style="border: 1px solid black; width:25px; "><img src="./image/도장1.png" style="width: 30px; height: 30px;"></td>
