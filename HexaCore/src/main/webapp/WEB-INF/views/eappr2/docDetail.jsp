@@ -95,8 +95,11 @@
 					test="${name eq Ddto.author && (Ddto.state eq '0' || Ddto.state eq '1') && (Ddto.appr_turn ne '2')}">
 					<input type="button" id="modifyDoc" value="수정"		onclick="modifyFormDoc('${Ddto.seq}')">
 					<input type="button" id="deleteDoc" value="삭제"		onclick="deleteDocc('${Ddto.seq}','${Ddto.state}')">
-						<c:if test="${Ddto.state eq '0'}">
-						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDocc('${Ddto.seq}')">
+					<c:if test="${Ddto.state eq '0'}">
+						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDocc('${Ddto.seq}','${Ddto.state}')">
+					</c:if>
+					<c:if test="${Ddto.state eq '1'}">
+						<input type="button" id="upApprDoc" value="상신취소"	onclick="upApprDocc('${Ddto.seq}','${Ddto.state}')">
 					</c:if>
 				</c:if>
 				<c:if

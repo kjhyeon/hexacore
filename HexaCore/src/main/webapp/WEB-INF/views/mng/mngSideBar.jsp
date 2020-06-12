@@ -23,6 +23,7 @@
 		<div class="sidebar">
 		<div class="menu" data-url="./employeeList.do">유저 관리</div>
 		<div class="menu" data-url='./updateDepartment.do'>부서 관리</div>
+		<div class="menu" data-url='./goDocTypeMng.do'>문서 양식 관리</div>
 		</div>
 	<%@include file="./../header.jsp" %>
 	

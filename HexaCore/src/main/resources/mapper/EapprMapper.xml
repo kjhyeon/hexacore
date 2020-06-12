@@ -231,6 +231,11 @@
 		UPDATE DOCUMENT SET STATE = '1' WHERE SEQ = #{seq}
 	</update>
 	
+	<!-- 문서 상신 취소 -->
+	<update id="reportCancel" parameterType="java.lang.String">
+		UPDATE DOCUMENT SET STATE = '0' WHERE SEQ = #{seq}
+	</update>
+	
 	<!-- 문서에 첨부된 파일 정보 가져오기 -->
 	<select id="selectFileInfo" parameterType="java.lang.String" resultType="DocFileDto">
 		SELECT * FROM DOC_FILES WHERE CATEGORY = '0' AND SEQ = #{seq}

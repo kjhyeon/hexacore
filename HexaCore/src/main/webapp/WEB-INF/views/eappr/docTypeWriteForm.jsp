@@ -30,7 +30,6 @@
 	}
 </script>
 <body>
-	<%@include file="./../../header.jsp"%>
 	문서 양식 추가
 	<form id="addType" name="addType" method="POST">
 		<table>
@@ -50,6 +49,5 @@
 		<input type="button" value="초기화" onclick="resetDoc()">
 		<input type="button" value="저장" onclick="savedoc()">
 	</form>
-	<%@include file="./../../footer.jsp"%>
 </body>
 </html>
