@@ -42,7 +42,7 @@ public class FreeComCtrl {
 		boolean isc = false;
 		isc = service.insertFreeComment(cDto);
 		
-		return isc?"redirect:/bbsDetail.do?seq="+cDto.getParent_seq():"redirect:/freeBbsMain.do";
+		return isc?"redirect:/freeBbsDetail.do?seq="+cDto.getParent_seq():"redirect:/freeBbsMain.do";
 	}
 	
 	@RequestMapping(value = "/commentDelete.do", method = RequestMethod.GET)
@@ -68,7 +68,7 @@ public class FreeComCtrl {
 			map.put("id", Ldto.getUsername());
 			isc = service.deleteFreeUserComment(map);
 		}
-		return isc?"redirect:/bbsDetail.do?seq="+parent_seq:"redirect:/freeBbsMain.do";
+		return isc?"redirect:/freeBbsDetail.do?seq="+parent_seq:"redirect:/freeBbsMain.do";
 	}
 	
 	
