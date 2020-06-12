@@ -57,12 +57,6 @@ public interface EapprIService {
 	 */
 	public boolean updateDoc(DocumentDTO Ddto);
 	
-//	/**
-//	 * 결재 루트 삭제
-//	 * @param seq 문서 seq
-//	 * @return True : 성공 / False 실패
-//	 */
-//	public boolean deleteApprRoot(String seq);
 	
 	/**
 	 * 결재루트 입력
@@ -93,20 +87,6 @@ public interface EapprIService {
 	public boolean deleteFile(String seq);
 	
 	/**
-	 * 결재상태 chk 업데이트
-	 * @param Adto chk, appr_sign, seq, id
-	 * @return True : 성공 / False 실패
-	 */
-//	public boolean updateApprChk(ApprovalDTO Adto);
-	
-	/**
-	 * 코멘트 입력
-	 * @param DCdto seq, turn, id, name, content
-	 * @return True : 성공 / False 실패
-	 */
-//	public boolean insertComment(DocCommentDTO DCdto);
-	
-	/**
 	 * 코멘트 조회
 	 * @param seq 해당 문서 번호
 	 * @return commentList
@@ -133,13 +113,6 @@ public interface EapprIService {
 	 * @return 성공여부
 	 */
 	public boolean deleteDoc(String seq);
-	
-	/**
-	 * 결재문서함 조회
-	 * @param id
-	 * @return DocumentDTO
-	 */
-	public List<DocumentDTO> selectNeedApprDoc(Map<String, Object> map);
 	
 	/**
 	 * 모든 문서 조회
@@ -203,11 +176,11 @@ public interface EapprIService {
 	public int selectApprDocCount(Map<String, Object> map);
 	
 	/**
-	 * 결재문서함에 결재해야 할 문서의 개수
-	 * @param id
+	 * 각 문서함 별 갯수 조회
+	 * @param map (id,state)
 	 * @return 문서 개수
 	 */
-	public int selectNeedApprDocCount(Map<String, Object> map);
+	public int selectAllApprDocCount(Map<String, Object> map);
 	
 	/**
 	 * 문서 양식 총 개수
@@ -223,27 +196,6 @@ public interface EapprIService {
 	public List<DocumentDTO> searchDoc(String word);
 	
 	/**
-	 * 결재루트에 본인이 포함되어있는 문서 조회
-	 * @param map 
-	 * @return list
-	 */
-	public List<DocumentDTO> selectApprMyDoc(Map<String, Object> map);
-	
-//	/**
-//	 * 상신문서함의 문서 조회
-//	 * @param map
-//	 * @return 문서 리스트
-//	 */
-//	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
-	
-//	/**
-//	 * 참조문서함 List
-//	 * @param Adto
-//	 * @return 참조문서 List
-//	 */
-//	public List<DocumentDTO> selectReferDoc(Map<String, Object> map);
-//	
-	/**
 	 * 각 문서함 갯수
 	 * @param id
 	 * @return List
@@ -251,11 +203,23 @@ public interface EapprIService {
 	public Map<String, Object> selectDocListAll(String id);
 	
 	/**
-	 * 상신문서함의 문서 조회
+	 * 문서 조회
 	 * @param map
 	 * @return 문서 리스트
 	 */
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map);
 	
+	/**
+	 * 문서 승인/반려 기능
+	 * @param map
+	 * @return TRUE : 성공 / FALSE : 실패
+	 */
 	public boolean confirmUpdate(Map<String,Object> map);
+	
+	/**
+	 * 임시저장 -> 상신 기능
+	 * @param seq
+	 * @return TRUE : 성공 / FALSE : 실패
+	 */
+	public boolean updateSaveToAppr(String seq);
 }

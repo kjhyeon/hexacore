@@ -15,7 +15,7 @@
   <script type="text/javascript" src="./js/sweetalert.js"></script>
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
 <body>
-		<form action="#" method="post">
+		<form  method="post">
 			<table class="table table-bordered" style="width: 75%">
 				<tr>
 					<th>문서번호</th>
@@ -33,12 +33,12 @@
 					<tr>
 						<td>${dto.seq}</td>
 						<td>${dto.author}</td>
-						<td><a href="./docDetail.do?seq=${dto.seq}&number=${number}">${dto.title}</a></td>
+						<td><a href="./docDetail.do?seq=${dto.seq}">${dto.title}</a></td>
 						<td>${dto.regdate}</td>
 						<c:choose>
 							<c:when	test="${(dto.a_turn eq dto.appr_turn) &&(id ne dto.author)&& ((dto.state eq '1') || (dto.state eq '2'))}">
 								<td><input type="button" value="결재" data-backdrop='static'	data-keyboard='false' data-toggle="modal"
-									data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}','${dto.a_turn}','${number}')">
+									data-target="#apprDoc" onclick="apprDoc('${dto.seq}','${dto.appr_turn}','${dto.a_turn}','${state}')">
 								</td>
 							</c:when>
 							<c:when test="${dto.state eq '2'}">
@@ -65,13 +65,13 @@
 			<input type="hidden" name="listNum" id="listNum" value="${row.listNum}">
 			<div class="center" style="text-align: center; position: relative;">
 				<ul class="pagination">
-					<li><a href="./docLists.do?page=0&state=${number}" onclick="pageFirst()">&laquo;</a></li>
-					<li><a href="./docLists.do?page=${row.index-1}&state=${number}"	onclick="pagePre()">&lt;</a></li>
+					<li><a href="./docLists.do?page=0&state=${state}" onclick="pageFirst()">&laquo;</a></li>
+					<li><a href="./docLists.do?page=${row.index-1}&state=${state}"	onclick="pagePre()">&lt;</a></li>
 					<c:forEach var="i" begin="${row.pageNum }" end="${row.count }" step="1">
-						<li><a href="./docLists.do?page=${i-1}&state=${number}">${i }</a></li>
+						<li><a href="./docLists.do?page=${i-1}&state=${state}">${i }</a></li>
 					</c:forEach>
-					<li><a href="./docLists.do?page=${row.index+1}&state=${number}">&gt;</a></li>
-					<li><a href="./docLists.do?page=${row.lastPage-1}&state=${number}">&raquo;</a></li>
+					<li><a href="./docLists.do?page=${row.index+1}&state=${state}">&gt;</a></li>
+					<li><a href="./docLists.do?page=${row.lastPage-1}&state=${state}">&raquo;</a></li>
 				</ul>
 			</div>
 		</form>

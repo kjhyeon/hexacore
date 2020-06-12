@@ -247,4 +247,10 @@ public class EapprDaoImpl implements EapprIDao{
 		return sqlSession.selectOne(NS+"selectDocListAll",id);
 	}
 
+	@Override
+	public boolean updateSaveToAppr(String seq) {
+		log.info("updateSaveToAppr DaoImpl 실행 : {}",seq);
+		return sqlSession.update(NS+"updateSaveToAppr", seq)>0?true:false;
+	}
+
 }

@@ -12,8 +12,7 @@
 </style>
 </head>
 <body>
-	문서요약보기${allcount}
-	${lalala}
+	문서요약보기${docCounts}
 	<br> 상신문서함에 있는 문서의 총 개수 : ${count1}
 	<br> 임시저장된 문서의 개수 : ${count2}
 	<br> 상신한 문서 중 결재대기중인 문서의 개수 : ${count3}
