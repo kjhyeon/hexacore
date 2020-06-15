@@ -4,11 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.hexa.core.dto.CommentDTO;
-import com.hexa.core.dto.RowNumDTO;
 
 public interface NoticeComIDao {
 
-	// 1. 자유 게시판 댓글 목록조회
+		// 1. 자유 게시판 댓글 목록조회
 		public List<CommentDTO> selectNoticeCommentList(CommentDTO cDto);
 		
 		// 2. 자유 게시판 댓글 작성

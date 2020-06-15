@@ -17,33 +17,33 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.CommentDTO;
 import com.hexa.core.dto.LoginDTO;
-import com.hexa.core.model.bbs.inf.FreeComIService;
+import com.hexa.core.model.bbs.inf.FileComIService;
 
 @Controller
-public class FreeComCtrl {
+public class FileComCtrl {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	private FreeComIService service;
+	private FileComIService service;
 	
-	@RequestMapping(value = "/commentWrite.do", method = RequestMethod.POST)
-	public String insertFreeComment(CommentDTO cDto, SecurityContextHolder session) {
-		log.info("Welcome insertFreeComment,\t {}",cDto);
+	@RequestMapping(value = "/fileCommentWrite.do", method = RequestMethod.POST)
+	public String insertFileComment(CommentDTO cDto, SecurityContextHolder session) {
+		log.info("Welcome insertFileComment,\t {}",cDto);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		cDto.setId(Ldto.getUsername());
 		cDto.setName(Ldto.getName());
 		
 		boolean isc = false;
-		isc = service.insertFreeComment(cDto);
+		isc = service.insertFileComment(cDto);
 		
-		return isc?"redirect:/freeBbsDetail.do?seq="+cDto.getParent_seq():"redirect:/freeBbsMain.do";
+		return isc?"redirect:/fileBbsDetail.do?seq="+cDto.getParent_seq():"redirect:/fileBbsMain.do";
 	}
 	
-	@RequestMapping(value = "/commentDelete.do", method = RequestMethod.GET)
-	public String deleteFreeComment(String seq, BbsDTO bDto, SecurityContextHolder session, String parent_seq) {
-		log.info("Welcome deleteFreeComment,\t {}", seq);
+	@RequestMapping(value = "/fileCommentDelete.do", method = RequestMethod.GET)
+	public String deleteFileComment(String seq, BbsDTO bDto, SecurityContextHolder session, String parent_seq) {
+		log.info("Welcome deleteFileComment,\t {}", seq);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		seq = String.valueOf(bDto.getSeq());
@@ -57,29 +57,13 @@ public class FreeComCtrl {
 		boolean isc = false;
 		
 		if(auth_check.trim().equalsIgnoreCase("role_admin")) {
-			isc = service.deleteFreeAdminComment(seq);
+			isc = service.deleteFileAdminComment(seq);
 		}else {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("seq", seq);
 			map.put("id", Ldto.getUsername());
-			isc = service.deleteFreeUserComment(map);
+			isc = service.deleteFileUserComment(map);
 		}
-		return isc?"redirect:/freeBbsDetail.do?seq="+parent_seq:"redirect:/freeBbsMain.do";
+		return isc?"redirect:/fileBbsDetail.do?seq="+parent_seq:"redirect:/fileBbsMain.do";
 	}
-	
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -19,8 +19,8 @@
 	<div class="wrap">
 		<div class="sidebar">
 		<div class="menu" data-url='./noticeBbsMain.do'>공지게시판</div>
-		<div class="menu" data-url="./freeBbsMain.do">자유게시판</div>
-		<div class="menu" data-url='#'>자료실</div>
+		<div class="menu" data-url='./freeBbsMain.do'>자유게시판</div>
+		<div class="menu" data-url='./fileBbsMain.do'>자료실</div>
 		</div>
 	<%@include file="./../header.jsp" %>
 	<div class="container">

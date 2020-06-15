@@ -212,7 +212,6 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 				model.addAttribute("list", list);
 						
 				RowNumDTO row = new RowNumDTO();
-				CommentDTO cDto = new CommentDTO();
 				
 				row.setTotal(cService.selectNoticeCommentListTotal(String.valueOf(dto.getSeq())));
 				row.setListNum(5);
@@ -243,8 +242,7 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 		@RequestMapping(value = "/Noticedel.do", method = RequestMethod.POST)
 		public String updateDeletenoticeBbs(SecurityContextHolder session, String seq) {
 			log.info("Welcome 글 단일삭제 값 보내기, {}", seq);
-			int n = service.updateDeleteNoticeBbs(seq);
-			
+			service.updateDeleteNoticeBbs(seq);
 			return "redirect:/noticeBbsMain.do";
 		}
 		

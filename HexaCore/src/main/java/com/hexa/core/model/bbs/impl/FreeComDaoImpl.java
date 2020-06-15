@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.hexa.core.dto.CommentDTO;
-import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeComIDao;
+
 @Repository
 public class FreeComDaoImpl implements FreeComIDao {
 

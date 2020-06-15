@@ -32,33 +32,28 @@ import com.hexa.core.dto.CommentDTO;
 import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
+import com.hexa.core.model.bbs.inf.FileBbsIService;
+import com.hexa.core.model.bbs.inf.FileComIService;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
-import com.hexa.core.model.bbs.inf.FreeComIService;
 import com.hexa.core.model.search.inf.SearchIService;
 
 @Controller
-public class FreeBbsCtrl {
+public class FileBbsCtrl {
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	
 	@Autowired
-	private FreeBbsIService service;
+	private FileBbsIService service;
 	
 	@Autowired
 	private SearchIService sService;
 	
 	@Autowired
-	private FreeComIService cService;
-	
-	@RequestMapping(value = "/goBbs.do", method = RequestMethod.GET)
-	public String goSideBar() {
-		return "Bbs/bbsSideBar";
-	}
+	private FileComIService cService;
 	
 	// 자유게시판 (관리자)목록 조회
-	@RequestMapping(value = "/freeBbsMain.do", method = RequestMethod.GET)
-	public String freeBbsMain(Model model, BbsDTO dto, SecurityContextHolder session, String page,String keyword,String type) {
+	@RequestMapping(value = "/fileBbsMain.do", method = RequestMethod.GET)
+	public String fileBbsMain(Model model, BbsDTO dto, SecurityContextHolder session, String page,String keyword,String type) {
 		log.info("Welcome List 목록조회, {}", new Date());
 		if(page==null) {
 			page="0";
@@ -76,9 +71,9 @@ public class FreeBbsCtrl {
 			model.addAttribute("keyword",keyword);
 			model.addAttribute("type",type);
 		}else if(auth_check.trim().equalsIgnoreCase("role_admin")){
-			row.setTotal(service.selectAdminBoardListTotal());
+			row.setTotal(service.selectAdminFileBoardListTotal());
 		}else {
-			row.setTotal(service.selectUserBoardListTotal());
+			row.setTotal(service.selectUserFileBoardListTotal());
 		}
 		row.setListNum(10);
 		row.setPageNum(5);
@@ -95,51 +90,49 @@ public class FreeBbsCtrl {
 		if(keyword!=null&&!keyword.equals("")) {
 			lists = sService.freeBbsSearch(keyword, type, row,auth_check);
 		}else if(!auth_check.trim().equalsIgnoreCase("role_admin")) {
-			lists = service.selectUserBbsListRow(row);
+			lists = service.selectUserFileBbsListRow(row);
 		}else {	
-			lists = service.selectAdminBbsListRow(row);
+			lists = service.selectAdminFileBbsListRow(row);
 		}
 		model.addAttribute("lists", lists);	
-		return "Bbs/freeBbsMain";
+		return "Bbs/fileBbsMain";
 	}
 	
-	
-	
 	// 자유게시판 새 글 작성.GET
-	@RequestMapping(value = "/freeBbsInsert.do", method = RequestMethod.GET)
-	public String insertfreeBbs(Model model, SecurityContextHolder session, BbsDTO dto) {
+	@RequestMapping(value = "/fileBbsInsert.do", method = RequestMethod.GET)
+	public String insertfileBbs(Model model, SecurityContextHolder session, BbsDTO dto) {
 		log.info("Welcome insert 글 작성, {}");
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		model.addAttribute("Ldto", Ldto);
-		
-		return "Bbs/freeBbsInsert";
+
+		return "Bbs/fileBbsInsert";
 	}
-	
+		
 	// 자유게시판 새 글 작성.POST
-	@RequestMapping(value = "/freeBbsInsert.do", method = RequestMethod.POST)
-	public String insertfreeBbs(String seq, BbsDTO dto, Model model,SecurityContextHolder session, MultipartFile[] filename) {
+	@RequestMapping(value = "/fileBbsInsert.do", method = RequestMethod.POST)
+	public String insertFileBbs(String seq, BbsDTO dto, Model model,SecurityContextHolder session, MultipartFile[] filename) {
 		log.info("Welcome insert 글 작성완료, {}/{}", dto, filename);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		dto.setId(Ldto.getUsername());
 		dto.setName(Ldto.getName());
-		
-		BbsDTO result = service.insertFreeBbs(dto,filename);
-		List<FileDTO> list = service.selectFile(String.valueOf(result.getSeq()));
+
+		BbsDTO result = service.insertFileBbs(dto,filename);
+		List<FileDTO> list = service.selectFileBbsFile(String.valueOf(result.getSeq()));
 		model.addAttribute("list", list);
 		model.addAttribute("seq",result);
-		return result!=null?"redirect:/freeBbsDetail.do?seq="+result.getSeq():"redirect:/logdout.do";
+		return result!=null?"redirect:/fileBbsDetail.do?seq="+result.getSeq():"redirect:/logdout.do";
 	}
 	
 	// 자유게시판 글 상세보기.GET
-	@RequestMapping(value = "/freeBbsDetail.do", method = RequestMethod.GET)
-	public String selectDetailFreeBbs(Model model, String page, String seq, SecurityContextHolder session) {
+	@RequestMapping(value = "/fileBbsDetail.do", method = RequestMethod.GET)
+	public String selectDetailFileBbs(Model model, String page, String seq, SecurityContextHolder session) {
 		log.info("Welcome 글 상세보기, {}", seq);
 		log.info("Welcome 글 조회수 여부, {}", seq);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
-		
+
 		Collection<GrantedAuthority> a = Ldto.getAuthorities();
 		String auth_check = null;
 		for (GrantedAuthority auths : a) {
@@ -148,11 +141,11 @@ public class FreeBbsCtrl {
 		if (page == null) {
 			page = "0";
 		}
-		
+
 		RowNumDTO row = new RowNumDTO();
 		CommentDTO cDto = new CommentDTO();
-		
-		row.setTotal(cService.selectFreeCommentListTotal(seq));
+
+		row.setTotal(cService.selectFileCommentListTotal(seq));
 		row.setListNum(5);
 		row.setPageNum(5);
 		row.setIndex(Integer.parseInt(page));
@@ -169,57 +162,57 @@ public class FreeBbsCtrl {
 		map.put("parent_seq", seq);
 		map.put("start", row.getStart());
 		map.put("last", row.getLast());
-		lists = cService.selectFreeCommentListRow(map);
+		lists = cService.selectFileCommentListRow(map);
 		model.addAttribute("lists", lists);
-		
+
 		if (!auth_check.trim().equalsIgnoreCase("role_admin")) {
 			boolean isc = false;
-			isc = service.updateViewsBbs(seq);
+			isc = service.updateViewsFileBbs(seq);
 		}
-		
+
 		cDto.setParent_seq(Integer.parseInt(seq));
-		
-		BbsDTO dto = service.selectDetailFreeBbs(seq);
-		List<FileDTO> list = service.selectFile(seq);
+
+		BbsDTO dto = service.selectDetailFileBbs(seq);
+		List<FileDTO> list = service.selectFileBbsFile(seq);
 		model.addAttribute("seq", dto);
 		model.addAttribute("list", list);
-		
-		
-		return "Bbs/freeBbsDetail";
+
+
+		return "Bbs/fileBbsDetail";
 	}
-	
+
 	// 자유게시판 글 수정.GET
-	@RequestMapping(value = "/freeBbsModify.do", method = RequestMethod.GET)
-	public String updateModifyFreeBbs(SecurityContextHolder session, Model model, BbsDTO dto, String seq) {
+	@RequestMapping(value = "/fileBbsModify.do", method = RequestMethod.GET)
+	public String updateModifyFileBbs(SecurityContextHolder session, Model model, BbsDTO dto, String seq) {
 		log.info("Welcome 글 수정 값 가져오기, {}", dto);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
-		dto = service.selectDetailFreeBbs(seq);
-		List<FileDTO> list = service.selectFile(seq);
+		dto = service.selectDetailFileBbs(seq);
+		List<FileDTO> list = service.selectFileBbsFile(seq);
 		model.addAttribute("list", list);
 		if(dto.getId().equals(Ldto.getUsername())) {
 			model.addAttribute("dto", dto);
-			return "Bbs/freeBbsModify";
+			return "Bbs/fileBbsModify";
 		}else{
-			return "redirect:/freeBbsMain.do";
+			return "redirect:/fileBbsMain.do";
 		}
 	}
 	
 	// 자유게시판 글 수정.POST
-	@RequestMapping(value = "/freeBbsDetail.do", method = RequestMethod.POST)
-	public String updateModifyFreeBbs(BbsDTO dto, Model model, MultipartFile[] filename,String[] files) {
+	@RequestMapping(value = "/fileBbsDetail.do", method = RequestMethod.POST)
+	public String updateModifyFileBbs(BbsDTO dto, Model model, MultipartFile[] filename,String[] files) {
 		log.info("Welcome 글 수정 값 보내기, {},{}", dto,Arrays.toString(files));
-		
-		dto = service.updateModifyFreeBbs(dto,files,filename);
+
+		dto = service.updateModifyFileBbs(dto,files,filename);
 		String page = "0";
 		if(dto!=null) {
 			model.addAttribute("seq",dto);
-			List<FileDTO> list = service.selectFile(String.valueOf(dto.getSeq()));
+			List<FileDTO> list = service.selectFileBbsFile(String.valueOf(dto.getSeq()));
 			model.addAttribute("list", list);
-					
+
 			RowNumDTO row = new RowNumDTO();
-			
-			row.setTotal(cService.selectFreeCommentListTotal(String.valueOf(dto.getSeq())));
+
+			row.setTotal(cService.selectFileCommentListTotal(String.valueOf(dto.getSeq())));
 			row.setListNum(5);
 			row.setPageNum(5);
 			row.setIndex(Integer.parseInt(page));
@@ -236,65 +229,64 @@ public class FreeBbsCtrl {
 			map.put("parent_seq", dto.getSeq());
 			map.put("start", row.getStart());
 			map.put("last", row.getLast());
-			lists = cService.selectFreeCommentListRow(map);
+			lists = cService.selectFileCommentListRow(map);
 			model.addAttribute("lists", lists);
-			return "Bbs/freeBbsDetail";
+			return "Bbs/fileBbsDetail";
 		}else {
-			return "redirect:/freeBbsMain.do";
+			return "redirect:/fileBbsMain.do";
 		}
 	}
 	
 	// 자유게시판 글 단일삭제
-	@RequestMapping(value = "/del.do", method = RequestMethod.POST)
-	public String updateDeleteFreeBbs(SecurityContextHolder session, String seq) {
+	@RequestMapping(value = "/fileDel.do", method = RequestMethod.POST)
+	public String updateDeleteFileBbs(SecurityContextHolder session, String seq) {
 		log.info("Welcome 글 단일삭제 값 보내기, {}", seq);
-		service.updateDeleteFreeBbs(seq);
-		
-		return "redirect:/freeBbsMain.do";
+		service.updateDeleteFileBbs(seq);
+
+		return "redirect:/fileBbsMain.do";
 	}
 	
 	// 자유게시판 글 다중삭제
-	@RequestMapping(value = "/multiDel.do", method = RequestMethod.POST)
-	public String updateMultiDelFreeBbs(String[] chkVal) {
+	@RequestMapping(value = "/fileMultiDel.do", method = RequestMethod.POST)
+	public String updateMultiDelFileBbs(String[] chkVal) {
 		log.info("Welcome 글 다중삭제 ,\t {}", Arrays.toString(chkVal));
 		boolean isc = false;
 		Map<String, String[]> map = new HashMap<String, String[]>();
 		map.put("seqs", chkVal);
-		isc = service.updateMultiDelFreeBbs(map);
-		
-		return isc?"redirect:/freeBbsMain.do":"redirect:/logout.do";
+		isc = service.updateMultiDelFileBbs(map);
+
+		return isc?"redirect:/fileBbsMain.do":"redirect:/logout.do";
 	}
 	
-	
 	// 자유게시판 답글 작성.GET
-	@RequestMapping(value = "/freeBbsReplyInsert.do", method = RequestMethod.GET)
-	public String goInsertReplyBbs(SecurityContextHolder session, Model model,String seq) {
+	@RequestMapping(value = "/fileBbsReplyInsert.do", method = RequestMethod.GET)
+	public String goInsertFileReplyBbs(SecurityContextHolder session, Model model,String seq) {
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		model.addAttribute("Ldto", Ldto);
 		model.addAttribute("seq",seq);
-		
-		return "Bbs/freeBbsReplyInsert";
+
+		return "Bbs/fileBbsReplyInsert";
 	}
 	
 	// 자유게시판 답글 작성.POST
-	@RequestMapping(value = "/freeBbsReplyInsert.do", method = RequestMethod.POST)
-	public String insertReplyBbs(BbsDTO dto, SecurityContextHolder session, Model model, MultipartFile[] filename) {
-		log.info("Welcome insertReplyBbs 답글 작성완료, {}", dto);
+	@RequestMapping(value = "/fileBbsReplyInsert.do", method = RequestMethod.POST)
+	public String insertFileReplyBbs(BbsDTO dto, SecurityContextHolder session, Model model, MultipartFile[] filename) {
+		log.info("Welcome insertFileReplyBbs 답글 작성완료, {}", dto);
 		Authentication auth = session.getContext().getAuthentication();
 		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
 		dto.setId(Ldto.getUsername());
 		dto.setName(Ldto.getName());
 
-		BbsDTO result = service.ReplyBbs(dto, filename);
-		List<FileDTO> list = service.selectFile(String.valueOf(result.getSeq()));
+		BbsDTO result = service.ReplyFile(dto, filename);
+		List<FileDTO> list = service.selectFileBbsFile(String.valueOf(result.getSeq()));
 		model.addAttribute("list", list);
 		model.addAttribute("seq",result);
-		
-		return result!=null?"redirect:/freeBbsDetail.do?seq="+result.getSeq():"redirect:/freeBbsMain.do";
+
+		return result!=null?"redirect:/fileBbsDetail.do?seq="+result.getSeq():"redirect:/fileBbsMain.do";
 	}
 	
-	@RequestMapping(value = "/download.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/fileDownload.do", method = RequestMethod.GET)
 	public void fileDownload(HttpServletResponse resp, FileDTO fDto) throws Exception {
 		log.info("#################################3 {}",fDto);
 		File file = new File(FreeBbsIService.ATTACH_PATH+"/"+fDto.getName());
@@ -313,16 +305,4 @@ public class FreeBbsCtrl {
 		//파일 자체를 웹브라우저에서 읽어들인다. 
 		FileCopyUtils.copy(inputStream, resp.getOutputStream());
 	}
-	
 }
-
-
-
-
-
-
-
-
-
-
-

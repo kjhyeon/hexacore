@@ -76,7 +76,7 @@ public class NoticeBbsServiceImpl implements NoticeBbsIService {
 
 	@Override
 	public BbsDTO updateModifyNoticeBbs(BbsDTO dto, String[] files, MultipartFile[] filename) {
-		log.info("자유게시판 글 수정 updateModifyFreeBbs,\t {}", dto);
+		log.info("공지게시판 글 수정 updateModifyFreeBbs,\t {}", dto);
 		Map<String, Object> map = Maps.newHashMap();
 		dao.updateModifyNoticeBbs(dto);
 		map.put("files", files);

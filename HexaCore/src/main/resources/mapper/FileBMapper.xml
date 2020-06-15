@@ -221,27 +221,11 @@
 	</delete>
 	
 	<!-- 17. 자료실 파일 조회 -->
-	<select id="selectFile" parameterType="java.lang.String"
+	<select id="selectFileBbsFile" parameterType="java.lang.String"
 							resultType="FileDto">
 	SELECT NAME ,F_SIZE, ORI_NAME, F_PATH 
 		FROM FILES 
 			WHERE SEQ=#{seq} AND CATEGORY = 2
 	</select>
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

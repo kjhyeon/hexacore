@@ -48,10 +48,10 @@ public interface NoticeBbsIDao {
 			// 11. 공지게시판 페이징 처리(관리자)
 			public List<BbsDTO> selectAdminNoticeBbsListRow(RowNumDTO rdto);
 			
-			// 12. 게시글 전체 갯수(유저)
+			// 12. 공지게시판 게시글 전체 갯수(유저)
 			public int selectUserNoticeBoardListTotal();
 			
-			// 13. 게시글 전체 갯수(관리자)
+			// 13. 공지게시판 게시글 전체 갯수(관리자)
 			public int selectAdminNoticeBoardListTotal();
 			// =================================================================
 			// 14. 파일 조회
