@@ -76,7 +76,7 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 
 	@Override
 	public BbsDTO selectDetailFreeBbs(String seq) {
-		log.info("자유게시판 상세글 보기 selectDetailFreeBbs,\t {}", seq);
+		log.info("자유게시판 상세 글 보기 selectDetailFreeBbs,\t {}", seq);
 		return dao.selectDetailFreeBbs(seq);
 	}
 

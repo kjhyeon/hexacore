@@ -18,7 +18,7 @@
 <body>
 	<div class="wrap">
 		<div class="sidebar">
-		<div class="menu" data-url='#'>공지게시판</div>
+		<div class="menu" data-url='./noticeBbsMain.do'>공지게시판</div>
 		<div class="menu" data-url="./freeBbsMain.do">자유게시판</div>
 		<div class="menu" data-url='#'>자료실</div>
 		</div>

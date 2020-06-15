@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hexa.core.file.filec">
+
+	<!-- 1. 자유 게시판 댓글 목록 -->
+	<select id="selectFreeCommentList"  parameterType="CommentDto"
+										resultType="CommentDto">
+	SELECT SEQ, ID, NAME, CONTENT, REGDATE, PARENT_SEQ 
+		FROM FREE_COMMENTS
+			WHERE PARENT_SEQ = #{parent_seq}
+				ORDER BY SEQ ASC
+	</select>
+
+	<!-- 2. 자유 게시판 댓글 작성 -->
+	<insert id="insertFreeComment" parameterType="CommentDto">
+		INSERT INTO FREE_COMMENTS
+			(SEQ, ID, NAME, CONTENT, REGDATE, PARENT_SEQ)
+		VALUES(FREE_COMMENTS_SEQ.NEXTVAL, #{id}, #{name}, #{content}, SYSDATE,
+		  	#{parent_seq})
+	</insert>
+
+	<!-- 3. 자유 게시판 댓글 수정 -->
+	<update id="updateFreeComment" parameterType="java.lang.String">
+		UPDATE FREE_COMMENTS
+			SET CONTENT = '뭐시여?', REGDATE = SYSDATE 
+				WHERE PARENT_SEQ = #{parent_seq}
+	</update>
+	
+	<!-- 4. 자유 게시판 댓글 삭제(유저) -->
+	<delete id="deleteFreeUserComment" parameterType="java.util.Map">
+		DELETE FREE_COMMENTS
+			WHERE SEQ = #{seq} AND ID = #{id}
+	</delete>
+	
+	<!-- 5. 자유 게시판 댓글 삭제(관리자) -->
+	<delete id="deleteFreeAdminComment" parameterType="java.lang.String">
+		DELETE FREE_COMMENTS
+			WHERE SEQ = #{seq}
+	</delete>
+	
+	<!-- 6. 자유 게시판 댓글 페이징 -->
+	<select id="selectFreeCommentListRow" parameterType="java.util.Map" resultType="CommentDto">
+		SELECT * FROM 
+			(
+			SELECT 
+				ROW_NUMBER() OVER(ORDER BY SEQ ASC) AS ROW_NUM, 
+					SEQ, ID, NAME, 
+					CONTENT, REGDATE, PARENT_SEQ 
+					FROM FREE_COMMENTS 
+					WHERE PARENT_SEQ = #{parent_seq}
+			)
+					WHERE ROW_NUM BETWEEN #{start} AND #{last}
+	</select>
+	
+	<!-- 7. 자유 게시판 댓글 총 갯수 -->	
+	<select id="selectFreeCommentListTotal" parameterType="java.lang.String" 
+											resultType="java.lang.Integer">
+		SELECT COUNT(*)
+			FROM FREE_COMMENTS
+				WHERE PARENT_SEQ = #{parent_seq}
+	</select>
+</mapper>

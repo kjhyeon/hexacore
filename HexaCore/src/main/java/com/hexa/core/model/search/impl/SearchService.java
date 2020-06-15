@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.common.collect.Lists;
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
@@ -124,11 +126,29 @@ public class SearchService implements SearchIService{
 	}
 	@Override
 	public List<MessageDTO> receiveMsgSearch(String keyword, RowNumDTO row,String type,String id) {
-		return dao.receiveMsgSearch(keyword, row, type,id);
+		List<MessageDTO> temp = dao.receiveMsgSearch(keyword, row, type,id);
+		List<MessageDTO> result = Lists.newArrayList();
+		for (MessageDTO dto : temp) {
+			List<FileDTO> fileList = mDao.selectFile(dto.getSeq());
+			if(fileList!=null&&fileList.size()>0) {
+				dto.setFile(fileList.get(0));
+			}
+			result.add(dto);
+		}
+		return result;
 	}
 	@Override
 	public List<MessageDTO> senderMsgSearch(String keyword, RowNumDTO row,String type,String id) {
-		return dao.senderMsgSearch(keyword, row, type, id);
+		List<MessageDTO> temp = dao.senderMsgSearch(keyword, row, type, id);
+		List<MessageDTO> result = Lists.newArrayList();
+		for (MessageDTO dto : temp) {
+			List<FileDTO> fileList = mDao.selectFile(dto.getSeq());
+			if(fileList!=null&&fileList.size()>0) {
+				dto.setFile(fileList.get(0));
+			}
+			result.add(dto);
+		}
+		return result;
 	}
 	@Override
 	public int receiveMsgTotal(String keyword,String type,String id) {

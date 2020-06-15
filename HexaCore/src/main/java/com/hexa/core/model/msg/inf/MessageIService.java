@@ -65,11 +65,15 @@ public interface MessageIService {
 	public boolean updateStateMessage(String seq);
 
 	/**
-	 * 메세지의 전체 갯수
+	 * 수신한 메세지의 전체 갯수
 	 * @return 메세지의 전체 갯수
 	 */
 	public int messageReceiveListTotal(String receiver_id);
 	
+	// 발신한 메세지의 전체 갯수
 	public int messageSenderListTotal(String sender_id);
+	
+	// 새로운 메세지 알림기능
+	public int selectNewMsgCount(String receiver_id);
 	
 }

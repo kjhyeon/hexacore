@@ -77,7 +77,7 @@
 	<sec:authentication property="principal.username" var="sessionId"/>
 	<div class="container">
 		<form action="#" method="post" id="replyForm" name="replyForm" enctype="multipart/form-data">
-		<input type="hidden" name="seq" value="${seq }">
+		<input type="hidden" name="seq" value="${seq}">
   		<table class="table table-bordered">
     		<thead>
       			<tr>

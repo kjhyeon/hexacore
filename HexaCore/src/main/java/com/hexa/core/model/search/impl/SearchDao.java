@@ -13,8 +13,11 @@ import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldType;
+import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.NumericDocValuesField;
+import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
@@ -51,6 +54,7 @@ import org.springframework.stereotype.Repository;
 import com.google.common.collect.Lists;
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
+import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.search.inf.SearchIDao;
@@ -965,7 +969,7 @@ public class SearchDao implements SearchIDao{
 			}
 			
 			if(isReceiveList) {
-				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(state, Occur.MUST).add(idquery, Occur.MUST).build();
+				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(idquery, Occur.MUST).add(state, Occur.MUST).build();
 			}else {
 				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(idquery, Occur.MUST).build();
 			}
@@ -976,7 +980,7 @@ public class SearchDao implements SearchIDao{
 	}
 
 	@Override
-	public void updateMsgIndex(String seq) {
+	public void updateMsgIndex(MessageDTO dto) {
 		FSDirectory directory;
 		try {
 			//인덱싱된 파일을 내보낼 경로를 얻음
@@ -991,10 +995,15 @@ public class SearchDao implements SearchIDao{
 			FieldType fieldType = getFieldType();
 			//저장할 데이터 목록 가져오기
 			Document doc = new Document();
-			doc.add(new Field("state", "-1", fieldType));
-			
-			writer.updateDocument(new Term("seq", seq), doc);
-			writer.commit();
+			doc.add(new NumericDocValuesField("sorted_seq", dto.getSeq()));
+			doc.add(new Field("seq", String.valueOf(dto.getSeq()), fieldType));
+			doc.add(new Field("sender_id", dto.getSender_id(), fieldType));
+			doc.add(new Field("receiver_id", dto.getReceiver_id(), fieldType));
+			doc.add(new Field("title", dto.getTitle(), fieldType));
+			doc.add(new Field("content", dto.getContent(), fieldType));
+			doc.add(new Field("regdate", dto.getRegdate(),fieldType));
+			doc.add(new Field("state", String.valueOf(dto.getState()), fieldType));
+			writer.updateDocument(new Term("seq",String.valueOf(dto.getSeq())), doc);
 			writer.close();
 			analyzer.close();
 			directory.close();

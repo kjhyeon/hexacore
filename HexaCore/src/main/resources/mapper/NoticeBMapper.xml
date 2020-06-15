@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hexa.core.notice.noticeb">
 	
-	<!-- 1. 자유게시판 글 작성 -->
+	<!-- 1. 공지게시판 글 작성 -->
 	<insert id="insertNoticeBbs" parameterType="BbsDto">
 	INSERT INTO NOTICE_BBS 
 		(SEQ, 		ID, 		NAME, 
@@ -14,21 +14,21 @@
 			  (SELECT NVL(MAX(ROOT),0)+1 FROM NOTICE_BBS), 0, 0)
 	</insert>
 
-	<!-- 2. 자유게시판 글 수정 -->
+	<!-- 2. 공지게시판 글 수정 -->
 	<update id="updateModifyNoticeBbs" parameterType="BbsDto">
 	UPDATE NOTICE_BBS
 		SET TITLE=#{title}, CONTENT=#{content}
 			WHERE SEQ=#{seq}
 	</update>
 	
-	<!-- 3. 자유 게시판 글 단일삭제 -->
+	<!-- 3. 공지 게시판 글 단일삭제 -->
 	<update id="updateDeleteNoticeBbs" parameterType="java.lang.String">
 	UPDATE NOTICE_BBS
 		SET STATE = 1
 			WHERE STATE = 0 AND SEQ = #{seq}
 	</update>
 	
-	<!-- 4. 자유 게시판 글 다중삭제 -->
+	<!-- 4. 공지 게시판 글 다중삭제 -->
 	<update id="updateMultiDelNoticeBbs" parameterType="java.util.Map">
  	UPDATE NOTICE_BBS 
  		SET STATE = 1
@@ -38,7 +38,7 @@
       		</foreach>
 	</update>
 	
-	<!-- 5. (유저) 자유 게시판 글 조회 -->
+	<!-- 5. (유저) 공지 게시판 글 조회 -->
 	<select id="selectUserNoticeBbsList" resultType="BbsDto">
 	SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
 		FROM NOTICE_BBS
@@ -46,7 +46,7 @@
 				ORDER BY ROOT DESC, REPLY_SEQ
 	</select>
 	
-	<!-- 6. (관리자) 자유 게시판 글 조회 -->
+	<!-- 6. (관리자) 공지 게시판 글 조회 -->
 	<select id="selectAdminNoticeBbsList" resultType="BbsDto">
 	 SELECT * FROM
 					(
@@ -65,27 +65,27 @@
 						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
 	</select>
 	
-	<!-- 7. 자유 게시판 상세글 보기 -->
+	<!-- 7. 공지 게시판 상세글 보기 -->
 	<select id="selectDetailNoticeBbs" parameterType="java.lang.String"
 							   		 resultType="BbsDto"> 
-		SELECT * FROM
+		 SELECT * FROM
 					(
-					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
-					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
-					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	NVL(f.CONTENT, ' ') CONTENT
-						FROM NOTICE_BBS f LEFT JOIN 
+					 SELECT nb.SEQ, 		nb.NAME, 	nb.REGDATE, 		nb.REPLY_SEQ,
+					 		nb.ROOT, 	nb.STATE,	nb.TITLE ,		nb.ID,
+					 		nb.VIEWS, 	nb2.F_COUNT,	nb.BBS_DEPTH, 	nb.CONTENT
+						FROM NOTICE_BBS nb LEFT JOIN 
 						(
 						 SELECT SEQ,COUNT(*) F_COUNT 
-						 	FROM FILES WHERE CATEGORY=0 GROUP BY SEQ
-						 ) f2 ON f.SEQ = f2.SEQ
+						 	FROM FILES WHERE CATEGORY=1 GROUP BY SEQ
+						 ) nb2 ON nb.SEQ = nb2.SEQ
 					 ) j1 LEFT JOIN (
 					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
-					 				 	FROM NOTICE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				 	FROM NOTICE_COMMENTS nc GROUP BY PARENT_SEQ
 					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
 						WHERE SEQ = #{seq}
 	</select>
 	
-	<!-- 8. 자유 게시판 조회수 증가  -->
+	<!-- 8. 공지 게시판 조회수 증가  -->
 	<!-- 유저에만 해당하는 사항 -->
 	<update id="updateViewsNoticeBbs" parameterType="java.lang.String">
 	UPDATE NOTICE_BBS 
@@ -93,7 +93,7 @@
 			WHERE SEQ = #{seq}
 	</update>
 	
-	<!-- 9. 자유 게시판 답글 -->
+	<!-- 9. 공지 게시판 답글 -->
 	<update id="updateReplyNoticeBbs" parameterType="BbsDto">
 		UPDATE NOTICE_BBS 
 			SET REPLY_SEQ = REPLY_SEQ+1
@@ -111,7 +111,7 @@
 			(SELECT BBS_DEPTH FROM NOTICE_BBS WHERE SEQ = #{seq}) +1)
 	</insert>
 	
-	<!-- 10. 유저 자유게시판 페이징 처리 -->
+	<!-- 10. 유저 공지게시판 페이징 처리 -->
 	<select id="selectUserNoticeBbsListRow" parameterType="RowNum"
 									  resultType="BbsDto">
 	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
@@ -138,15 +138,15 @@
 					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
 					 				 	FROM NOTICE_COMMENTS nc GROUP BY PARENT_SEQ
 					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
-					 	WHERE STATE = 0
+					 				WHERE STATE = 0
 						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
 			)
 		)
 		WHERE
-			RNUM BETWEEN #{start} AND #{last};
+			RNUM BETWEEN #{start} AND #{last}
 	</select>
 	
-	<!-- 11. 관리자 자유게시판 페이징 처리 -->
+	<!-- 11. 관리자 공지게시판 페이징 처리 -->
 	<select id="selectAdminNoticeBbsListRow" parameterType="RowNum"
 									  resultType="BbsDto">
 	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
@@ -180,14 +180,14 @@
 			RNUM BETWEEN #{start} AND #{last}
 	</select>
 	
-	<!-- 12. 유저 자유게시판 글 전체 갯수 -->
-	<select id="selectUserNoticeBoardistTotal" resultType="java.lang.Integer">
+	<!-- 12. 유저 공지게시판 글 전체 갯수 -->
+	<select id="selectUserNoticeBoardListTotal" resultType="java.lang.Integer">
 	SELECT COUNT(*) 
 		FROM NOTICE_BBS
 			WHERE STATE = 0
 	</select>
 	
-	<!-- 13. 관리자 자유게시판 글 전체 갯수 -->
+	<!-- 13. 관리자 공지게시판 글 전체 갯수 -->
 	<select id="selectAdminNoticeBoardListTotal" resultType="java.lang.Integer">
 	SELECT COUNT(*) 
 		FROM NOTICE_BBS
@@ -202,7 +202,7 @@
 	<insert id="insertNoticeBbsFile" parameterType="FileDto">
 	INSERT INTO HEXA.FILES
 		(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE, CATEGORY)
-			VALUES(#{name}, #{seq}, #{f_path}, #{ori_name}, #{f_size}, #{category})
+			VALUES(#{name}, #{seq}, #{f_path}, #{ori_name}, #{f_size}, 1)
 	</insert>
 	
 	<!-- 16. 파일 삭제 -->
