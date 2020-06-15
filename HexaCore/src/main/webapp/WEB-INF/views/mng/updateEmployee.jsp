@@ -36,7 +36,16 @@ $(document).ready(
 		<input type="hidden" value="${dto.employee_number }" name="employee_number">
 		<table class="table table-bordered">
 			<tr>
-				<td rowspan="13"><img id="profile-image" src="./image/profile/${dto.profile_img}" ></td>
+				<td rowspan="13">
+					<c:choose>
+					<c:when test="${empty dto.profile_img || dto.profile_img eq '' }">
+						<img style="height: 120px; width: 120px;" alt="" src="./image/default_profile.png" id="profile-image">
+					</c:when>
+					<c:otherwise>
+						<img style="height: 120px; width: 120px;" alt="" src="./image/profile/${dto.profile_img }" id="profile-image">
+					</c:otherwise>
+				</c:choose>
+				</td>
 				<th>아이디</th>
 				<td>
 					<span style="float: left;">${dto.id }</span> 
@@ -138,10 +147,19 @@ $(document).ready(
 				</td>
 			</tr>
 			<tr>
-				<th>프로필이미지</th><td><input multiple="multiple" type="file" name="profile_file" onchange="a(this,'profile-')"  accept="image/*"></td>
+				<th>프로필이미지</th><td><input type="file" name="profile_file" onchange="a(this,'profile-')"  accept="image/*"></td>
 			</tr>
 			<tr>
-				<td><img id="sign-image" src="./image/profile/${dto.sign_img}" ></td><th>결재 도장</th><td><input multiple="multiple" type="file" name="sign_file" id="sign" onchange="a(this,'sign-')"  accept="image/*"></td>
+				<td>
+					<c:choose>
+						<c:when test="${empty dto.sign_img || dto.sign_img eq '' }">
+							<img style="height: 80px; width: 80px;" id="sign-image" src="./image/default_sign.png" id="sign-image" >
+						</c:when>
+						<c:otherwise>
+							<img style="height: 80px; width: 80px;" id="sign-image" src="./image/profile/${dto.sign_img}" id="sign-image">
+						</c:otherwise>
+					</c:choose>
+				</td><th>결재 도장</th><td><input type="file" name="sign_file" id="sign" onchange="a(this,'sign-')"  accept="image/*"></td>
 			</tr>
 		</table>
 		<div class="btns" style="text-align: center;">

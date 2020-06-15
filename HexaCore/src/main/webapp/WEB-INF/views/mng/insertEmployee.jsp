@@ -20,10 +20,12 @@
 <body>
 	<div id="container">
 	<form action="./insertEmployee.do" method="post" id ="frm" enctype="multipart/form-data">
-		<table class="table table-bordered">
 		<h2>사원 등록</h2>
+		<table class="table table-bordered">
 			<tr>
-				<td rowspan="10"><img id="image" src="#" style="display :none;"></td>
+				<td rowspan="10">
+					<img style="height: 120px; width: 120px;" alt="" src="./image/default_profile.png" id="image">
+				</td>
 				<th>아이디</th>
 				<td>
 					<input class="form-control" type="text" name="id" placeholder="아이디" id="id"><br> 
@@ -78,7 +80,10 @@
 				</td>
 			</tr>
 			<tr>
-				<th>프로필이미지</th><td><input  multiple="multiple" type="file" name="profile_file" onchange="a(this,'profile-')" accept="image/*"></td>
+				<th>프로필이미지</th>
+				<td>
+					<input  type="file" name="profile_file" onchange="a(this,'profile-')" accept="image/*">
+				</td>
 			</tr>
 		</table>
 		<input class="btn" type="button" value="등록" onclick="formChk()">

@@ -9,17 +9,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.FieldType;
-import org.apache.lucene.document.IntPoint;
 import org.apache.lucene.document.NumericDocValuesField;
-import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.Fields;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -27,23 +22,15 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.queryparser.xml.builders.RangeQueryBuilder;
-import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.BooleanQuery.Builder;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopFieldDocs;
-import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.search.highlight.SimpleHTMLFormatter;
-import org.apache.lucene.search.highlight.TokenGroup;
-import org.apache.lucene.search.highlight.TokenSources;
-import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.QueryBuilder;
@@ -54,7 +41,6 @@ import org.springframework.stereotype.Repository;
 import com.google.common.collect.Lists;
 import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.DocumentDTO;
-import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.search.inf.SearchIDao;
@@ -73,7 +59,7 @@ public class SearchDao implements SearchIDao{
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	private final String INDEX_PATH = "C:/eclipse-spring/lucene"; //인덱싱 파일이 저장될 공간 지정 나중에 바꿀거임
+	private final String INDEX_PATH = "../webapps/HexaCore/lucene"; //인덱싱 파일이 저장될 공간 지정 나중에 바꿀거임
 	
 	@Override
 	public void eDocIndex(List<DocumentDTO> list) {

@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -68,6 +69,7 @@ public class SearchCtrl {
 		return "search/searchResult";
 	}
 	
+	@Scheduled(cron = "0 0 4 * * *")
 	@RequestMapping(value="/totalIndex.do", method = RequestMethod.GET)
 	public String totalIndex() {
 		log.info("WelcomePage totalIndex ");

@@ -1,9 +1,5 @@
 package com.hexa.core.ctrl;
 
-import java.io.File;
-import java.security.Principal;
-import java.util.UUID;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
-import com.hexa.core.model.mng.inf.DepartmentIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 
 @Controller
@@ -28,11 +23,6 @@ public class MngCtrl {
 
 	@Autowired
 	private EmployeeIService eService;
-	
-	@Autowired
-	private DepartmentIService dService;
-	
-	private final String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile";
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -73,24 +63,7 @@ public class MngCtrl {
 	public String EmployeeInsert(EmployeeDTO dto, MultipartFile profile_file) {
 		log.info("Welcome EmployeeInsert {}/{}", dto,profile_file);
 		
-		File indexFolder = new File(attach_path);
-		if(indexFolder.isDirectory() == false){
-			indexFolder.mkdirs();
-		}
-		if(profile_file!=null&&!profile_file.getOriginalFilename().trim().equals("")) {
-			try {
-				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
-				File f = new File(attach_path,saveName);
-				profile_file.transferTo(f);
-				dto.setProfile_img(saveName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}else {
-			dto.setProfile_img("");
-		}
-		
-		boolean isc = eService.insertEmployee(dto);
+		boolean isc = eService.insertEmployee(dto,profile_file);
 		
 		if(isc)
 			return "redirect:/employeeList.do";
@@ -121,32 +94,7 @@ public class MngCtrl {
 	public String EmployeeUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
 		log.info("Welcome EmployeeInsert {}/{}/{}", dto,profile_file,sign_file);
 		
-		File indexFolder = new File(attach_path);
-		if(indexFolder.isDirectory() == false){
-			indexFolder.mkdirs();
-		}
-		if(profile_file!=null&&!profile_file.getOriginalFilename().trim().equals("")) {
-			try {
-				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
-				File f = new File(attach_path,saveName);
-				profile_file.transferTo(f);
-				dto.setProfile_img(saveName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		if(sign_file!=null&&!sign_file.getOriginalFilename().trim().equals("")) {
-			try {
-				String saveName = "sign_"+UUID.randomUUID()+"_"+sign_file.getOriginalFilename();
-				File f = new File(attach_path,saveName);
-				sign_file.transferTo(f);
-				dto.setSign_img(saveName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		boolean isc = eService.updateEmployee(dto);
+		boolean isc = eService.updateEmployee(dto,profile_file,sign_file);
 		if(isc)
 			return "redirect:/employeeList.do";
 		else
@@ -229,32 +177,8 @@ public class MngCtrl {
 	@RequestMapping(value="/empInfoUpdate.do", method = RequestMethod.POST)
 	public String empInfoUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
 		log.info("Welcome Page empInfoUpdate {}/{}/{}",dto,profile_file.getOriginalFilename(),sign_file.getOriginalFilename());
-		File indexFolder = new File(attach_path);
-		if(indexFolder.isDirectory() == false){
-			indexFolder.mkdirs();
-		}
-		if(profile_file.getOriginalFilename()!=null&&!profile_file.getOriginalFilename().equals("")) {
-			try {
-				String saveName = "profile_"+UUID.randomUUID()+"_"+profile_file.getOriginalFilename();
-				File f = new File(attach_path,saveName);
-				profile_file.transferTo(f);
-				dto.setProfile_img(saveName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		if(sign_file.getOriginalFilename()!=null&&!sign_file.getOriginalFilename().equals("")) {
-			try {
-				String saveName = "sign_"+UUID.randomUUID()+"_"+sign_file.getOriginalFilename();
-				File f = new File(attach_path,saveName);
-				sign_file.transferTo(f);
-				dto.setSign_img(saveName);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 		
-		boolean isc = eService.updateEmployee(dto);
+		boolean isc = eService.updateEmployee(dto,profile_file,sign_file);
 		if(isc)
 			return "redirect:/empInfo.do";
 		else

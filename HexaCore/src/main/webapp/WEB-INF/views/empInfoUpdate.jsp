@@ -69,7 +69,16 @@ function formChk(){
 	<input type="hidden" name ="name" value="${dto.name }">
 	<input type="hidden" name ="state" value="${dto.state }">
 	<table class="table table-bordered" style="width:75%">
-		<tr><td rowspan="10"><img alt="" src="./image/profile/${dto.profile_img }" id="profile-image"></td><th>아이디</th><td>${dto.id }</td></tr>
+		<tr><td rowspan="10">
+			<c:choose>
+				<c:when test="${empty dto.profile_img || dto.profile_img eq '' }">
+					<img style="height: 120px; width: 120px;" alt="" src="./image/default_profile.png" id="profile-image">
+				</c:when>
+				<c:otherwise>
+					<img style="height: 120px; width: 120px;" alt="" src="./image/profile/${dto.profile_img }" id="profile-image">
+				</c:otherwise>
+			</c:choose>
+		</td><th>아이디</th><td>${dto.id }</td></tr>
 		<tr><th>비밀번호</th><td><input class="form-control" type="password" name="password" id="password" maxlength="20"></td></tr>
 		<tr><th>비밀번호 확인</th><td><input class="form-control" type="password" id="password2" maxlength="20"></td></tr>
 		<tr><th>이름</th><td>${dto.name }</td></tr>
@@ -87,8 +96,17 @@ function formChk(){
 					<input class="form-control" type="text" name="detailaddress" id="detailAddress" placeholder="상세주소" value="${dto.detailaddress }">
 			</td>
 		</tr>
-		<tr><th>프로필 이미지</th><td><input multiple="multiple" type="file" name="profile_file" id="profile_file" onchange="a(this,'profile-')" accept="image/*"></td></tr>
-		<tr><td><img id="sign-image" src="./image/profile/${dto.sign_img}" ></td><th>사인</th><td><input multiple="multiple" type="file" name="sign_file" id="sign_file"  onchange="a(this,'sign-')" accept="image/*"></td></tr>
+		<tr><th>프로필 이미지</th><td><input type="file" name="profile_file" id="profile_file" onchange="a(this,'profile-')" accept="image/*"></td></tr>
+		<tr><td>
+			<c:choose>
+				<c:when test="${empty dto.sign_img || dto.sign_img eq '' }">
+					<img style="height: 80px; width: 80px;" id="sign-image" src="./image/default_sign.png" id="sign-image" >
+				</c:when>
+				<c:otherwise>
+					<img style="height: 80px; width: 80px;" id="sign-image" src="./image/profile/${dto.sign_img}" id="sign-image">
+				</c:otherwise>
+			</c:choose>
+		</td><th>사인</th><td><input type="file" name="sign_file" id="sign_file"  onchange="a(this,'sign-')" accept="image/*"></td></tr>
 	</table>
 		<div id="btns"><input type="button" value="수정" onclick="formChk()" id="sign-image" class="btn"><input type="reset" value="리셋" class="btn"></div>
 	</form>
