@@ -27,11 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
-import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
-import com.hexa.core.model.bbs.inf.FreeBbsIService;
 import com.hexa.core.model.eappr.inf.EapprIService;
-import com.hexa.core.model.search.inf.SearchIService;
 
 @Controller
 public class EapprCtrl1 {
@@ -39,11 +36,7 @@ public class EapprCtrl1 {
 	@Autowired
 	private EapprIService service;
 	
-	@Autowired
-	private SearchIService sService;
-	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
-	
 	
 	// ------------------------------ 전자결재 메인, 홈 화면 관련 컨트롤러 ------------------------------
 	
@@ -90,7 +83,7 @@ public class EapprCtrl1 {
 	// 작성된 문서 DB에 저장하고 작성 글 상세보기 화면으로 이동
 	@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
 	public String DocDetail(DocumentDTO dto, Model model, MultipartFile[] filename) {
-		int seq = service.insertNewDoc(dto, filename);
+		int seq = service.insertNewDoc(dto, filename); // 문서 내용, 결재자 루트, 첨부파일 DB에 저장, 새로 작성된 전자문서 SEQ값 반환
 		return "redirect:/docDetail.do?seq="+seq;
 	}
 	
@@ -176,6 +169,7 @@ public class EapprCtrl1 {
 		return "redirect:/goDocTypeDetail.do?seq="+dto.getType_seq();
 	}
 	
+	// 파일 다운로드
 	@RequestMapping(value = "/fdownload.do", method = RequestMethod.GET)
 	public void fileDownload(HttpServletResponse resp, DocFileDTO fDto) throws Exception {
 		log.info("#################################3 {}",fDto);
