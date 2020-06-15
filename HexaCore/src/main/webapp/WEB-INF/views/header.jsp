@@ -46,13 +46,16 @@
   			if(msg.eapprCnt=="0"){
   				$("#cntChkk").html("전자결재");
   			}
-  			if(msg.msgCnt!=beforeMCnt){
-  				alert("메시지가 있습니다!!!");
-  			}
-  				$("#Mcntchk").html("메세지("+msg.msgCnt+")");
-  				$("#Mcnt").val(msg.msgCnt);
-  			if(msg.msgCnt=="0"){
-  				$("#Mcntchk").html("");
+  			if(msg.msgCnt!=0){
+  				$("#msgImg").css("display","initial");
+  				$("#msgImg").attr("onclick","openMsg('true');");
+//   			$("#Mcntchk").html("("+msg.msgCnt+")");
+//   			$("#Mcnt").val(msg.msgCnt);
+  			}else{
+//   			$("#Mcntchk").html("("+msg.msgCnt+")");
+//   			$("#Mcnt").val(msg.msgCnt);
+// 				$("#Mcntchk").attr("onclick",null);
+  				$("#msgImg").css("display","none");
   			}
   		},error: function() {
   			alert("실패");
@@ -79,7 +82,13 @@
                  };
              }
          }
-
+	function openMsg(isc) {
+		if(isc == 'true'){
+			window.open("./msgReceiveList.do", "사원 정보", "width=1024,height=760");
+		}else{
+			return false;
+		}
+	}
   </script>
 	<title>Home</title>
 </head>
@@ -121,9 +130,11 @@ function totalSearch(){
 						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;" onclick="totalSearch()">
 							<span class="glyphicon glyphicon-search"></span>
 						</button>
-						<div id="Mcntchk"></div>
 				</div>
 			</form>
+		</div>
+		<div class="msg" id="Mcntchk">
+			<img src="./image/newMsg.png" id="msgImg" style="display:none;" class="msgImg">
 		</div>
 		<div class="mypage" onclick="empPop()">My Page</div>
 		<div class="logout" onclick="location.href='./logout'">Logout</div>
