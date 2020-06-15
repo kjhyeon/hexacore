@@ -15,9 +15,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
-	function replyComplete(){
-		location.href="./freeBbsMain.do";
-	}
 	
 	$(document).ready(function() {
 		var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
@@ -123,8 +120,10 @@
    	<hr>
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
-	        <button class="btn btn-default" onclick="replyComplete()">답글작성완료</button>
-	        <button class="btn btn-default" onclick="">취소</button>
+	        <button class="btn btn-default">답글작성완료</button>
+	       <a href="./freeBbsMain.do">
+	        <input type="button" class="btn btn-default" value="답글작성취소">
+	       </a>
 	      </div>
 	    </div>
 	    </form>

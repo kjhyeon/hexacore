@@ -137,7 +137,7 @@
   		
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
-	        <button type="submit" class="btn btn-default" onclick="BbsContent_modify_complete()">수정완료</button>
+	        <button type="submit" class="btn btn-default">수정완료</button>
 	        <a href="./freeBbsMain.do">
 	        	<button type="button" class="btn btn-default" onclick="BbsContent_modify_cancle()">작성취소</button>
 	        </a>

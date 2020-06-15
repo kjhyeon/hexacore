@@ -137,8 +137,8 @@
       		</tr>
       </c:forEach>
   		</table>
-		<input type="button" class="btn btn-default" id="insertForm" value="새 글 작성" onclick="writeForm()">
       	<c:if test="${auth eq true }">
+			<input type="button" class="btn btn-default" id="insertForm" value="새 글 작성" onclick="writeForm()">
       		<input type="submit" class="btn btn-danger" id="multidel" value="글 다중 삭제" onclick="multiDelete()">
    		</c:if>
       </form>

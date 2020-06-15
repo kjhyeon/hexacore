@@ -1,7 +1,247 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hexa.core.file.fileb">
-	<select id="">
+	<!-- 1. 자료실 글 작성 -->
+	<insert id="insertFileBbs" parameterType="BbsDto">
+	INSERT INTO FILE_BBS 
+		(SEQ, 		ID, 		NAME, 
+		 TITLE, 	CONTENT, 	STATE, 
+		 REGDATE, 	VIEWS, 		ROOT, 
+		 REPLY_SEQ, BBS_DEPTH)
+	  VALUES (FILE_BBS_SEQ.NEXTVAL, #{id}, 		#{name}, 	#{title}, 
+	  		  #{content}, 			0, 			SYSDATE, 	0, 
+			  (SELECT NVL(MAX(ROOT),0)+1 FROM FILE_BBS), 0, 0)
+	</insert>
 	
+	<!-- 2. 자료실 글 수정 -->	
+	<update id="updateModifyFileBbs" parameterType="BbsDto">
+	UPDATE FILE_BBS
+		SET TITLE=#{title}, CONTENT=#{content}
+			WHERE SEQ=#{seq}
+	</update>
+	
+	<!-- 3. 자료실 글 단일삭제 -->
+	<update id="updateDeleteFileBbs" parameterType="java.lang.String">
+	UPDATE FILE_BBS
+		SET STATE = 1
+			WHERE STATE = 0 AND SEQ = #{seq}
+	</update>
+	
+	<!-- 4. 자료실 글 다중삭제 -->
+	<update id="updateMultiDelFileBbs" parameterType="java.util.Map">
+ 	UPDATE FILE_BBS 
+ 		SET STATE = 1
+      		WHERE STATE = 0 AND SEQ IN 
+      		<foreach collection="seqs" item="seq" open="(" separator="," close=")">
+      			#{seq}
+      		</foreach>
+	</update>
+	
+	<!-- 5. (유저) 자료실 글 조회 -->
+	<select id="selectUserFileBbsList" resultType="BbsDto">
+	SELECT SEQ, ID, NAME, TRIM(TITLE) TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH
+		FROM FILE_BBS
+			WHERE STATE = 0
+				ORDER BY ROOT DESC, REPLY_SEQ
+	</select>
+	
+	<!-- 6. (관리자) 자료실 글 조회 -->
+	<select id="selectAdminFileBbsList" resultType="BbsDto">
+	  SELECT * FROM
+					(
+					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
+					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
+					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	f.CONTENT
+						FROM FILE_BBS f LEFT JOIN 
+						(
+						 SELECT SEQ,COUNT(*) F_COUNT 
+						 	FROM FILES WHERE CATEGORY=2 GROUP BY SEQ
+						 ) f2 ON f.SEQ = f2.SEQ
+					 ) j1 LEFT JOIN (
+					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
+					 				 	FROM FILE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
+						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
+	</select>
+	
+	<!-- 7. 자료실 상세글 보기 -->
+	<select id="selectDetailFileBbs" parameterType="java.lang.String"
+							   		 resultType="BbsDto"> 
+		SELECT * FROM
+					(
+					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
+					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
+					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	NVL(f.CONTENT, ' ') CONTENT
+						FROM FILE_BBS f LEFT JOIN 
+						(
+						 SELECT SEQ,COUNT(*) F_COUNT 
+						 	FROM FILES WHERE CATEGORY=2 GROUP BY SEQ
+						 ) f2 ON f.SEQ = f2.SEQ
+					 ) j1 LEFT JOIN (
+					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
+					 				 	FROM FILE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
+						WHERE SEQ = #{seq}
+	</select>
+	
+	<!-- 8. 자료실 조회수 증가  -->
+	<!-- 유저에만 해당하는 사항 -->
+	<update id="updateViewsFileBbs" parameterType="java.lang.String">
+	UPDATE FILE_BBS 
+		SET VIEWS = VIEWS+1
+			WHERE SEQ = #{seq}
+	</update>
+	
+	<!-- 9. 자료실 답글 -->
+	<!-- 9-1. 자료실 답글 update문 -->
+	<update id="updateReplyFileBbs" parameterType="BbsDto">
+		UPDATE FILE_BBS 
+			SET REPLY_SEQ = REPLY_SEQ+1
+				WHERE ROOT =(SELECT ROOT FROM FILE_BBS WHERE SEQ = #{seq})
+					AND REPLY_SEQ > (SELECT REPLY_SEQ FROM FILE_BBS WHERE SEQ =#{seq})
+	</update>
+	
+	<!-- 9-2. 자료실 답글  insert문 -->
+	<insert id="insertReplyFileBbs" parameterType="BbsDto">
+	INSERT INTO FILE_BBS 
+	(SEQ, ID, NAME, TITLE, CONTENT, STATE, REGDATE, VIEWS, ROOT, REPLY_SEQ, BBS_DEPTH)
+	VALUES (FILE_BBS_SEQ.NEXTVAL, #{id}, #{name}, #{title}, #{content},
+			0, SYSDATE, 0,
+			(SELECT ROOT FROM FILE_BBS WHERE SEQ = #{seq}),
+			(SELECT REPLY_SEQ FROM FILE_BBS WHERE SEQ = #{seq}) +1,
+			(SELECT BBS_DEPTH FROM FILE_BBS WHERE SEQ = #{seq}) +1)
+	</insert>
+	
+	<!-- 10. (유저) 자료실 페이징 처리 -->
+	<select id="selectUserFileBbsListRow" parameterType="RowNum"
+									  	  resultType="BbsDto">
+	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
+		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
+		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH,F_COUNT, C_COUNT 
+		FROM 
+		(
+		SELECT ROWNUM RNUM, 	SEQ, 		ID, 		NAME,
+				   TRIM(TITLE) TITLE, CONTENT,	STATE,		REGDATE,	
+				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH, F_COUNT, C_COUNT 
+			FROM
+			(
+			 SELECT * FROM
+					(
+					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
+					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
+					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	f.CONTENT
+						FROM FILE_BBS f LEFT JOIN 
+						(
+						 SELECT SEQ,COUNT(*) F_COUNT 
+						 	FROM FILES WHERE CATEGORY=2 GROUP BY SEQ
+						 ) f2 ON f.SEQ = f2.SEQ
+					 ) j1 LEFT JOIN (
+					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
+					 				 	FROM FILE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
+					 	WHERE STATE = 0
+						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
+			)
+		)
+		WHERE
+			RNUM BETWEEN #{start} AND #{last}
+	</select>
+	
+	<!-- 11. (관리자) 자료실 페이징 처리 -->
+	<select id="selectAdminFileBbsListRow" parameterType="RowNum"
+									  resultType="BbsDto">
+	SELECT SEQ, 		ID, 		NAME, 		TRIM(TITLE) TITLE, 
+		   CONTENT, 	STATE, 		REGDATE, 	VIEWS, 
+		   ROOT, 		REPLY_SEQ, 	BBS_DEPTH,F_COUNT, C_COUNT 
+		FROM 
+		(
+		SELECT ROWNUM RNUM, 	SEQ, 		ID, 		NAME,
+				   TRIM(TITLE) TITLE, CONTENT,	STATE,		REGDATE,	
+				   VIEWS,		ROOT,		REPLY_SEQ,	BBS_DEPTH, F_COUNT, C_COUNT 
+			FROM
+			(
+			 SELECT * FROM
+					(
+					 SELECT f.SEQ, 		f.NAME, 	f.REGDATE, 		f.REPLY_SEQ,
+					 		f.ROOT, 	f.STATE,	f.TITLE ,		f.ID,
+					 		f.VIEWS, 	f2.F_COUNT,	f.BBS_DEPTH, 	f.CONTENT
+						FROM FILE_BBS f LEFT JOIN 
+						(
+						 SELECT SEQ,COUNT(*) F_COUNT 
+						 	FROM FILES WHERE CATEGORY=2 GROUP BY SEQ
+						 ) f2 ON f.SEQ = f2.SEQ
+					 ) j1 LEFT JOIN (
+					 				 SELECT PARENT_SEQ , COUNT(*) C_COUNT 
+					 				 	FROM FILE_COMMENTS fc GROUP BY PARENT_SEQ
+					 				) c1 ON j1.SEQ = c1.PARENT_SEQ
+						ORDER BY j1.ROOT DESC, j1.REPLY_SEQ
+			)
+		)
+		WHERE
+			RNUM BETWEEN #{start} AND #{last}
+	</select>
+	
+	<!-- 12. (유저) 자료실 글 전체 갯수 -->
+	<select id="selectUserFileBoardListTotal" resultType="java.lang.Integer">
+	SELECT COUNT(*) 
+		FROM FILE_BBS
+			WHERE STATE = 0
+	</select>
+	
+	<!-- 13. (관리자) 자료실 글 전체 갯수 -->
+	<select id="selectAdminFileBoardListTotal" resultType="java.lang.Integer">
+	SELECT COUNT(*) 
+		FROM FILE_BBS
+	</select>
+	
+	<!-- 14. 자료실 seq최대값 가져오기(검색엔진 + 자기가 쓴글 상세보기) -->
+	<select id="selectNewFileBbs" resultType="java.lang.String">
+		SELECT SEQ FROM FILE_BBS WHERE SEQ=(SELECT MAX(SEQ) FROM FILE_BBS)
+	</select>
+	
+	<!-- 15. 자료실 파일 추가 -->
+	<insert id="insertFileBbsFile" parameterType="FileDto">
+	INSERT INTO HEXA.FILES
+		(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE, CATEGORY)
+			VALUES(#{name}, #{seq}, #{f_path}, #{ori_name}, #{f_size}, 2)
+	</insert>
+	
+	<!-- 16. 자료실 파일 삭제 -->
+	<delete id="deleteFileBbsFile" parameterType="java.util.Map">
+	DELETE FROM FILES 
+		WHERE
+			<if test="files != null">
+				NAME NOT IN
+				<foreach collection="files" item="name" open="(" separator="," close=")">
+					#{name}
+				</foreach> 
+				AND
+			</if>
+				SEQ = #{seq} AND CATEGORY = 2
+	</delete>
+	
+	<!-- 17. 자료실 파일 조회 -->
+	<select id="selectFile" parameterType="java.lang.String"
+							resultType="FileDto">
+	SELECT NAME ,F_SIZE, ORI_NAME, F_PATH 
+		FROM FILES 
+			WHERE SEQ=#{seq} AND CATEGORY = 2
 	</select>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

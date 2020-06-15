@@ -118,7 +118,7 @@ public class NoticeBbsServiceImpl implements NoticeBbsIService {
 	@Override
 	public BbsDTO ReplyNotice(BbsDTO dto, MultipartFile[] filename) {
 		log.info("공지게시판 답글작성 ReplyNotice,\t {}", dto, filename);
-		boolean iscU = dao.updateReplyNoticeBbs(dto);
+		dao.updateReplyNoticeBbs(dto);
 		boolean iscI = dao.insertReplyNoticeBbs(dto);
 		
 		String seq = dao.selectNewNoticeBbs();
@@ -126,7 +126,7 @@ public class NoticeBbsServiceImpl implements NoticeBbsIService {
 		BbsDTO result = dao.selectDetailNoticeBbs(seq);
 		sService.addBbsIndex(result, SearchIService.NOTICE);
 		
-		return (iscU&&iscI)?result:null;
+		return iscI?result:null;
 	}
 
 	@Override

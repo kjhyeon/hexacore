@@ -298,6 +298,8 @@ public class FreeBbsCtrl {
 		model.addAttribute("list", list);
 		model.addAttribute("seq",result);
 		
+		
+		
 		return result!=null?"redirect:/freeBbsDetail.do?seq="+result.getSeq():"redirect:/freeBbsMain.do";
 	}
 	

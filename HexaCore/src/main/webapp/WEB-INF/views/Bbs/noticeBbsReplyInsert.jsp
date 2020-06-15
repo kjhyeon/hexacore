@@ -15,10 +15,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
-	function replyComplete(){
-		location.href="./noticeBbsMain.do";
-	}
-	
 	$(document).ready(function() {
 		var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
 		$("#file_td").append(button);
@@ -112,9 +108,6 @@
 								CKEDITOR.replace('content'
         				        , {height: 500                                                  
              				    });
-             				    
-//  								CKEDITOR.instances.content.setData($("#con").val());
- 								
 						</script>
 					</td>
       			</tr>
@@ -123,7 +116,7 @@
    	<hr>
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
-	        <button class="btn btn-default" onclick="replyComplete()">답글작성완료</button>
+	        <button class="btn btn-default">답글작성완료</button>
 	       <a href="./noticeBbsMain.do">
 	        <input type="button" class="btn btn-default" value="답글작성취소">
 	       </a> 
