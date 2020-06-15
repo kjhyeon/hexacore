@@ -254,5 +254,3 @@ function upApprDocc(seq,state){
 	$("#formDoc").submit();
 }
 
-///////////
-

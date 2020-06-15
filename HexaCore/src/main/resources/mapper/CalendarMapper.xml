@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hexa.core.cal">
+
+<select id="selectEventsCal"  resultType="CalDto">
+	SELECT SEQ, ID, TITLE, START_DATE, END_DATE
+		FROM CALENDAR
+	</select>
+
+<insert id="insertEventsCal" parameterType="CalDto">
+	INSERT INTO 
+		HEXA.CALENDAR
+		      (SEQ, ID, TITLE, START_DATE, END_DATE)
+		VALUES((SELECT MAX(SEQ) FROM CALENDAR)+1,#{id}, #{title}, #{start_date}, #{end_date})
+</insert>
+
+<delete id="deleteEventsCal" parameterType="java.lang.String">
+DELETE 
+	FROM CALENDAR
+		WHERE SEQ = #{seq}
+</delete>
+</mapper>
