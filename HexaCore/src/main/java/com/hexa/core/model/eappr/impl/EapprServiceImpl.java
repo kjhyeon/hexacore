@@ -2,6 +2,7 @@ package com.hexa.core.model.eappr.impl;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +19,6 @@ import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
-import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.eappr.inf.EapprIDao;
 import com.hexa.core.model.eappr.inf.EapprIService;
@@ -75,12 +75,6 @@ public class EapprServiceImpl implements EapprIService{
 	public DocumentDTO selectDoc(String seq) {
 		log.info("selectDoc serviceImpl 실행");
 		return dao.selectDoc(seq);
-	}
-
-	@Override
-	public boolean updateDoc(DocumentDTO Ddto) {
-		log.info("updateDoc serviceImpl 실행");
-		return dao.updateDoc(Ddto);
 	}
 
 	@Transactional
@@ -169,12 +163,6 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public List<DocCommentDTO> selectComment(String seq) {
-		log.info("selectComment ServiceImpl 실행 : {}",seq);
-		return dao.selectComment(seq);
-	}
-
-	@Override
 	public int selectReportCount(String id) {
 		log.info("selectReportCount ServiceImpl 실행 : {}",id);
 		return dao.selectReportCount(id);
@@ -198,6 +186,7 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectApprDocCount(map);
 	}
 
+	@Transactional
 	@Override
 	public int selectAllApprDocCount(Map<String, Object> map) {
 		log.info("selectNeedApprDocCount ServiceImpl 실행 : {}",map);
@@ -285,18 +274,6 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectDocListAll(id);
 	}
 
-	@Override
-	public boolean updateSaveToAppr(String seq) {
-		log.info("updateSaveToAppr ServiceImpl 실행 : {}",seq);
-		return dao.updateSaveToAppr(seq);
-	}
-	
-	@Override
-	public boolean reportCancel(String seq) {
-		log.info("reportCancel ServiceImpl 실행 : {}",seq);
-		return dao.reportCancel(seq);
-	}
-	
 	public boolean saveDocFile(MultipartFile[] files,int seq) {
 		log.info("파일 등록,\t {}", Arrays.toString(files));
 		boolean isc = false;
@@ -336,6 +313,83 @@ public class EapprServiceImpl implements EapprIService{
 	public List<DocFileDTO> selectDocFile(String seq) {
 		log.info("파일 추가 selectDocFile, {}", seq);
 		return dao.selectDocFile(seq);
+	}
+	
+	@Transactional
+	@Override
+	public Map<String, Object> goDetail(ApprovalDTO ADto) {
+		log.info("goDetail, {}", ADto);
+		log.info("받아온 seq 값: {}", ADto.getSeq());
+		String seq = Integer.toString(ADto.getSeq());
+		String userId = ADto.getId();
+		ADto.setId(null);
+		Map<String, Object> map = new HashMap<String, Object>();
+		//도장 주소 결합
+		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
+		attach_path +=ADto.getAppr_sign();
+		//믄사 내용 조회
+		DocumentDTO Ddto = dao.selectDoc(seq);
+		//문서 결재선 전체 조회
+		List<ApprovalDTO> apprList = dao.selectApprRoot(ADto);
+		log.info("문서리스트{}",apprList);
+		for (int i = 0; i < apprList.size(); i++) {
+			if(apprList.get(i).getAppr_sign()!=null) {
+				apprList.get(i).setAppr_sign(attach_path+apprList.get(i).getAppr_sign()); 
+			}
+		}
+		
+		//문서 나의 결재선 조회
+		ADto.setId(userId);
+		List<ApprovalDTO> listsa = dao.selectApprRoot(ADto);
+		log.info("********listsa:{}",listsa);
+		int turn = 0;
+		if(listsa!=null && listsa.size()!=0) {
+			turn = listsa.get(0).getTurn();
+			map.put("turn",turn);
+		}
+		log.info("********turn:{}",turn);
+		
+		//결재자 코멘트 가져오기
+		List<DocCommentDTO> lists = dao.selectComment(seq);
+		//독타입 가져오기
+		DocumentTypeDTO TDto = dao.selectDocType(Integer.toString(Ddto.getType_seq()));
+		map.put("typeDto",TDto);
+		map.put("comment",lists);
+		map.put("Ddto",Ddto);
+		map.put("apprList",apprList);
+		
+		// 첨부파일 가져오기
+		List<DocFileDTO> flist = dao.selectDocFile(seq);
+		map.put("flist", flist);
+		return map;
+	}
+
+	@Override
+	public boolean upApprDoc(DocumentDTO Ddto) {
+		String seq = Integer.toString(Ddto.getSeq());
+		boolean isc = false;
+		if(seq.equalsIgnoreCase("0")) {
+			isc = dao.updateSaveToAppr(seq);
+		}else {
+			isc = dao.reportCancel(seq);
+		}
+		return (isc)?true:false;
+	}
+
+	@Override
+	public boolean saveUpDoc(DocumentDTO Ddto) {
+		Ddto.setAppr_turn(0);
+		Ddto.setState(0);
+		boolean isc = dao.updateDoc(Ddto);
+		int isc2=0;
+		if(isc==true) {
+			if(Ddto.getLists()!=null) {
+				for (int i = 0; i < Ddto.getLists().size(); i++) {
+					isc2 = dao.insertApprRoot(Ddto.getLists().get(i));
+				}
+			}
+		}
+		return (isc2>Ddto.getLists().size())?true:false;
 	}
 
 }

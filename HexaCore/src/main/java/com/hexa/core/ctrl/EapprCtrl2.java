@@ -21,16 +21,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.CalDTO;
 import com.hexa.core.dto.DocCommentDTO;
-import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
-import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.cal.inf.Calendar_IService;
 import com.hexa.core.model.eappr.inf.EapprIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 import com.hexa.core.model.msg.inf.MessageIService;
-@SuppressWarnings("static-access")
 @Controller
 public class EapprCtrl2 {
 	
@@ -47,6 +44,7 @@ public class EapprCtrl2 {
 	private BCryptPasswordEncoder passwordEncoder;
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
+	//알림 카운트
 	@ResponseBody
 	@RequestMapping(value="/needCnt",method=RequestMethod.POST)
 	public Map<String, Object> needCnt(Principal principal,int beforeCnt,int beforeMCnt) {
@@ -110,49 +108,15 @@ public class EapprCtrl2 {
 	//문서 상세조회
 	@Transactional
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
-	public String updateDoc(Model model,Principal principal,ApprovalDTO Adto) {
-		log.info("받아온 seq 값: {}", Adto.getSeq());
-		String id = principal.getName();
-		String seq = Integer.toString(Adto.getSeq());
-		
-		//도장 주소 결합
-		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
-		attach_path +=Adto.getAppr_sign();
-		//믄사 내용 조회
-		DocumentDTO Ddto = service.selectDoc(seq);
-		//문서 결재선 전체 조회
-		List<ApprovalDTO> apprList = service.selectApprRoot(Adto);
-		log.info("문서리스트{}",apprList);
-		for (int i = 0; i < apprList.size(); i++) {
-			if(apprList.get(i).getAppr_sign()!=null) {
-				apprList.get(i).setAppr_sign(attach_path+apprList.get(i).getAppr_sign()); 
-			}
-		}
-		
-		//문서 나의 결재선 조회
-		Adto.setId(id);
-		List<ApprovalDTO> listsa = service.selectApprRoot(Adto);
-		log.info("********listsa:{}",listsa);
-		int turn = 0;
-		if(listsa!=null && listsa.size()!=0) {
-			turn = listsa.get(0).getTurn();
-			model.addAttribute("turn",turn);
-		}
-		log.info("********turn:{}",turn);
-		
-		//결재자 코멘트 가져오기
-		List<DocCommentDTO> lists = service.selectComment(seq);
-		//독타입 가져오기
-		DocumentTypeDTO TDto = service.selectDocType(Integer.toString(Ddto.getType_seq()));
-		model.addAttribute("typeDto",TDto);
-		model.addAttribute("comment",lists);
-		model.addAttribute("Ddto",Ddto);
-		model.addAttribute("name",id);
-		model.addAttribute("apprList",apprList);
-		
-		// 첨부파일 가져오기
-		List<DocFileDTO> flist = service.selectDocFile(seq);
-		model.addAttribute("flist", flist);
+	public String updateDoc(Model model,Principal principal,ApprovalDTO ADto) {
+		String userId = principal.getName();
+		Map<String, Object> map = service.goDetail(ADto);
+		model.addAttribute("typeDto",map.get("typeDto"));
+		model.addAttribute("comment",map.get("comment"));
+		model.addAttribute("Ddto",map.get("Ddto"));
+		model.addAttribute("name",userId);
+		model.addAttribute("apprList",map.get("apprList"));
+		model.addAttribute("flist", map.get("flist"));
 		return "eappr2/docDetail";
 	}	
 	
@@ -180,28 +144,18 @@ public class EapprCtrl2 {
 	@RequestMapping(value="/saveUpDoc.do", method= RequestMethod.POST)
 	public String saveUpDoc(DocumentDTO Ddto) {
 		log.info("********Ddto:{}", Ddto);
-		Ddto.setAppr_turn(0);
-		Ddto.setState(0);
-		boolean isc = service.updateDoc(Ddto);
-		boolean isc2=false;
-		if(isc==true) {
-			if(Ddto.getLists()!=null) {
-				isc2 = service.insertApprRoot(Ddto);
-			}
-		}
-		return (isc||isc2)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
+		boolean isc = service.saveUpDoc(Ddto);
+		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
 	
+	//상신/취소 기능
 	@RequestMapping(value="/upApprDoc.do", method=RequestMethod.GET)
-	public String upApprDoc(String seq,String state) {
-		if(state.equalsIgnoreCase("0")) {
-			service.updateSaveToAppr(seq);
-		}else {
-			service.reportCancel(seq);
-		}
-		return "redirect:/docDetail.do?seq="+seq;
+	public String upApprDoc(DocumentDTO Ddto) {
+		boolean isc = service.upApprDoc(Ddto);
+		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
-	//문서승인 Modal
+	
+	//문서 승인 modal
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/apprDoc.do", method= RequestMethod.POST ,produces = "applicaton/text; charset=UTF-8;")
 	@ResponseBody
@@ -265,22 +219,18 @@ public class EapprCtrl2 {
 		return isc?"redirect:/docLists.do?state=7":"redirec:/eApprmain.do";
 	}
 	
-
+	//캘린더 리스트 Ajax
 	@SuppressWarnings("unchecked")
 	@ResponseBody
 	@RequestMapping(value="/getCals.do", method = RequestMethod.POST)
 	public JSONObject getEventsCal(CalDTO CDto) {
+		log.info("---------{}",CDto);
 		Map<String, Object> map = new HashMap<String, Object>();
 		JSONArray jLists = new JSONArray();
 		JSONObject jdto = new JSONObject();
-		
-		log.info("---------{}",CDto);
 		map.put("start",CDto.getStart_date());
 		map.put("end",CDto.getEnd_date());
-		log.info("꺅{}",map);
 		List<CalDTO> lists = CService.selectEventsCal(map);
-		log.info("꺅2{}",lists);
-		
 		
 		for(CalDTO Cdtos : lists) { 
 			JSONObject json = new JSONObject();
@@ -296,6 +246,7 @@ public class EapprCtrl2 {
 		return jdto;
 	}
 	
+	//이벤트추가
 	@RequestMapping(value = "/addEventCals.do", method= RequestMethod.POST)
 	public String addEventCals(CalDTO CDto,Principal principal) {
 		log.info("addEventCals{}",CDto);
@@ -304,6 +255,7 @@ public class EapprCtrl2 {
 		return (n>0)?"redirect:/goEapprHome.do":"redirect:/goEapprHome.do";
 	}
 	
+	//이벤트 삭제
 	@RequestMapping(value = "/deleteCal.do", method= RequestMethod.POST)
 	public String deleteCal(String title) {
 		log.info("삭제{}",title);

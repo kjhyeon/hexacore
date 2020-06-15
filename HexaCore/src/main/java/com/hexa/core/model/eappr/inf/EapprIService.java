@@ -55,14 +55,6 @@ public interface EapprIService {
 	public DocumentDTO selectDoc(String seq);
 	
 	/**
-	 * 문서 수정사항 업데이트
-	 * @param DocumentDTO 문서 seq, appr_turn,(title, content)
-	 * @return True : 성공 / False 실패
-	 */
-	public boolean updateDoc(DocumentDTO Ddto);
-	
-	
-	/**
 	 * 결재루트 입력
 	 * @param ApprovalDto 결재선 seq, id, name, duty, turn, appr_kind
 	 * @return True : 성공 / False 실패
@@ -89,13 +81,6 @@ public interface EapprIService {
 	 * @return True : 성공 / False 실패
 	 */
 	public boolean deleteFile(String seq);
-	
-	/**
-	 * 코멘트 조회
-	 * @param seq 해당 문서 번호
-	 * @return commentList
-	 */
-	public List<DocCommentDTO> selectComment(String seq);
 	
 	/**
 	 * 문서 상태 업데이트
@@ -221,20 +206,6 @@ public interface EapprIService {
 	public boolean confirmUpdate(Map<String,Object> map);
 	
 	/**
-	 * 임시저장 -> 상신 기능
-	 * @param seq
-	 * @return TRUE : 성공 / FALSE : 실패
-	 */
-	public boolean updateSaveToAppr(String seq);
-	
-	/**
-	 * 상신 -> 임시저장 기능
-	 * @param seq
-	 * @return TRUE : 성공 / FALSE : 실패
-	 */
-	public boolean reportCancel(String seq);
-	
-	/**
 	 * 업로드한 파일 저장 쿼리
 	 * @param dto
 	 * @return TRUE : 성공 / FALSE : 실패
@@ -247,4 +218,24 @@ public interface EapprIService {
 	 * @return 파일Dto
 	 */
 	public List<DocFileDTO> selectDocFile(String seq);
+	
+	/**
+	 * 디테일 화면 service
+	 * @param ADto
+	 * @return
+	 */
+	public Map<String,Object> goDetail(ApprovalDTO ADto);
+	
+	/**
+	 * 상신/취소 기능
+	 * @param Ddto
+	 * @return  TRUE : 성공 / FALSE : 실패
+	 */
+	public boolean upApprDoc(DocumentDTO Ddto);
+	
+	/**
+	 * 임시저장 기능
+	 * @param Ddto
+	 */
+	public boolean saveUpDoc(DocumentDTO Ddto);
 }
