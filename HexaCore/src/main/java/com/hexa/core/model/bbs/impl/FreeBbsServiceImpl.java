@@ -89,7 +89,7 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	@Override
 	public BbsDTO ReplyBbs(BbsDTO dto, MultipartFile[] filename) {
 		log.info("자유게시판 답글 달기  ReplyBbs,\t {}", dto);
-		boolean iscU = dao.updateReplyBbs(dto);
+		dao.updateReplyBbs(dto);
 		boolean iscI = dao.insertReplyBbs(dto);
 		// 트랜잭셔널을 위해 거는 것들
 		String seq = dao.selectNewBbs();
@@ -97,7 +97,7 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 		BbsDTO result = dao.selectDetailFreeBbs(seq);
 		sService.addBbsIndex(result, SearchIService.FREE);
 		
-		return (iscU&&iscI)?result:null;
+		return iscI?result:null;
 	}
 
 	@Override

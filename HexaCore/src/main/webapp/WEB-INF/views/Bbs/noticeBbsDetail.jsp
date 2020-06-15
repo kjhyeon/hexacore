@@ -19,15 +19,15 @@
 <script type="text/javascript" src="./js/sweetalert.js"></script>
 </head>
 <script type="text/javascript">
-	function BbsContent_modify(){
+	function NoticeContent_modify(){
 		location.href="./noticeBbsModify.do?seq="+${seq.seq};
 	}
 	
-	function del(){
+	function Notice_del(){
 		location.href="./Noticedel.do?seq="+${seq.seq};
 	}
 	
-	function BbsReplyWrite(){
+	function NoticeReplyWrite(){
 		location.href="./noticeBbsReplyInsert.do?seq="+${seq.seq};
 	}
 	
@@ -94,10 +94,10 @@
 	        <input type="hidden" name="seq" value="${seq.seq}" id="seq">
 	        
 	        <c:if test="${(sessionId eq seq.id) || auth eq true}">
-	        	<input id="Detail_Delete" type="submit" class="btn btn-default" value="삭제" onclick="del()">
-	        	<input id="Detail_Modify" type="button" class="btn btn-default" onclick="BbsContent_modify()" value="수정">
+	        	<input id="Notice_Detail_Delete" type="submit" class="btn btn-default" value="삭제" onclick="Notice_del()">
+	        	<input id="Notice_Detail_Modify" type="button" class="btn btn-default" onclick="NoticeContent_modify()" value="수정">
+	        	<input id="Notice_Detail_Reply" type="button" class="btn btn-default" onclick="NoticeReplyWrite()" value="답글">
 	        </c:if>
-	        	<input id="Detail_Reply" type="button" class="btn btn-default" onclick="BbsReplyWrite()" value="답글">
 	      </div>
 	    </div>
 	   </form>
