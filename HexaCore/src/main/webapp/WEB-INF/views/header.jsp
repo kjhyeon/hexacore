@@ -27,14 +27,15 @@
   };
   function aa(){
   	var beforeCnt = $("#cnt").val();
-  	cntCheck(beforeCnt);
+  	var beforeMCnt = $("#Mcnt").val();
+  	cntCheck(beforeCnt,beforeMCnt);
   }
   //아작스실행
-  function cntCheck(val) {
+  function cntCheck(val,val2) {
   	$.ajax({
   		url:"./needCnt.do",
   		type : "post",
-  		data : {"val":parseInt(val)},
+  		data : {"val":parseInt(val),"val2":parseInt(val2)},
   		async : true,
   		success : function(msg) {
   			if(msg!=val){
@@ -111,6 +112,7 @@ function totalSearch(){
 					</select>
 					<input type="text" class="form-control" style="width:300px;  margin:1px" name="keyword">
 					<input id="cnt" type="hidden" value="0">
+					<input id="Mcnt" type="hidden" value="0">
 						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;" onclick="totalSearch()">
 							<span class="glyphicon glyphicon-search"></span>
 						</button>
