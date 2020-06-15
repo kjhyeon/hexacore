@@ -10,8 +10,6 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +25,6 @@ import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.dto.EmployeeDTO;
-import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.cal.inf.Calendar_IService;
 import com.hexa.core.model.eappr.inf.EapprIService;
@@ -73,10 +70,8 @@ public class EapprCtrl2 {
 	
 	//문서함 List 조회 (분기)
 	@RequestMapping(value = "/docLists.do", method = RequestMethod.GET,produces = "applicaton/text; charset=UTF-8;")
-	public String docLists(Model model,SecurityContextHolder session, String page,String state) {
-		 Authentication auth = session.getContext().getAuthentication();
-		 LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
-		    String id = Ldto.getUsername();
+	public String docLists(Model model,Principal principal, String page,String state) {
+		    String id = principal.getName();
 		if(page==null) {
 			page="0";
 		}
@@ -115,12 +110,11 @@ public class EapprCtrl2 {
 	//문서 상세조회
 	@Transactional
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
-	public String updateDoc(Model model,SecurityContextHolder session,ApprovalDTO Adto) {
+	public String updateDoc(Model model,Principal principal,ApprovalDTO Adto) {
 		log.info("받아온 seq 값: {}", Adto.getSeq());
-		Authentication auth = session.getContext().getAuthentication();
-		LoginDTO Ldto = (LoginDTO) auth.getPrincipal();
-		String id = Ldto.getUsername();
+		String id = principal.getName();
 		String seq = Integer.toString(Adto.getSeq());
+		
 		//도장 주소 결합
 		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
 		attach_path +=Adto.getAppr_sign();
@@ -211,12 +205,10 @@ public class EapprCtrl2 {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/apprDoc.do", method= RequestMethod.POST ,produces = "applicaton/text; charset=UTF-8;")
 	@ResponseBody
-	public String apprDoc(ApprovalDTO Adto, DocumentDTO Ddto, SecurityContextHolder session) {
+	public String apprDoc(ApprovalDTO Adto, DocumentDTO Ddto, Principal principal) {
 		JSONObject json = new JSONObject();
 		log.info("********Adto:{}",Adto);
-		Authentication auth = session.getContext().getAuthentication();
-	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
-		Adto.setId(dto.getUsername());
+		Adto.setId(principal.getName());
 		List<ApprovalDTO> lists = service.selectApprRoot(Adto);
 		log.info("********lists:{}",lists);
 		json.put("seq", lists.get(0).getSeq());
@@ -233,11 +225,9 @@ public class EapprCtrl2 {
 	//비밀번호 Check
 	@ResponseBody
 	@RequestMapping(value="/checkPassword", method=RequestMethod.POST)
-	public String checkPassword(String password , SecurityContextHolder session) {
+	public String checkPassword(String password , Principal principal) {
 		log.info("********password:{}",password);
-		Authentication auth = session.getContext().getAuthentication();
-	    LoginDTO dto = (LoginDTO) auth.getPrincipal();
-		EmployeeDTO EDto =  EService.selectLoginInfo(dto.getUsername());
+		EmployeeDTO EDto =  EService.selectLoginInfo(principal.getName());
 		if(passwordEncoder.matches(password, EDto.getPassword())) {
 			return "true";
 		}else {

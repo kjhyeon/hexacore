@@ -40,23 +40,17 @@
   		success : function(msg) {
   			if(msg.eapprCnt!=beforeCnt){
   				calculate();
-  				$("#cntChkk").html("전자결재("+msg.eapprCnt+")");
-  				$("#cnt").val(msg.eapprCnt);
-  			}else{
-  				$("#cntChkk").html("전자결재("+msg.eapprCnt+")");
-  				$("#cnt").val(msg.eapprCnt);
   			}
+  				$("#cntChkk").html("전자결재("+msg.eapprCnt+")");
+  				$("#cnt").val(msg.eapprCnt);
   			if(msg.eapprCnt=="0"){
   				$("#cntChkk").html("전자결재");
   			}
   			if(msg.msgCnt!=beforeMCnt){
   				alert("메시지가 있습니다!!!");
-  				$("#Mcntchk").html("메세지("+msg.msgCnt+")");
-  				$("#Mcnt").val(msg.msgCnt);
-  			}else{
-  				$("#Mcntchk").html("메세지("+msg.msgCnt+")");
-  				$("#Mcnt").val(msg.msgCnt);
   			}
+  				$("#Mcntchk").html("메세지("+msg.msgCnt+")");
+  				$("#Mcnt").val(msg.msgCnt);
   			if(msg.msgCnt=="0"){
   				$("#Mcntchk").html("");
   			}
@@ -127,9 +121,9 @@ function totalSearch(){
 						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;" onclick="totalSearch()">
 							<span class="glyphicon glyphicon-search"></span>
 						</button>
+						<div id="Mcntchk"></div>
 				</div>
 			</form>
-						<div id="Mcntchk"></div>
 		</div>
 		<div class="mypage" onclick="empPop()">My Page</div>
 		<div class="logout" onclick="location.href='./logout'">Logout</div>
