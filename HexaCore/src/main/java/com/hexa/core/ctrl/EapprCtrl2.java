@@ -298,4 +298,11 @@ public class EapprCtrl2 {
 		int n = CService.insertEventsCal(CDto);
 		return (n>0)?"redirect:/goEapprHome.do":"redirect:/goEapprHome.do";
 	}
+	
+	@RequestMapping(value = "/deleteCal.do", method= RequestMethod.POST)
+	public String deleteCal(String title) {
+		log.info("삭제{}",title);
+		int n = CService.deleteEventsCal(title);
+		return (n>0)?"redirect:/goEapprHome.do":"redirect:/goEapprHome.do";
+	}
 }

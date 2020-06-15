@@ -80,15 +80,22 @@ document.addEventListener('DOMContentLoaded', function() {
   			});
   		}
   	}]
-	, eventClick:function(event) {
-       		 
-	}
-
+	, eventClick:function(info, jsEvent, view) {
+		 var r = confirm("일정을 삭제하시겠습니까? "+info.event.title);
+         if (r === true) {
+        	deleteCal(info.event.title);
+         }
+       }, 
     });
 
     calendar.render();
   });
 
+function deleteCal(title) {
+	$("#deleteCal").attr("action",'./deleteCal.do?title='+title);
+	$("#deleteCal").attr("method","post");
+	$("#deleteCal").submit();
+}
 </script>
 <style>
 
@@ -133,7 +140,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				</div>
 			</div>
 		</div>
-<div id="calendar"></div>
+<div id="calendar">
+<form id="deleteCal">
+</form>
+</div>
 	문서요약보기${docCounts}<br>
 	COUNT1: 참조문서함 개수 : ${docCounts.get("COUNT1")}<br>
 	COUNT2: 결재문서함-결재중문서 개수 : ${docCounts.get("COUNT2")}<br>

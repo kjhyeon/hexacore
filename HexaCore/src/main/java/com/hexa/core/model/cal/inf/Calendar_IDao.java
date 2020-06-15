@@ -11,4 +11,6 @@ public interface Calendar_IDao {
 	public List<CalDTO> selectEventsCal(Map<String, Object> map);
 	
 	public int insertEventsCal(CalDTO CDto);
+	
+	public int deleteEventsCal(String title);
 }

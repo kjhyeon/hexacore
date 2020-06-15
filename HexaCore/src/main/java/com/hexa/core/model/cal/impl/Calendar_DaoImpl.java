@@ -33,4 +33,10 @@ public class Calendar_DaoImpl implements Calendar_IDao{
 		return sqlSession.insert(NS+"insertEventsCal",CDto);
 	}
 
+	@Override
+	public int deleteEventsCal(String title) {
+		log.info("deleteEventsCal : {}",title);
+		return sqlSession.delete(NS+"deleteEventsCal",title);
+	}
+
 }

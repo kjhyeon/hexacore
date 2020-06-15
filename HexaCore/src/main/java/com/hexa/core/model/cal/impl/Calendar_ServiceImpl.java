@@ -27,6 +27,12 @@ public class Calendar_ServiceImpl implements Calendar_IService{
 		log.info("insertEventsCal : {}",CDto);
 		return dao.insertEventsCal(CDto);
 	}
+	
+	@Override
+	public int deleteEventsCal(String title) {
+		log.info("deleteEventsCal : {}",title);
+		return dao.deleteEventsCal(title);
+	}
 
 	
 }

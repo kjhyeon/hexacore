@@ -17,6 +17,6 @@
 <delete id="deleteEventsCal" parameterType="java.lang.String">
 DELETE 
 	FROM CALENDAR
-		WHERE SEQ = #{seq}
+		WHERE TITLE = #{title}
 </delete>
 </mapper>
