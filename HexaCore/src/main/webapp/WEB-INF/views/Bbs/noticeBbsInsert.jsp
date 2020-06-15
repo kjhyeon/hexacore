@@ -15,15 +15,23 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
-	function replyComplete(){
-		location.href="./freeBbsMain.do";
+	// 스크립트 < > 제약조건 
+	function writeComplete(){
+		var temp = $("#title").val();
+		if(temp.indexOf("<")>=0){
+			temp = temp.replace(/</g ,"&lt;");
+		}
+		if(temp.indexOf(">")>=0){
+			temp = temp.replace(/>/g ,"&gt;");
+		}
+		$("#title").val(temp);
+		document.forms[0].submit();
 	}
 	
 	$(document).ready(function() {
 		var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
 		$("#file_td").append(button);
 	});
-	
 	function addinput(){
 		var len = document.getElementsByName("filename").length;
 		if(len<3){
@@ -37,52 +45,41 @@
 	}
 	
 	function fileChk(f){
-		// 파일 유형 제한
-			if ($(f).val != "") {  // input에 name이 filename 불러오기
-				var ext = $(f).val().split('.').pop().toLowerCase();
-				if ($.inArray(ext, ['gif','jpg','jpeg','doc','html','zip','rar','7z',
-									'alz','egg','001','alz','lzh','tgz','tar','tlz','tbz',
-									'jar','war','apk','ppt','xlsx','txt','hwp','png','mp3',
-									'mp4','avi','docx','gif','java'])== -1) {
-					alert("등록할 수 없는 파일입니다.");
-					$(f).val(""); // input 파일명을 다시 지워주는 코드
-					return;
-				}
+	// 파일 유형 제한
+		if ($(f).val != "") {  // input에 name이 filename 불러오기
+			var ext = $(f).val().split('.').pop().toLowerCase();
+			if ($.inArray(ext, ['gif','jpg','jpeg','doc','html','zip','rar','7z',
+								'alz','egg','001','alz','lzh','tgz','tar','tlz','tbz',
+								'jar','war','apk','ppt','xlsx','txt','hwp','png','mp3',
+								'mp4','avi','docx','gif','java'])== -1) {
+				alert("등록할 수 없는 파일입니다.");
+				$(f).val(""); // input 파일명을 다시 지워주는 코드
+				return;
 			}
-		// 파일 용량 제한
-			if (f.value != ""){
-		 		var fileSize = f.files[0].size;
-		 		var maxSize = 108*1024*1024 // 108MB 제한
-		 		if(fileSize > maxSize){
-		 			alert("첨부파일 사이즈는 108MB 이내로 등록가능합니다.");
-		 			$(f).val("");
-		 			return
-		 		}
-		 	}
 		}
-	
-	function replyComplete(){
-		var temp = $("#title").val();
-		if(temp.indexOf("<")>=0){
-			temp = temp.replace(/</g ,"&lt;");
-		}
-		if(temp.indexOf(">")>=0){
-			temp = temp.replace(/>/g ,"&gt;");
-		}
-		$("#title").val(temp);
-		document.forms[1].submit();
+	// 파일 용량 제한
+		if (f.value != ""){
+	 		var fileSize = f.files[0].size;
+	 		var maxSize = 108*1024*1024 // 108MB 제한
+	 		if(fileSize > maxSize){
+	 			alert("첨부파일 사이즈는 108MB 이내로 등록가능합니다.");
+	 			$(f).val("");
+	 			return
+	 		}
+	 	}
 	}
+	
+	
 </script>
 <body>
 	<sec:authentication property="principal.username" var="sessionId"/>
 	<div class="container">
-		<form action="#" method="post" id="replyForm" name="replyForm" enctype="multipart/form-data">
-		<input type="hidden" name="seq" value="${seq}">
+		<form action="#" method="post" id="writeForm" name="writeForm" enctype="multipart/form-data">
   		<table class="table table-bordered">
     		<thead>
       			<tr>
         			<th colspan="2">
-        				<h1>답글 작성</h1>
+        				<h1>글작성</h1>
         			</th>
       			</tr>
     		</thead>
@@ -90,7 +87,7 @@
     			<tr>
     				<td>제목</td>
     				<td>
-    					<input type="text" id="title" name="title" value="제목">
+    					<input type="text" id="title" name="title" value="제목" maxlength="100">
     				</td>
     			</tr>
        			<tr>
@@ -121,14 +118,16 @@
     		</tbody>
   		</table>
    	<hr>
+  		
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
-	        <button class="btn btn-default" onclick="replyComplete()">답글작성완료</button>
-	        <button class="btn btn-default" onclick="">취소</button>
+	        <input type="button" class="btn btn-default" onclick="writeComplete()" value="작성완료">
+	        <a href="./noticeBbsMain.do">
+		        <input type="button" class="btn btn-default" value="작성취소" onclick="writeCancle()">
+	        </a>
 	      </div>
 	    </div>
 	    </form>
 	</div>
-	
 </body>
 </html>

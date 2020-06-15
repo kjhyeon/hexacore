@@ -24,7 +24,9 @@
 		<mapper resource="/mapper/FreeBMapper.xml"/>
 		<mapper resource="/mapper/FreeCMapper.xml"/>
 		<mapper resource="/mapper/NoticeBMapper.xml"/>
+		<mapper resource="/mapper/NoticeCMapper.xml"/>
 		<mapper resource="/mapper/FileBMapper.xml"/>
+		<mapper resource="/mapper/FileCMapper.xml"/>
 		<mapper resource="/mapper/MessageMapper.xml"/>
 	</mappers>
 </configuration>

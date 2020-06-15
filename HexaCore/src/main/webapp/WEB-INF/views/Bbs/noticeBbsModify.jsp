@@ -8,32 +8,36 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
+<title>자유게시판 글 수정페이지</title>
 <script type="text/javascript">
-	function replyComplete(){
-		location.href="./freeBbsMain.do";
-	}
 	
 	$(document).ready(function() {
-		var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
-		$("#file_td").append(button);
+		var len = document.getElementsByName("files").length;
+		if(len<3){
+			var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
+			$("#file_td").append(button);
+		}
+// 		if(len ==)
 	});
 	
 	function addinput(){
-		var len = document.getElementsByName("filename").length;
-		if(len<3){
+		var len1 = document.getElementsByName("files").length;
+		var len2 = document.getElementsByName("filename").length;
+		if(len1+len2<3){
 			$("#addbutton").remove();
 			var input = "<input type='file' name='filename' onchange='fileChk(this)'><br>";
-			if(len<2){
+			if(len1+len2<2){
 				input += "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
 			}
 			$("#file_td").append(input);
 		}
+	}
+	
+	function delFile(val){
+		$(val).parent().remove();
 	}
 	
 	function fileChk(f){
@@ -61,7 +65,7 @@
 		 	}
 		}
 	
-	function replyComplete(){
+	function writeComplete(){
 		var temp = $("#title").val();
 		if(temp.indexOf("<")>=0){
 			temp = temp.replace(/</g ,"&lt;");
@@ -72,42 +76,51 @@
 		$("#title").val(temp);
 		document.forms[1].submit();
 	}
+	
+	
 </script>
+</head>
+<script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <body>
-	<sec:authentication property="principal.username" var="sessionId"/>
 	<div class="container">
-		<form action="#" method="post" id="replyForm" name="replyForm" enctype="multipart/form-data">
-		<input type="hidden" name="seq" value="${seq}">
+		<form action="./noticeBbsDetail.do?seq=${dto.seq}" method="post" enctype="multipart/form-data">
   		<table class="table table-bordered">
     		<thead>
-      			<tr>
+    			<tr>
         			<th colspan="2">
-        				<h1>답글 작성</h1>
+        				<input type="text" name="title" value="${dto.title}">
         			</th>
       			</tr>
     		</thead>
     		<tbody>
-    			<tr>
-    				<td>제목</td>
-    				<td>
-    					<input type="text" id="title" name="title" value="제목">
-    				</td>
-    			</tr>
+       			<tr>
+        			<td>작성일</td>
+        			<td>${dto.regdate}</td>
+      			</tr>	
        			<tr>
         			<td>아이디</td>
-        			<td>
-        				${Ldto.username}
-        			</td>
+        			<td>${dto.id}</td>
       			</tr>
-      			<tr>
-      				<td>파일</td>
-      				<td id="file_td">
-      				</td>
+       			<tr>
+        			<td>성명</td>
+        			<td>${dto.name}</td>
       			</tr>
+     		 	<tr>
+     		 		<td>파일</td>
+		     		<td id="file_td">
+		     		 	<c:forEach items="${list}" var="files">
+		     		 	<span id="file">
+			    	  		${files.ori_name}
+			    	  		<input readonly="readonly" type="hidden" name="files" value="${files.name}" >
+			    	  		<input type="button" class="btn btn-default" name="deleteFile" onclick="delFile(this)" value="삭제"><br>
+		     		 	</span>
+		     		 	</c:forEach>
+		     		</td>
+     		 	</tr>
       			<tr>
         			<td>글내용</td>
         			<td>
-						<textarea id="content" name="content"></textarea>
+						<textarea id="content" name="content">${dto.content}</textarea>
 						<script type="text/javascript">
 								CKEDITOR.replace('content'
         				        , {height: 500                                                  
@@ -121,14 +134,18 @@
     		</tbody>
   		</table>
    	<hr>
+  		
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
-	        <button class="btn btn-default" onclick="replyComplete()">답글작성완료</button>
-	        <button class="btn btn-default" onclick="">취소</button>
+	        <button type="submit" class="btn btn-default" onclick="BbsContent_modify_complete()">수정완료</button>
+	        <a href="./noticeBbsMain.do">
+	        	<button type="button" class="btn btn-default" onclick="BbsContent_modify_cancle()">작성취소</button>
+	        </a>
 	      </div>
 	    </div>
 	    </form>
 	</div>
-	
-</body>
+   	
+ </body>
+   	
 </html>

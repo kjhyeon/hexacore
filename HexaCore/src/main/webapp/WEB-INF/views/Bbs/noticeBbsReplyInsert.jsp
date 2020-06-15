@@ -16,7 +16,7 @@
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 	function replyComplete(){
-		location.href="./freeBbsMain.do";
+		location.href="./noticeBbsMain.do";
 	}
 	
 	$(document).ready(function() {
@@ -124,7 +124,9 @@
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
 	        <button class="btn btn-default" onclick="replyComplete()">답글작성완료</button>
-	        <button class="btn btn-default" onclick="">취소</button>
+	       <a href="./noticeBbsMain.do">
+	        <input type="button" class="btn btn-default" value="답글작성취소">
+	       </a> 
 	      </div>
 	    </div>
 	    </form>
