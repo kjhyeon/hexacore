@@ -53,8 +53,6 @@ $(document).ready(function(e) {
 			//document.getElementById('the_iframe').scrolling = "no";
 			document.getElementById('iframe').style.overflow = "hidden";
 		}
-		
-		});
 	</script>
 </body>
 </html>

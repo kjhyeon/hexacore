@@ -3,6 +3,8 @@ package com.hexa.core.model.eappr.inf;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocFileDTO;
@@ -11,6 +13,8 @@ import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.dto.RowNumDTO;
 
 public interface EapprIService {
+	
+	public static final String ATTACH_PATH = "C:\\nobrand\\eclipse_spring\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\HexaCore\\resource\\docfile";
 	
 	/**
 	 * 문서 양식 리스트 출력
@@ -35,7 +39,7 @@ public interface EapprIService {
 	 * 문서 작성
 	 * @return 성공T 실패F
 	 */
-	public boolean insertNewDoc(DocumentDTO dto);
+	public int insertNewDoc(DocumentDTO dto, MultipartFile[] filename);
 	
 	/**
 	 * 방금 작성한 문서의 seq 가져오기
@@ -229,4 +233,18 @@ public interface EapprIService {
 	 * @return TRUE : 성공 / FALSE : 실패
 	 */
 	public boolean reportCancel(String seq);
+	
+	/**
+	 * 업로드한 파일 저장 쿼리
+	 * @param dto
+	 * @return TRUE : 성공 / FALSE : 실패
+	 */
+	public boolean insertDocFile(DocFileDTO dto);
+	
+	/**
+	 * 첨부된 파일 조회
+	 * @param seq
+	 * @return 파일Dto
+	 */
+	public List<DocFileDTO> selectDocFile(String seq);
 }

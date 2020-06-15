@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
+import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.dto.EmployeeDTO;
@@ -139,6 +140,10 @@ public class EapprCtrl2 {
 		model.addAttribute("Ddto",Ddto);
 		model.addAttribute("name",id);
 		model.addAttribute("apprList",apprList);
+		
+		// 첨부파일 가져오기
+		List<DocFileDTO> flist = service.selectDocFile(seq);
+		model.addAttribute("flist", flist);
 		return "eappr2/docDetail";
 	}	
 	

@@ -287,6 +287,18 @@
 		(SELECT COUNT(*) AS COUNT8 FROM DOCUMENT WHERE AUTHOR = #{id} AND STATE = 4) A8
 	</select>
 	
+	<!-- 문서 작성할 때 첨부파일 DB에 저장 -->
+	<insert id="insertDocFile" parameterType="FileDto">
+	INSERT INTO DOC_FILES
+		(NAME, SEQ, F_PATH, ORI_NAME, F_SIZE)
+			VALUES(#{name}, #{seq}, #{f_path}, #{ori_name}, #{f_size})
+	</insert>
 	
+	<!-- 문서에 첨부된 파일 조회 -->
+	<select id="selectDocFile" parameterType="java.lang.String" resultType="FileDto">
+	SELECT NAME ,F_SIZE, ORI_NAME, F_PATH 
+		FROM DOC_FILES 
+			WHERE SEQ=#{seq}
+	</select>
 	
 </mapper>

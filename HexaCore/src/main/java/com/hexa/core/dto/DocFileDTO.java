@@ -1,17 +1,20 @@
 package com.hexa.core.dto;
 
-public class DocFileDTO {
+import java.io.Serializable;
 
+public class DocFileDTO implements Serializable {
+
+	private static final long serialVersionUID = -8727835072387832975L;
 	private String name;
 	private int seq;
 	private String f_path;
 	private String ori_name;
-	private int f_size;
+	private String f_size;
 	
 	public DocFileDTO() {
 	}
 	
-	public DocFileDTO(String name, int seq, String f_path, String ori_name, int f_size) {
+	public DocFileDTO(String name, int seq, String f_path, String ori_name, String f_size) {
 		super();
 		this.name = name;
 		this.seq = seq;
@@ -50,10 +53,10 @@ public class DocFileDTO {
 	public void setOri_name(String ori_name) {
 		this.ori_name = ori_name;
 	}
-	public int getF_size() {
+	public String getF_size() {
 		return f_size;
 	}
-	public void setF_size(int f_size) {
+	public void setF_size(String f_size) {
 		this.f_size = f_size;
 	}
 

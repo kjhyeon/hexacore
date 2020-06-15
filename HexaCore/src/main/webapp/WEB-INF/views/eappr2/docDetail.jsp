@@ -108,6 +108,18 @@
 																		onclick="apprDoc('${Ddto.seq}','${Ddto.appr_turn}','${Ddto.a_turn}','${Ddto.state}')">
 				</c:if>
 				</div>
+				<table class="filetable">
+					<tr class="index">
+						<td>첨부파일</td>
+					</tr>
+					<tr>
+						<td id="file_td">
+						<c:forEach items="${flist}" var="files" varStatus="n">
+     		 				<a href="./fdownload.do?name=${files.name}" >${files.ori_name}</a> | ${files.f_size }byte
+     		 			</c:forEach>
+						</td>
+					</tr>
+				</table>
 			</div>
 			<div class="leftBox">
 			<table id="docuHead">
@@ -127,7 +139,7 @@
 			<hr>
 			<h1>${typeDto.name}<input type="hidden" name="type_seq" value="${Ddto.type_seq}"></h1>
 		<div id="contentModi" style="text-align: center; width: 100%;">
-				<div class="apprSignTable">
+				<div class="apprSignTable" style="margin-bottom: 10px;">
 					<table id="approLine" style="border: 3px solid black; width: 100%; height: 100px;">
 						<c:if test="${apprList ne null}">
 							<tr style="text-align: right; width: 200px; height: 30px;">

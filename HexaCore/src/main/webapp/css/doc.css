@@ -42,8 +42,21 @@
 }
 
 .btnBox {
-	margin-top: 50px;
+	margin-top: 20px;
 	width: 100%;
+}
+
+.filetable {
+	width: 100%;
+	height: 100px;
+	margin-top: 20px;
+	border: 1px solid #E1E2E1;
+	text-align: center;
+	overflow: scroll;
+}
+
+#file_td {
+	padding: 10px;
 }
 
 .refers {

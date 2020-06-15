@@ -1,8 +1,15 @@
 package com.hexa.core.ctrl;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URLConnection;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -11,13 +18,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
+import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
+import com.hexa.core.model.bbs.inf.FreeBbsIService;
 import com.hexa.core.model.eappr.inf.EapprIService;
 import com.hexa.core.model.search.inf.SearchIService;
 
@@ -76,20 +88,9 @@ public class EapprCtrl1 {
 	}
 	
 	// 작성된 문서 DB에 저장하고 작성 글 상세보기 화면으로 이동
-	// ------------------------------ 서비스 너무 많음 한개로 합치기
-	@Transactional
 	@RequestMapping(value = "/DocWrite.do", method = RequestMethod.POST)
-	public String DocDetail(DocumentDTO dto, Model model) {
-		service.insertNewDoc(dto);
-		String seq = service.selectNewDoc();
-		int sseq = Integer.parseInt(seq);
-		dto.setSeq(sseq);
-		for (int i = 0; i < dto.getLists().size(); i++) {
-			dto.getLists().get(i).setSeq(sseq);
-		}
-		service.insertApprRoot(dto);
-		DocumentDTO newDto = service.selectDoc(seq);
-		sService.addDocIndex(newDto);
+	public String DocDetail(DocumentDTO dto, Model model, MultipartFile[] filename) {
+		int seq = service.insertNewDoc(dto, filename);
 		return "redirect:/docDetail.do?seq="+seq;
 	}
 	
@@ -173,6 +174,26 @@ public class EapprCtrl1 {
 		service.updateDocType(dto); // 수정한 문서 양식의 데이터 DB에서 수정
 		model.addAttribute("dto", dto);
 		return "redirect:/goDocTypeDetail.do?seq="+dto.getType_seq();
+	}
+	
+	@RequestMapping(value = "/fdownload.do", method = RequestMethod.GET)
+	public void fileDownload(HttpServletResponse resp, DocFileDTO fDto) throws Exception {
+		log.info("#################################3 {}",fDto);
+		File file = new File(EapprIService.ATTACH_PATH+"/"+fDto.getName());
+		
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+		String mimeType = URLConnection.guessContentTypeFromStream(inputStream);
+
+		if (mimeType == null) {
+			mimeType = "application/octec-stream";
+		}
+		resp.setContentType(mimeType);
+		resp.setContentLength((int) file.length());
+		//헤더에 해당 파일이 첨부 파일임을 명시
+		resp.setHeader("Content-Disposition", String.format("attachment; fileName=%s", fDto.getName()));
+		log.info(file.getName() + "@@@@@@@@@@@@@@@@@@@@@@@@@@");
+		//파일 자체를 웹브라우저에서 읽어들인다. 
+		FileCopyUtils.copy(inputStream, resp.getOutputStream());
 	}
 	
 }

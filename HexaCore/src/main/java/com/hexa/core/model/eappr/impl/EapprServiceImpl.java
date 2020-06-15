@@ -1,28 +1,37 @@
 package com.hexa.core.model.eappr.impl;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocFileDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
+import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.eappr.inf.EapprIDao;
 import com.hexa.core.model.eappr.inf.EapprIService;
+import com.hexa.core.model.search.inf.SearchIService;
 
 @Service
 public class EapprServiceImpl implements EapprIService{
 
 	@Autowired
 	private EapprIDao dao;
+	
+	@Autowired
+	private SearchIService sService;
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -44,10 +53,22 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectDocType(type_seq);
 	}
 	
+	@Transactional
 	@Override
-	public boolean insertNewDoc(DocumentDTO dto) {
+	public int insertNewDoc(DocumentDTO dto, MultipartFile[] filename) {
 		log.info("insertNewDoc serviceImpl 실행");
-		return dao.insertNewDoc(dto);
+		dao.insertNewDoc(dto);
+		String seq = dao.selectNewDoc();
+		int intSeq = Integer.parseInt(seq);
+		saveDocFile(filename, intSeq);
+		dto.setSeq(intSeq);
+		for (int i = 0; i < dto.getLists().size(); i++) {
+			dto.getLists().get(i).setSeq(intSeq);
+		}
+		insertApprRoot(dto);
+		DocumentDTO newDto = selectDoc(seq);
+		sService.addDocIndex(newDto);
+		return intSeq;
 	}
 
 	@Override
@@ -275,6 +296,47 @@ public class EapprServiceImpl implements EapprIService{
 	public boolean reportCancel(String seq) {
 		log.info("reportCancel ServiceImpl 실행 : {}",seq);
 		return dao.reportCancel(seq);
+	}
+	
+	public boolean saveDocFile(MultipartFile[] files,int seq) {
+		log.info("파일 등록,\t {}", Arrays.toString(files));
+		boolean isc = false;
+		if(files!=null) {
+			for (MultipartFile file : files) {
+				String saveName = file.getOriginalFilename();
+				File dir = new File(ATTACH_PATH);
+				String filename = "eappr-"+UUID.randomUUID()+"-"+saveName;
+				if(dir.isDirectory() == false){
+					dir.mkdirs();
+				}
+				File f = new File(ATTACH_PATH, filename);
+				try {
+					file.transferTo(f);
+					DocFileDTO dto = new DocFileDTO();
+					dto.setOri_name(file.getOriginalFilename());
+					dto.setName(filename);
+					dto.setF_size(String.valueOf(file.getSize()));
+					dto.setF_path(ATTACH_PATH);
+					dto.setSeq(seq);
+					isc = dao.insertDocFile(dto);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return isc;
+	}
+
+	@Override
+	public boolean insertDocFile(DocFileDTO dto) {
+		log.info("파일 추가 insertDocFile, {}", dto);
+		return dao.insertDocFile(dto);
+	}
+
+	@Override
+	public List<DocFileDTO> selectDocFile(String seq) {
+		log.info("파일 추가 selectDocFile, {}", seq);
+		return dao.selectDocFile(seq);
 	}
 
 }

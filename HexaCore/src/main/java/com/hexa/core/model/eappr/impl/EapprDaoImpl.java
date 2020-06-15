@@ -258,5 +258,17 @@ public class EapprDaoImpl implements EapprIDao{
 		log.info("reportCancel DaoImpl 실행 : {}",seq);
 		return sqlSession.update(NS+"reportCancel", seq)>0?true:false;
 	}
+	
+	@Override
+	public boolean insertDocFile(DocFileDTO dto) {
+		log.info("insertDocFile DaoImpl 실행 : {}", dto);
+		return sqlSession.insert(NS+"insertDocFile", dto)>0?true:false;
+	}
+
+	@Override
+	public List<DocFileDTO> selectDocFile(String seq) {
+		log.info("selectDocFile DaoImpl 실행 : {}", seq);
+		return sqlSession.selectList(NS+"selectDocFile", seq);
+	}
 
 }

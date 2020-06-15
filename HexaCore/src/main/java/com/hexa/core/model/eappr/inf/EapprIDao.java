@@ -263,4 +263,18 @@ public interface EapprIDao {
 	 * @return TRUE : 성공 / FALSE : 실패
 	 */
 	public boolean reportCancel(String seq);
+	
+	/**
+	 * 업로드한 파일 저장 쿼리
+	 * @param dto
+	 * @return TRUE : 성공 / FALSE : 실패
+	 */
+	public boolean insertDocFile(DocFileDTO dto);
+
+	/**
+	 * 첨부된 파일 조회
+	 * @param seq
+	 * @return 파일 리스트
+	 */
+	public List<DocFileDTO> selectDocFile(String seq);
 }
