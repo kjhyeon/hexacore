@@ -7,75 +7,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link href="./css/message.css" rel="stylesheet">
 <title>메시지 발신함</title>
-<style type="text/css">
-	thead {
-		font-weight: bold;
-		font-size: 13pt;
-		text-align: center;
-	}
-	tbody > tr > td{
-		text-align: center;
-	}
-	tbody > tr > th{
-		margin-left: 50px;
-	}
-	#select{
-	width: 100%;
-	text-align: right;
-	margin-bottom: 10px;
-}
-
-div.center{
-	text-align: center;
-}
-
-ul.pagination{
-	display: inline;
-}
-
-ul.pagination li a{
-	color: black;
-	float: left;
-	padding: 10px 20;
-	text-decoration: none;
-	transition : background-color .3s;
-	border: 1px solid #ddd;	
-}
-
-ul.pagination li a:active{
-	
-	background-color: #4a4a4a;
-	color: skyblue;
-	border: 1px solid pink;
-	
-}	
-
-	
-	#Main_Search_Text{
-		width: 450px;
-		float: right;
-	}
-
-
-#type_Select{
-		width: 120px;
-		margin-right: 5px;
-		border-radius: 4px;
-	}
-	
-	#keyword_Search{
-		width: 300px;
-		position: relative; 
-		float: left;
-		border-radius: 4px;
-		margin-right: 5px;
-	}
-	#type_Finder{
-		border-radius: 4px;
-	}
-	
-</style>
 </head>
 <script type="text/javascript" src="./js/message.js"></script>
 <script type="text/javascript">
@@ -131,6 +64,9 @@ function goSearch(){
 								<a data-toggle='collapse' data-parent='#accordion'
 									href='#collapse${dto.seq}'
 									onclick='collapse(\"${dto.seq}\")'>${dto.title}</a>
+									<c:if test="${not empty dto.file }">
+												<img src="./image/file.png" alt="file" class="fileImg">
+											</c:if>
 							</div>
 						</th>
 						<td>${dto.regdate}</td>
