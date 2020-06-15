@@ -51,18 +51,23 @@ public class EapprCtrl2 {
 	
 	@ResponseBody
 	@RequestMapping(value="/needCnt",method=RequestMethod.POST)
-	public String needCnt(Principal principal,int val,int val2) {
+	public Map<String, Object> needCnt(Principal principal,int beforeCnt,int beforeMCnt) {
 		String userId = principal.getName();
-		int a = val;
-		int c = val2;
 		Map<String,Object> docCount = service.selectDocListAll(userId); // 결재 필요 문서 개수 가져오기
 		int msgCount = MService.selectNewMsgCount(userId);
-		int b = Integer.parseInt(docCount.get("COUNT3").toString());
-		if(a<b) {
-			return docCount.get("COUNT3").toString(); 
+		int eapprCnt = Integer.parseInt(docCount.get("COUNT3").toString());
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(beforeCnt<eapprCnt) {
+			map.put("eapprCnt",docCount.get("COUNT3").toString());
 		}else {
-			return Integer.toString(val);
+			map.put("eapprCnt",Integer.toString(beforeCnt));
 		}
+		if(beforeMCnt<msgCount) {
+			map.put("msgCnt", msgCount);
+		}else {
+			map.put("msgCnt", beforeMCnt);
+		}
+		return map;
 	}
 	
 	//문서함 List 조회 (분기)

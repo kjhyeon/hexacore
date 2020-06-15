@@ -15,7 +15,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="./js/sweetalert.js"></script>
   <script type="text/javascript">
-  window.setInterval('timeset()',100000);
+  window.setInterval('timeset()',3000);
   function timeset () {
       if (window.Notification) {
           Notification.requestPermission();
@@ -31,23 +31,34 @@
   	cntCheck(beforeCnt,beforeMCnt);
   }
   //아작스실행
-  function cntCheck(val,val2) {
+  function cntCheck(beforeCnt,beforeMCnt) {
   	$.ajax({
   		url:"./needCnt.do",
   		type : "post",
-  		data : {"val":parseInt(val),"val2":parseInt(val2)},
+  		data : {"beforeCnt":parseInt(beforeCnt),"beforeMCnt":parseInt(beforeMCnt)},
   		async : true,
   		success : function(msg) {
-  			if(msg!=val){
+  			if(msg.eapprCnt!=beforeCnt){
   				calculate();
-  				$("#cntChkk").html("전자결재("+msg+")");
-  				$("#cnt").val(msg);
+  				$("#cntChkk").html("전자결재("+msg.eapprCnt+")");
+  				$("#cnt").val(msg.eapprCnt);
   			}else{
-  				$("#cntChkk").html("전자결재("+msg+")");
-  				$("#cnt").val(msg);
+  				$("#cntChkk").html("전자결재("+msg.eapprCnt+")");
+  				$("#cnt").val(msg.eapprCnt);
   			}
-  			if(msg=="0"){
+  			if(msg.eapprCnt=="0"){
   				$("#cntChkk").html("전자결재");
+  			}
+  			if(msg.msgCnt!=beforeMCnt){
+  				alert("메시지가 있습니다!!!");
+  				$("#Mcntchk").html("메세지("+msg.msgCnt+")");
+  				$("#Mcnt").val(msg.msgCnt);
+  			}else{
+  				$("#Mcntchk").html("메세지("+msg.msgCnt+")");
+  				$("#Mcnt").val(msg.msgCnt);
+  			}
+  			if(msg.msgCnt=="0"){
+  				$("#Mcntchk").html("");
   			}
   		},error: function() {
   			alert("실패");
@@ -118,6 +129,7 @@ function totalSearch(){
 						</button>
 				</div>
 			</form>
+						<div id="Mcntchk"></div>
 		</div>
 		<div class="mypage" onclick="empPop()">My Page</div>
 		<div class="logout" onclick="location.href='./logout'">Logout</div>
