@@ -80,7 +80,9 @@ public class MessageServiceImpl implements MessageIService {
 	@Override
 	public boolean updateDelMessage(String seq) {
 		log.info("updateDelMessage serviceImpl 실행 {}", seq);
-		sDao.updateMsgIndex(seq);
+		MessageDTO dto = dao.selectDetailMessage(seq);
+		dto.setState(2);
+		sDao.updateMsgIndex(dto);
 		return dao.updateDelMessage(seq);
 	}
 
@@ -89,7 +91,9 @@ public class MessageServiceImpl implements MessageIService {
 		log.info("updateMultiDelMessage serviceImpl 실행 {}", map);
 		String[] seqs = map.get("seqs");
 		for (int i = 0; i < seqs.length; i++) {
-			sDao.updateMsgIndex(seqs[i]);
+			MessageDTO dto = dao.selectDetailMessage(seqs[i]);
+			dto.setState(2);
+			sDao.updateMsgIndex(dto);
 		}
 		return dao.updateMultiDelMessage(map);
 	}
@@ -97,6 +101,9 @@ public class MessageServiceImpl implements MessageIService {
 	@Override
 	public boolean updateStateMessage(String seq) {
 		log.info("updateStateMessage serviceImpl 실행 {}", seq);
+		MessageDTO dto = dao.selectDetailMessage(seq);
+		dto.setState(1);
+		sDao.updateMsgIndex(dto);
 		return dao.updateStateMessage(seq);
 	}
 
@@ -141,6 +148,12 @@ public class MessageServiceImpl implements MessageIService {
 			}
 		}
 		return isc;
+	}
+
+	@Override
+	public int selectNewMsgCount(String receiver_id) {
+		log.info("MsgServiceImpl selectNewMsgCount 실행  : {}",receiver_id);
+		return dao.selectNewMsgCount(receiver_id);
 	}
 	
 

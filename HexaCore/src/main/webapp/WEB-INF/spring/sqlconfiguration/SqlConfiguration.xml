@@ -15,6 +15,7 @@
 		<typeAlias type="com.hexa.core.dto.RowNumDTO" alias="RowNum"/>
 		<typeAlias type="com.hexa.core.dto.FileDTO" alias="FileDto"/>
 		<typeAlias type="com.hexa.core.dto.MessageDTO" alias="MessageDTO"/>
+		<typeAlias type="com.hexa.core.dto.CalDTO" alias="CalDto"/>
 	</typeAliases>
 	
 	<mappers>
@@ -28,5 +29,6 @@
 		<mapper resource="/mapper/FileBMapper.xml"/>
 		<mapper resource="/mapper/FileCMapper.xml"/>
 		<mapper resource="/mapper/MessageMapper.xml"/>
+		<mapper resource="/mapper/CalendarMapper.xml"/>
 	</mappers>
 </configuration>

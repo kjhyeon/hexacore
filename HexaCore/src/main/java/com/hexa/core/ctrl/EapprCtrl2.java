@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hexa.core.dto.ApprovalDTO;
+import com.hexa.core.dto.CalDTO;
 import com.hexa.core.dto.DocCommentDTO;
 import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.DocumentTypeDTO;
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
+import com.hexa.core.model.cal.inf.Calendar_IService;
 import com.hexa.core.model.eappr.inf.EapprIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 @SuppressWarnings("static-access")
@@ -37,6 +40,9 @@ public class EapprCtrl2 {
 	@Autowired
 	private EmployeeIService EService;
 	@Autowired
+	private Calendar_IService CService;
+	
+	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -47,7 +53,6 @@ public class EapprCtrl2 {
 		int a = val;
 		Map<String,Object> docCount = service.selectDocListAll(userId); // 결재 필요 문서 개수 가져오기
 		int b = Integer.parseInt(docCount.get("COUNT3").toString());
-		log.info("랄랄{}",b+":"+a);
 		if(a<b) {
 			return docCount.get("COUNT3").toString(); 
 		}else {
@@ -253,5 +258,44 @@ public class EapprCtrl2 {
 			map.put("DCdto", DCdto);
 		isc = service.confirmUpdate(map);
 		return isc?"redirect:/docLists.do?state=7":"redirec:/eApprmain.do";
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	@ResponseBody
+	@RequestMapping(value="/getCals.do", method = RequestMethod.POST)
+	public JSONObject getEventsCal(CalDTO CDto) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		JSONArray jLists = new JSONArray();
+		JSONObject jdto = new JSONObject();
+		
+		log.info("---------{}",CDto);
+		map.put("start",CDto.getStart_date());
+		map.put("end",CDto.getEnd_date());
+		log.info("꺅{}",map);
+		List<CalDTO> lists = CService.selectEventsCal(map);
+		log.info("꺅2{}",lists);
+		
+		
+		for(CalDTO Cdtos : lists) { 
+			JSONObject json = new JSONObject();
+			json.put("id", Cdtos.getId());
+			json.put("start",Cdtos.getStart_date());
+			json.put("end",Cdtos.getEnd_date());
+			json.put("title",Cdtos.getTitle());
+			jLists.add(json);
+		}
+		jdto.put("lists", jLists);
+		log.info("꺅2{}",jLists);
+		
+		return jdto;
+	}
+	
+	@RequestMapping(value = "/addEventCals.do", method= RequestMethod.POST)
+	public String addEventCals(CalDTO CDto,Principal principal) {
+		log.info("addEventCals{}",CDto);
+		CDto.setId(principal.getName());
+		int n = CService.insertEventsCal(CDto);
+		return (n>0)?"redirect:/goEapprHome.do":"redirect:/goEapprHome.do";
 	}
 }

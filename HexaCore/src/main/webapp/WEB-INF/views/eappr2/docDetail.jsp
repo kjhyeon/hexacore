@@ -113,7 +113,7 @@
 			<table id="docuHead">
 				<tr>
 					<th>문서번호</th>
-					<td>${Ddto.seq}<input type="hidden" class="seq" name ="seq" value="${Ddto.seq}"></td>
+					<td>${Ddto.seq}<input type="hidden" class="seq" name ="seq" value="${Ddto.seq}"><input type="hidden" name ="state" value="${Ddto.state}"></td>
 				</tr>
 				<tr>
 					<th>기안자</th>
