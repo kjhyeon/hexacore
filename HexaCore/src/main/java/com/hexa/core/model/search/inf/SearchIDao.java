@@ -21,7 +21,7 @@ public interface SearchIDao {
 	
 	public void updateDocIndex(DocumentDTO dto);
 	public void updateBbsIndex(BbsDTO dto,String type);
-	public void updateMsgIndex(String seq);
+	public void updateMsgIndex(MessageDTO dto);
 	
 	public List<DocumentDTO> eDocSearch(String keyword,String type,String id,RowNumDTO row);
 	public List<BbsDTO> freeBbsSearch(String keyword,String type,RowNumDTO row,String auth);

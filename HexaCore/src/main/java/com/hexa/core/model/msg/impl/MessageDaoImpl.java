@@ -104,6 +104,12 @@ public class MessageDaoImpl implements MessageIDao {
 		log.info("selectAllMsg daoImpl 실행 ");
 		return sqlSession.selectList(NS+"selectAllMsg");
 	}
+
+	@Override
+	public int selectNewMsgCount(String receiver_id) {
+		log.info("selectNewMsgCount daoImpl 실행 ");
+		return sqlSession.selectOne(NS+"selectNewMsgCount",receiver_id);
+	}
 	
 
 }
