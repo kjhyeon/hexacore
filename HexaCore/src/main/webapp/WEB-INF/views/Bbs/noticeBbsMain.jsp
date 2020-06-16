@@ -56,7 +56,7 @@
 	}
 	
 	function goSearch(){
-		var location = "./noticeMain.do?"; 
+		var location = "./noticeBbsMain.do?"; 
 		location += "keyword="+$("#keyword_Search").val()+"&type="+$("#type_Select").val();			
 		document.location.href=location;
 	}

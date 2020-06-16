@@ -38,7 +38,7 @@ public class NoticeBbsServiceImpl implements NoticeBbsIService {
 			for (MultipartFile file : files) {
 				String saveName = file.getOriginalFilename();
 				File dir = new File(ATTACH_PATH);
-				String filename = "freeBbs-"+UUID.randomUUID()+"-"+saveName;
+				String filename = "NoticeBbs-"+UUID.randomUUID()+"-"+saveName;
 				if(dir.isDirectory() == false){
 					dir.mkdirs();
 				}
@@ -76,7 +76,7 @@ public class NoticeBbsServiceImpl implements NoticeBbsIService {
 
 	@Override
 	public BbsDTO updateModifyNoticeBbs(BbsDTO dto, String[] files, MultipartFile[] filename) {
-		log.info("공지게시판 글 수정 updateModifyFreeBbs,\t {}", dto);
+		log.info("공지게시판 글 수정 updateModifyNoticeBbs,\t {}", dto);
 		Map<String, Object> map = Maps.newHashMap();
 		dao.updateModifyNoticeBbs(dto);
 		map.put("files", files);

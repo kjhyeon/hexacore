@@ -62,9 +62,9 @@ public class SearchCtrl {
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("type",type);
 		model.addAttribute("eDocList",service.eDocSearch(keyword,type,dto.getUsername(),null));
-//		model.addAttribute("noticeBbsList", service.noticeBbsSearch(keyword, type));
+		model.addAttribute("noticeBbsList", service.noticeBbsSearch(keyword, type,null,role));
 		model.addAttribute("freeBbsList", service.freeBbsSearch(keyword, type,null,role));
-//		model.addAttribute("fileBbsList", service.fileBbsSearch(keyword, type));
+		model.addAttribute("fileBbsList", service.fileBbsSearch(keyword, type,null,role));
 		model.addAttribute("msgList", service.receiveMsgSearch(keyword,null, type,dto.getUsername()));
 		return "search/searchResult";
 	}

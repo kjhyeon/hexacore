@@ -13,7 +13,10 @@ import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.FileDTO;
 import com.hexa.core.dto.MessageDTO;
 import com.hexa.core.dto.RowNumDTO;
+import com.hexa.core.model.bbs.inf.FileBbsIDao;
+import com.hexa.core.model.bbs.inf.FreeBbsIDao;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
+import com.hexa.core.model.bbs.inf.NoticeBbsIDao;
 import com.hexa.core.model.eappr.inf.EapprIService;
 import com.hexa.core.model.msg.inf.MessageIDao;
 import com.hexa.core.model.search.inf.SearchIDao;
@@ -26,10 +29,16 @@ public class SearchService implements SearchIService{
 	private EapprIService eService;
 
 	@Autowired
-	private FreeBbsIService frService;
+	private FreeBbsIDao frDao;
+	
+	@Autowired
+	private NoticeBbsIDao nDao;
 	
 	@Autowired
 	private MessageIDao mDao;
+	
+	@Autowired
+	private FileBbsIDao fDao;
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -44,18 +53,19 @@ public class SearchService implements SearchIService{
 	@Override
 	public void freeBbsIndex() {
 		log.info("SearchService 인덱싱 작업 시작");
-		dao.freeBbsIndex(frService.selectAdminFreeBbsList());
+		dao.freeBbsIndex(frDao.selectAdminFreeBbsList());
 	}  
 
 	@Override
 	public void noticeBbsIndex() {
-		// TODO Auto-generated method stub
+		log.info("SearchService 인덱싱 작업 시작");
+		dao.noticeBbsIndex(nDao.selectAdminNoticeBbsList());
 	}
 
 	@Override
 	public void fileBbsIndex() {
-		// TODO Auto-generated method stub
-		
+		log.info("SearchService 인덱싱 작업 시작");
+		dao.fileBbsIndex(fDao.selectAdminFileBbsList());
 	}
 
 	@Override

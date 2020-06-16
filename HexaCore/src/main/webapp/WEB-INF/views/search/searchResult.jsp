@@ -39,7 +39,7 @@
 		<hr>
 		<div id="eDocContainer">
 			<h3>상신함</h3>
-			<button class="btn" style="float: right;">더 보기</button>
+<!-- 			<button class="btn" style="float: right;">더 보기</button> -->
 			<table class="table table-bordered">
 				<tr><th>번호</th><th>제목</th><th>글쓴이</th><th>작성일</th></tr>
 				<c:forEach items="${eDocList }" var="eDoc">
@@ -54,7 +54,18 @@
 		</div>
 		<hr>
 		<div id="noticeContainer">
-			<table class="table table-bordered">
+			<h3>공지사항</h3>
+			<button class="btn" style="float: right;" onclick="moreInfo('noticeBbs')">더 보기</button>
+			<table class="table table-bordered" id="noticeBbs">
+				<tr><th>번호</th><th>제목</th><th>글쓴이</th><th>작성일</th></tr>
+				<c:forEach items="${noticeBbsList }" var="notice">
+					<tr>
+						<td>${notice.seq }</td>
+						<td><a href="#" onclick="detail(${notice.seq},'noticeBbs')">${notice.title }</a></td>
+						<td>${notice.name }</td><td>${notice.regdate }</td>
+					</tr>
+					<tr style="background-color: #EEEEEE;"><td colspan="4">${notice.content }</td></tr>
+				</c:forEach>
 			</table>
 		</div>
 		<hr>
@@ -75,7 +86,18 @@
 		</div>
 		<hr>
 		<div id="fileContainer">
-			<table class="table table-bordered">
+			<h3>자료실</h3>
+			<button class="btn" style="float: right;" onclick="moreInfo('fileBbs')">더 보기</button>
+			<table class="table table-bordered" id="fileBbs">
+				<tr><th>번호</th><th>제목</th><th>글쓴이</th><th>작성일</th></tr>
+				<c:forEach items="${fileBbsList }" var="file">
+					<tr>
+						<td>${file.seq }</td>
+						<td><a href="#" onclick="detail(${file.seq},'fileBbs')">${file.title }</a></td>
+						<td>${file.name }</td><td>${file.regdate }</td>
+					</tr>
+					<tr style="background-color: #EEEEEE;"><td colspan="4">${file.content }</td></tr>
+				</c:forEach>
 			</table>
 		</div>
 		

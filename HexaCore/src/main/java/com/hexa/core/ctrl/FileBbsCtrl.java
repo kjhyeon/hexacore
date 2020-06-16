@@ -67,7 +67,7 @@ public class FileBbsCtrl {
 		}
 		RowNumDTO row = new RowNumDTO();
 		if(keyword!=null&&!keyword.equals("")) {
-			row.setTotal(sService.freeBbsTotal(keyword, type,auth_check));
+			row.setTotal(sService.fileBbsTotal(keyword, type,auth_check));
 			model.addAttribute("keyword",keyword);
 			model.addAttribute("type",type);
 		}else if(auth_check.trim().equalsIgnoreCase("role_admin")){
@@ -88,7 +88,7 @@ public class FileBbsCtrl {
 		model.addAttribute("row",row);
 		List<BbsDTO> lists = null;
 		if(keyword!=null&&!keyword.equals("")) {
-			lists = sService.freeBbsSearch(keyword, type, row,auth_check);
+			lists = sService.fileBbsSearch(keyword, type, row,auth_check);
 		}else if(!auth_check.trim().equalsIgnoreCase("role_admin")) {
 			lists = service.selectUserFileBbsListRow(row);
 		}else {	
@@ -289,7 +289,7 @@ public class FileBbsCtrl {
 	@RequestMapping(value = "/fileDownload.do", method = RequestMethod.GET)
 	public void fileDownload(HttpServletResponse resp, FileDTO fDto) throws Exception {
 		log.info("#################################3 {}",fDto);
-		File file = new File(FreeBbsIService.ATTACH_PATH+"/"+fDto.getName());
+		File file = new File(FileBbsIService.ATTACH_PATH+"/"+fDto.getName());
 		
 		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 		String mimeType = URLConnection.guessContentTypeFromStream(inputStream);

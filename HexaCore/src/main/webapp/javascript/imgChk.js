@@ -60,7 +60,7 @@ function a(input,str) {
 	if (input.files && input.files[0]) {
 		if(this.value != "") { 
 			var extPlan = "JPG, PNG"; 
-			var checkSize = 1024*1024*10; // 5MB 
+			var checkSize = 1024*1024*5; // 5MB 
 			if(!checkImg(input, extPlan) | !checkImgSize(input, checkSize) | !checkLength(input)) { 
 //				input.select();
 //				document.selection.clear();

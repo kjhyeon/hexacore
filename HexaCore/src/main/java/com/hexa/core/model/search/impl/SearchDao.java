@@ -138,12 +138,16 @@ public class SearchDao implements SearchIDao{
 					Matcher m = SCRIPTS.matcher(con);
 					con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
 					item.setTitle(title);
-					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
-						int idx = con.indexOf(keyword);
+					int idx = con.indexOf(keyword);
+					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)&&idx>-1) {
 						if(idx-15>0) {
 							con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
 						}else {
-							con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+							if(idx+30>con.length()) {
+								con = con.substring(idx);
+							}else {
+								con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+							}
 						}
 					}else if(con.length()>30){
 						con = con.substring(0, 30)+"ㆍㆍㆍ";
@@ -237,8 +241,8 @@ public class SearchDao implements SearchIDao{
 					Pattern SCRIPTS = Pattern.compile("<([^'\"]|\"[^\"]*\"|'[^']*')*?>",Pattern.DOTALL);
 					Matcher m = SCRIPTS.matcher(con);
 					con = m.replaceAll("").replaceAll("&([^'\\\"]|\\\"[^\\\"]*\\\"|'[^']*')*?;", " ");
-					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)) {
-						int idx = con.indexOf(keyword);
+					int idx = con.indexOf(keyword);
+					if((type.trim().equals("content")&&con.length()>30)||(type.trim().equals("title/con")&&con.length()>30)&&idx>-1) {
 						if(idx-15>0) {
 							if(idx+15>con.length()) {
 								con = "ㆍㆍㆍ"+con.substring(idx-15);
@@ -246,7 +250,11 @@ public class SearchDao implements SearchIDao{
 								con = "ㆍㆍㆍ"+con.substring(idx-15, idx+15)+"ㆍㆍㆍ";
 							}
 						}else {
-							con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+							if(idx+30>con.length()) {
+								con = con.substring(idx);
+							}else {
+								con = con.substring(idx, idx+30)+"ㆍㆍㆍ";
+							}
 						}
 					}else if(con.length()>30){
 						con = con.substring(0, 30)+"ㆍㆍㆍ";

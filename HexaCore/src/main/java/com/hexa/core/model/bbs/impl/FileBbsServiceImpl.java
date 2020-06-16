@@ -39,7 +39,7 @@ public class FileBbsServiceImpl implements FileBbsIService {
 			for (MultipartFile file : files) {
 				String saveName = file.getOriginalFilename();
 				File dir = new File(ATTACH_PATH);
-				String filename = "freeBbs-"+UUID.randomUUID()+"-"+saveName;
+				String filename = "fileBbs-"+UUID.randomUUID()+"-"+saveName;
 				if(dir.isDirectory() == false){
 					dir.mkdirs();
 				}
@@ -70,7 +70,7 @@ public class FileBbsServiceImpl implements FileBbsIService {
 		saveFile(filename, Integer.parseInt(seq));
 		BbsDTO result = dao.selectDetailFileBbs(seq);
 		
-		sService.addBbsIndex(result, SearchIService.NOTICE);
+		sService.addBbsIndex(result, SearchIService.FILE);
 		
 		return result;
 	}
@@ -87,7 +87,7 @@ public class FileBbsServiceImpl implements FileBbsIService {
 		
 		BbsDTO result = dao.selectDetailFileBbs(String.valueOf(dto.getSeq()));
 		
-		sService.updateBbsIndex(result, SearchIService.NOTICE);
+		sService.updateBbsIndex(result, SearchIService.FILE);
 		
 		return result;
 	}
@@ -125,7 +125,7 @@ public class FileBbsServiceImpl implements FileBbsIService {
 		String seq = dao.selectNewFileBbs();
 		saveFile(filename, Integer.parseInt(seq));
 		BbsDTO result = dao.selectDetailFileBbs(seq);
-		sService.addBbsIndex(result, SearchIService.NOTICE);
+		sService.addBbsIndex(result, SearchIService.FILE);
 		
 		return iscI?result:null;
 	}
