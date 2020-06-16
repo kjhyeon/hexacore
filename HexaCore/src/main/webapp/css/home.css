@@ -58,7 +58,7 @@
  	background-color: orange;
  }
  
- #Notice_Title_Header{
+ #NoticeBoard_Title_Header{
  	margin-bottom: 0px;
  	margin-left: 20px;
  	display: inline-block;
@@ -70,7 +70,7 @@
  	margin-bottom: 0px;
  }
  
- #Board_Title_Header{
+ #FileBoard_Title_Header{
  	margin-bottom: 0px;
  	margin-left: 20px;
  	display: inline-block;

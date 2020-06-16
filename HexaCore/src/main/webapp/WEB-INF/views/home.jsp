@@ -29,10 +29,10 @@
 					<a href="./totalIndex.do">인덱싱</a><br>
 				</div>
 				<div class="container_div3" id="item">
-					<div id="Notice_Title_Header">
+					<div id="NoticeBoard_Title_Header">
 						<h3 id="Title_h">공지사항</h3> 
 					</div>
-					<div id="Notice_Title_Header">
+					<div id="NoticeBoard_Title_Header">
 						<a href="./goBbs.do?category=1" id="Title_a">
 							more
 						</a>
@@ -40,10 +40,10 @@
 					<hr>
 				</div>
 				<div class="container_div4" id="item">
-					<div id="Board_Title_Header">
+					<div id="FileBoard_Title_Header">
 						<h3 id="Title_h">자료실</h3> 
 					</div>
-					<div id="Board_Title_Header">
+					<div id="FileBoard_Title_Header">
 						<a href="./goBbs.do?category=2" id="Title_a">
 							more
 						</a>

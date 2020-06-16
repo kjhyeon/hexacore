@@ -1,5 +1,7 @@
 package com.hexa.core.ctrl;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +15,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hexa.core.dto.BbsDTO;
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
+import com.hexa.core.model.bbs.inf.FileBbsIService;
+import com.hexa.core.model.bbs.inf.FreeBbsIService;
+import com.hexa.core.model.bbs.inf.NoticeBbsIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 
 @Controller
 public class MngCtrl {
-
+	
 	@Autowired
 	private EmployeeIService eService;
+	
+	@Autowired
+	private NoticeBbsIService noticeService;
+	
+	@Autowired
+	private FileBbsIService fileService;
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -140,9 +152,16 @@ public class MngCtrl {
 		return "../login";
 	}
 
-
+	
 	@RequestMapping(value = "/result.do", method = RequestMethod.GET)
-	public String maingo() {
+	public String maingo(Model model) {
+		
+		List<BbsDTO> noticeList = noticeService.selectUserNoticeBbsList();
+		List<BbsDTO> fileList = fileService.selectUserFileBbsList();
+		
+		model.addAttribute("noticeList", noticeList);
+		model.addAttribute("fileList", fileList);
+		
 		return "home";
 	}
 	
