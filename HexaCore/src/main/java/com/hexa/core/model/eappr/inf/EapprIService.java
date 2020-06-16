@@ -55,13 +55,6 @@ public interface EapprIService {
 	public DocumentDTO selectDoc(String seq);
 	
 	/**
-	 * 결재루트 입력
-	 * @param ApprovalDto 결재선 seq, id, name, duty, turn, appr_kind
-	 * @return True : 성공 / False 실패
-	 */
-	public boolean insertApprRoot(DocumentDTO Adto);
-	
-	/**
 	 * 해당 문서 결재루트 조회
 	 * @param ApprovalDto seq : 문서번호, (id = 조회할 사람)
 	 * @return	ApprovalDto
@@ -128,13 +121,6 @@ public interface EapprIService {
 	 * @return 성공여부
 	 */
 	public boolean updateDocType(DocumentTypeDTO dto);
-	
-	/**
-	 * 결재자 서명 가져오기
-	 * @param id
-	 * @return 이미지파일경로, 이름
-	 */
-	public String selectSignImg(String id);
 	
 	/**
 	 * 상신문서함의 문서 개수
@@ -237,5 +223,5 @@ public interface EapprIService {
 	 * 임시저장 기능
 	 * @param Ddto
 	 */
-	public boolean saveUpDoc(DocumentDTO Ddto);
+	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename);
 }

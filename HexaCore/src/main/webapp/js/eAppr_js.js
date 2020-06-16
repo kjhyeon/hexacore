@@ -45,6 +45,9 @@ function apprDoc(val1,val2,val3,number){
 	   });
 	}
 	
+
+	
+	
 function passwordChk(conf, a_turn, number) {
 	var password = document.getElementById("password").value;
 	 $.ajax({
@@ -159,17 +162,18 @@ function nodeSort(nodes){
 	return nodes;
 }
 
-function report() {
-	if($("#inputTitle").val()==""){
-		alert("제목을 입력하세요.");
-	}else if($(".apprtable > tbody >tr").length != 4){
-		alert("결재자를 선택하세요.");
-	}else{
-		$(".leftBox").append("<input type='hidden' name='state' value='1'>");
-		$("#formDoc").attr("action", "./DocWrite.do");
-		document.formDoc.submit();
-	}
-}
+//function report() {
+//	if($("#inputTitle").val()==""){
+//		alert("제목을 입력하세요.");
+//	}else if($(".apprtable > tbody >tr").length != 4){
+//		alert("결재자를 선택하세요.");
+//	}else{
+//		$(".leftBox").append("<input type='hidden' name='state' value='1'>");
+//		$("#formDoc").attr("action", "./DocWrite.do");
+//		$("#formDoc").attr("method", "post");
+//		$("#formDoc").submit();
+//	}
+//}
 
 
 function saveUpdoc(){
@@ -182,7 +186,7 @@ function saveUpdoc(){
 			$(".leftBox").append("<input type='hidden' name='state' value='0'>");
 			$("#formDoc").attr("action", "./saveUpDoc.do");
 			$("#formDoc").attr("method", "post");
-			document.formDoc.submit();
+			$("#formDoc").submit();
 		}
 	}else{
 		return;
@@ -212,6 +216,8 @@ function modifyFormDoc(val){
 			$("#contentModi").html("");
 			$("#contentModi").append(contentInsert(msg.content));
 			$(".apprSignTable").html("");
+				var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
+				$("#file_td").append(button);
 		},	error: function() {
 			alert("실패");
 		}
@@ -238,7 +244,7 @@ function btnInsert() {
 	result+="<input type='button' onclick='apprSearch()' value='결재선 재선택'>                            		"     ;      
 	result+="<input type='button' value='수정 취소' onclick='cancelmodify()'>                                  	"	;      
 	result+="<input type='button' value='임시저장' onclick='saveUpdoc()'>                                    	"	;      
-	result+="<input type='button' value='바로상신' onclick='report()'>                                    		 "   ;
+//	result+="<input type='button' value='바로상신' onclick='report()'>                                    		 "   ;
 	return result;
 }
 
@@ -248,9 +254,50 @@ function deleteDocc(seq,state){
 	$("#formDoc").submit();
 }
 
-function upApprDocc(seq,state){
-	$("#formDoc").attr("action",'./upApprDoc.do?seq='+seq+"&state="+state);
-	$("#formDoc").attr("method","GET");
+function upApprDocc(){
+	$("#formDoc").attr("action",'./upApprDoc.do');
+	$("#formDoc").attr("method","post");
 	$("#formDoc").submit();
 }
+
+
+function addinput(){
+	var len = document.getElementsByName("filename").length;
+	if(len<3){
+		$("#addbutton").remove();
+		var input = "<input type='file' name='filename' onchange='fileChk(this)'><br>";
+		if(len<2){
+			input += "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
+		}
+		$("#file_td").append(input);
+	}
+}
+
+function fileChk(f){
+	// 파일 유형 제한
+	if ($(f).val != "") {  // input에 name이 filename 불러오기
+		var ext = $(f).val().split('.').pop().toLowerCase();
+		if ($.inArray(ext, ['gif','jpg','jpeg','doc','html','zip','rar','7z',
+			'alz','egg','001','alz','lzh','tgz','tar','tlz','tbz',
+			'jar','war','apk','ppt','xlsx','txt','hwp','png','mp3',
+			'mp4','avi','docx','gif','java'])== -1) {
+			alert("등록할 수 없는 파일입니다.");
+			$(f).val(""); // input 파일명을 다시 지워주는 코드
+			return;
+		}
+	}
+	// 파일 용량 제한
+	if (f.value != ""){
+		var fileSize = f.files[0].size;
+		var maxSize = 108*1024*1024 // 108MB 제한
+		if(fileSize > maxSize){
+			alert("첨부파일 사이즈는 108MB 이내로 등록가능합니다.");
+			$(f).val("");
+			return
+		}
+	}
+}
+
+
+
 

@@ -65,7 +65,10 @@ public class EapprServiceImpl implements EapprIService{
 		for (int i = 0; i < dto.getLists().size(); i++) {
 			dto.getLists().get(i).setSeq(intSeq);
 		}
-		insertApprRoot(dto);
+		for (int i = 0; i < dto.getLists().size(); i++) {
+			log.info("insertApprRoot serviceImpl 실행");
+			dao.insertApprRoot(dto.getLists().get(i));
+		}
 		DocumentDTO newDto = selectDoc(seq);
 		sService.addDocIndex(newDto);
 		return intSeq;
@@ -75,19 +78,6 @@ public class EapprServiceImpl implements EapprIService{
 	public DocumentDTO selectDoc(String seq) {
 		log.info("selectDoc serviceImpl 실행");
 		return dao.selectDoc(seq);
-	}
-
-	@Transactional
-	@Override
-	public boolean insertApprRoot(DocumentDTO Ddto) {
-		log.info("deleteApprRoot serviceImpl 실행");
-		dao.deleteApprRoot(Integer.toString(Ddto.getSeq()));
-		int iscI =0;
-			for (int i = 0; i < Ddto.getLists().size(); i++) {
-				log.info("insertApprRoot serviceImpl 실행");
-				iscI += dao.insertApprRoot(Ddto.getLists().get(i));
-			}
-		return (iscI>2)?true:false;
 	}
 
 	@Override
@@ -154,12 +144,6 @@ public class EapprServiceImpl implements EapprIService{
 	public boolean updateDocType(DocumentTypeDTO dto) {
 		log.info("updateDocType ServiceImpl 실행 : {}",dto);
 		return dao.updateDocType(dto);
-	}
-
-	@Override
-	public String selectSignImg(String id) {
-		log.info("selectSignImg ServiceImpl 실행 : {}",id);
-		return dao.selectSignImg(id);
 	}
 
 	@Override
@@ -254,17 +238,36 @@ public class EapprServiceImpl implements EapprIService{
 	@Transactional
 	@Override
 	public boolean confirmUpdate(Map<String, Object> map) {
+		log.info("********confirm Test Adto:{}",map.get("Adto"));
+		log.info("********confirm Test Ddto:{}",map.get("Ddto"));
+		log.info("********confirm Test DCdto:{}",map.get("DCdto"));
+		ApprovalDTO Adto = (ApprovalDTO) map.get("Adto");
+		DocumentDTO Ddto = (DocumentDTO) map.get("Ddto");
+		DocCommentDTO DCdto = (DocCommentDTO) map.get("DCdto");
+		Adto.setAppr_sign(dao.selectSignImg(Adto.getId()));
+		if(Adto.getChk().equalsIgnoreCase("T")) {//승인일경우
+			Adto.setAppr_kind("승인");
+				if(Adto.getTurn()<3) {
+					Ddto.setAppr_turn(Ddto.getAppr_turn()+1);
+					Ddto.setState(2);
+				}else if(Adto.getTurn()==3){
+					Ddto.setState(3);
+				}
+		}else if(Adto.getChk().equalsIgnoreCase("R")){
+				Adto.setAppr_kind("반려");
+				Ddto.setState(4);
+			}
 		boolean iscD=false;
 		boolean iscA=false;
 		boolean iscDC=false;
 		if(map.get("Ddto")!=null) {
-			iscD = dao.updateDoc((DocumentDTO)map.get("Ddto"));
+			iscD = dao.updateDoc(Ddto);
 		}
 		if(iscD=true && map.get("Adto")!=null) {
-			iscA = dao.updateApprChk((ApprovalDTO)map.get("Adto"));
+			iscA = dao.updateApprChk(Adto);
 		}
-		if((iscD && iscA) ==true && map.get("DCdto")!=null) {
-			iscDC = dao.insertComment((DocCommentDTO)map.get("DCdto"));
+		if((iscD && iscA) ==true && DCdto!=null) {
+			iscDC = dao.insertComment(DCdto);
 		}
 		return (iscD||iscA||iscDC)?true:false;
 	}
@@ -325,8 +328,8 @@ public class EapprServiceImpl implements EapprIService{
 		ADto.setId(null);
 		Map<String, Object> map = new HashMap<String, Object>();
 		//도장 주소 결합
-		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
-		attach_path +=ADto.getAppr_sign();
+//		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
+//		attach_path +=ADto.getAppr_sign();
 		//믄사 내용 조회
 		DocumentDTO Ddto = dao.selectDoc(seq);
 		//문서 결재선 전체 조회
@@ -334,7 +337,7 @@ public class EapprServiceImpl implements EapprIService{
 		log.info("문서리스트{}",apprList);
 		for (int i = 0; i < apprList.size(); i++) {
 			if(apprList.get(i).getAppr_sign()!=null) {
-				apprList.get(i).setAppr_sign(attach_path+apprList.get(i).getAppr_sign()); 
+				apprList.get(i).setAppr_sign(apprList.get(i).getAppr_sign()); 
 			}
 		}
 		
@@ -367,8 +370,9 @@ public class EapprServiceImpl implements EapprIService{
 	@Override
 	public boolean upApprDoc(DocumentDTO Ddto) {
 		String seq = Integer.toString(Ddto.getSeq());
+		log.info("큰일이다{}",Ddto);
 		boolean isc = false;
-		if(seq.equalsIgnoreCase("0")) {
+		if(Ddto.getState()==0) {
 			isc = dao.updateSaveToAppr(seq);
 		}else {
 			isc = dao.reportCancel(seq);
@@ -377,19 +381,25 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public boolean saveUpDoc(DocumentDTO Ddto) {
+	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename) {
 		Ddto.setAppr_turn(0);
 		Ddto.setState(0);
 		boolean isc = dao.updateDoc(Ddto);
-		int isc2=0;
+		boolean isc2=false;
+		boolean isc3=false;
+		isc2 = dao.deleteFile(Integer.toString(Ddto.getSeq()));
+		isc3 = saveDocFile(filename, Ddto.getSeq());
+		int iscI =0;
 		if(isc==true) {
 			if(Ddto.getLists()!=null) {
-				for (int i = 0; i < Ddto.getLists().size(); i++) {
-					isc2 = dao.insertApprRoot(Ddto.getLists().get(i));
-				}
+				dao.deleteApprRoot(Integer.toString(Ddto.getSeq()));
+					for (int i = 0; i < Ddto.getLists().size(); i++) {
+						log.info("insertApprRoot serviceImpl 실행");
+						iscI += dao.insertApprRoot(Ddto.getLists().get(i));
+					}
 			}
 		}
-		return (isc2>Ddto.getLists().size())?true:false;
+		return (iscI>2&&isc2&&isc3)?true:false;
 	}
 
 }

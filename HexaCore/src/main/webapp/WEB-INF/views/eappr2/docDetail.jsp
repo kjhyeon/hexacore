@@ -13,11 +13,22 @@
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type = "text/javascript" src = "http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="./js/sweetalert.js"></script>
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script type="text/javascript">
+$(document).keypress(function(e) {
+    if ($("#apprDoc").hasClass('in') && (e.keycode == 13 || e.which == 13)) {
+      return false;
+    }
+});	
+
+</script>
 <body>
 	<div id="ajaxModify">
-		<form name="formDoc" id="formDoc">
+		<form id="formDoc" enctype="multipart/form-data">
 			<div class="rightBox">
 				<div class="apprBox">
 					<h3>결재자</h3>
@@ -93,10 +104,10 @@
 				<div class="btnBox">
 				<c:if
 					test="${name eq Ddto.author && (Ddto.state eq '0' || Ddto.state eq '1') && (Ddto.appr_turn ne '2')}">
+					<c:if test="${Ddto.state eq '0'}">
+						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDocc()">
 					<input type="button" id="modifyDoc" value="수정"		onclick="modifyFormDoc('${Ddto.seq}')">
 					<input type="button" id="deleteDoc" value="삭제"		onclick="deleteDocc('${Ddto.seq}','${Ddto.state}')">
-					<c:if test="${Ddto.state eq '0'}">
-						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDocc('${Ddto.seq}','${Ddto.state}')">
 					</c:if>
 					<c:if test="${Ddto.state eq '1'}">
 						<input type="button" id="upApprDoc" value="상신취소"	onclick="upApprDocc('${Ddto.seq}','${Ddto.state}')">
@@ -154,7 +165,7 @@
 						<c:if test="${AdtoL.appr_kind ne '참조'}">
 								<c:choose>
 										<c:when test="${AdtoL.appr_sign ne null}">
-											<td style="border: 1px solid black; width:25px; "><img src="./image/도장1.png" style="width: 30px; height: 30px;"></td>
+											<td style="border: 1px solid black; width:25px; "></td>
 										</c:when>
 										<c:when test="${AdtoL.appr_sign eq null}">
 											<td  style="border: 1px solid black; width:25px; ">""</td>

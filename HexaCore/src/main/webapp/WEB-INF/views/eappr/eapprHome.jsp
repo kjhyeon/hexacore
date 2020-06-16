@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
+<%@taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%request.setCharacterEncoding("UTF-8");%>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -44,9 +46,13 @@
     margin: 0 auto;
   }
 
+ .form-group > label, button, input[type="text"]{
+ 	margin-top : 20px;
+ }
 </style>
 </head>
 <body>
+<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
 <button style="display: none" type="button" id="btnModal" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
 <div id="addEventCal" class="modal fade" role="dialog">
 			<div class="modal-dialog">
@@ -54,7 +60,8 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">공지사항</h4>
+						<h2 class="modal-title">간편공지</h2>
+						<h4 class="modal-title">간단하게 공지를 등록해주세요</h4>
 					</div>
 					<div class="modal-body">
 						<form id="addEventCals" action="./addEventCals.do" method="POST">
@@ -73,7 +80,74 @@
 				</div>
 			</div>
 		</div>
-<div id="calendar">
+<div id="calendar" style="width: 50%;">
+<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      plugins: [ 'interaction' ,'dayGrid', 'timeGrid' ],
+      header: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      defaultDate: new Date(),
+      navLinks: true, // can click day/week names to navigate views
+	  <c:choose>
+      	<c:when test="${auth eq true}">
+      	selectable: true,
+      	</c:when>
+      	<c:otherwise>
+    	  selectable: false,
+      	</c:otherwise>
+      	</c:choose>
+      selectMirror: true,
+      select:  function(event) {
+    		  $("#addEventCal").modal("show");
+    		  $("#start_date").val(moment(event.start).format('YYYY-MM-DD'));
+    		  $("#end_date").val(moment(event.end).format('YYYY-MM-DD'));
+    	  },
+      editable: true,
+      disableDragging: true,
+      eventLimit: true, // allow "more" link when too many events
+      eventSources: [{
+  		events: function(info, successCallback, failureCallback) {
+  			$.ajax({
+  				url: './getCals.do',
+  				type: 'POST',
+  				data: {
+  					start : moment(info.startStr).format('YYYY-MM-DD'),
+  					end : moment(info.endStr).format('YYYY-MM-DD'),
+  				},
+  				success: function(data) {
+  					successCallback(data.lists);
+  				},
+  				error: function(data) {
+					alert(실패);
+				}
+  			});
+  		}
+  	}]
+	, eventClick:function(info, jsEvent, view) {
+		  <c:choose>
+	      	<c:when test="${auth eq true}">
+				 var r = confirm("일정을 삭제하시겠습니까? "+info.event.title);
+       			  if (r === true) {
+        			deleteCal(info.event.title);
+        			 }
+	      	</c:when>
+	      	<c:otherwise>
+	      		return false;
+	      	</c:otherwise>
+	      	</c:choose>
+       },
+    });
+
+    calendar.render();
+  });
+
+</script>
 <form id="deleteCal">
 </form>
 </div>

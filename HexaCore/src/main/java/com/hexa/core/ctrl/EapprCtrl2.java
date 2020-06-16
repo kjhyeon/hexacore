@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hexa.core.dto.ApprovalDTO;
 import com.hexa.core.dto.CalDTO;
@@ -142,14 +143,14 @@ public class EapprCtrl2 {
 	//임시저장
 	@Transactional
 	@RequestMapping(value="/saveUpDoc.do", method= RequestMethod.POST)
-	public String saveUpDoc(DocumentDTO Ddto) {
+	public String saveUpDoc(DocumentDTO Ddto, MultipartFile[] filename) {
 		log.info("********Ddto:{}", Ddto);
-		boolean isc = service.saveUpDoc(Ddto);
+		boolean isc = service.saveUpDoc(Ddto,filename);
 		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
 	
 	//상신/취소 기능
-	@RequestMapping(value="/upApprDoc.do", method=RequestMethod.GET)
+	@RequestMapping(value="/upApprDoc.do", method=RequestMethod.POST)
 	public String upApprDoc(DocumentDTO Ddto) {
 		boolean isc = service.upApprDoc(Ddto);
 		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
@@ -193,29 +194,11 @@ public class EapprCtrl2 {
 	//승인,반려 기능
 	@RequestMapping(value="/confirmDoc.do", method= RequestMethod.POST)
 	public String confirmDoc(ApprovalDTO Adto, DocumentDTO Ddto, DocCommentDTO DCdto) {
-		log.info("********confirm Test Adto:{}",Adto);
-		log.info("********confirm Test Ddto:{}",Ddto);
-		log.info("********confirm Test DCdto:{}",DCdto);
-		Adto.setAppr_sign(service.selectSignImg(Adto.getId()));
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		boolean isc = false;
-		if(Adto.getChk().equalsIgnoreCase("T")) {//승인일경우
-			Adto.setAppr_kind("승인");
-				if(Adto.getTurn()<3) {
-					Ddto.setAppr_turn(Ddto.getAppr_turn()+1);
-					Ddto.setState(2);
-				}else if(Adto.getTurn()==3){
-					Ddto.setState(3);
-				}
-		}else if(Adto.getChk().equalsIgnoreCase("R")){
-				Adto.setAppr_kind("반려");
-				Ddto.setState(4);
-			}
-			map.put("Ddto", Ddto);
-			map.put("Adto", Adto);
-			map.put("DCdto", DCdto);
-		isc = service.confirmUpdate(map);
+		map.put("Ddto", Ddto);
+		map.put("Adto", Adto);
+		map.put("DCdto", DCdto);
+		boolean isc = service.confirmUpdate(map);
 		return isc?"redirect:/docLists.do?state=7":"redirec:/eApprmain.do";
 	}
 	

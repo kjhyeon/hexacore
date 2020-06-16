@@ -58,7 +58,7 @@
 	
 	<!-- 업로드한 파일 삭제	DB에 저장되어있는 첨부파일 영구 삭제 하는 쿼리 작성 및 테스트 -->
 	<delete id="deleteFile" parameterType="java.lang.String">
-	DELETE FROM DocFileDTO
+	DELETE FROM DOC_FILES
 		WHERE SEQ= #{seq}
 	</delete>
 	
