@@ -166,14 +166,15 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 			lists = cService.selectNoticeCommentListRow(map);
 			model.addAttribute("lists", lists);
 			
+			BbsDTO dto = null;
 			if (!auth_check.trim().equalsIgnoreCase("role_admin")) {
-				boolean isc = false;
-				isc = service.updateViewsNoticeBbs(seq);
+				dto =service.updateViewsNoticeBbs(seq);
+			}else {
+				dto = service.selectDetailNoticeBbs(seq);
 			}
 			
 			cDto.setParent_seq(Integer.parseInt(seq));
 			
-			BbsDTO dto = service.selectDetailNoticeBbs(seq);
 			List<FileDTO> list = service.selectNoticeBbsFile(seq);
 			model.addAttribute("seq", dto);
 			model.addAttribute("list", list);

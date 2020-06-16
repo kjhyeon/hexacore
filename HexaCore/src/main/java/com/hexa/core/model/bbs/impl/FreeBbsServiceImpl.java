@@ -80,9 +80,12 @@ public class FreeBbsServiceImpl implements FreeBbsIService {
 	}
 
 	@Override
-	public boolean updateViewsBbs(String seq) {
+	public BbsDTO updateViewsBbs(String seq) {
 		log.info("자유게시판 조회수 증가 updateViewsBbs,\t {}", seq);
-		return dao.updateViewsBbs(seq);
+		dao.updateViewsBbs(seq);
+		BbsDTO dto = dao.selectDetailFreeBbs(seq);
+		sService.updateBbsIndex(dto, SearchIService.FREE);
+		return dto;
 	}
 
 	@Override
