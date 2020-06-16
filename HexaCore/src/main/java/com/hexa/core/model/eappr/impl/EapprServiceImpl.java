@@ -336,11 +336,9 @@ public class EapprServiceImpl implements EapprIService{
 		log.info("문서리스트{}",apprList);
 		for (int i = 0; i < apprList.size(); i++) {
 			if(apprList.get(i).getAppr_sign()!=null) {
-				apprList.get(i).setAppr_sign(apprList.get(i).getAppr_sign()); 
+				apprList.get(i).setAppr_sign(APPR_SIGN+"/"+apprList.get(i).getAppr_sign()); 
 			}
 		}
-		//도장 갖고오기
-		ADto.setAppr_sign(APPR_SIGN+"/"+sign);
 		//문서 나의 결재선 조회
 		ADto.setId(userId);
 		List<ApprovalDTO> listsa = dao.selectApprRoot(ADto);
