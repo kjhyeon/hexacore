@@ -33,7 +33,6 @@
 <script src='./packages/list/main.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script type="text/javascript" src="./js/eapprhome.js"></script>
-<link type="text/css" rel="stylesheet" href="./css/eapprhome.css">
 </head>
 <body>
 <sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
@@ -135,16 +134,25 @@ document.addEventListener('DOMContentLoaded', function() {
 <form id="deleteCal">
 </form>
 </div>
-	문서요약보기${docCounts}<br>
-	COUNT1: 참조문서함 개수 : ${docCounts.get("COUNT1")}<br>
-	COUNT2: 결재문서함-결재중문서 개수 : ${docCounts.get("COUNT2")}<br>
-	COUNT3: 결재문서함-결재필요문서개수 : ${docCounts.get("COUNT3")}<br>
-	COUNT4: 상신문서함-임시저장문서 : ${docCounts.get("COUNT4")}<br>
-	COUNT5:	상신문서함-결재대기문서 개수 : ${docCounts.get("COUNT5")}<br>
-	COUNT6: 상신문서함-결재중문서 개수 : ${docCounts.get("COUNT6")}<br>
-	COUNT7: 상신문서함-승인문서개수 : ${docCounts.get("COUNT7")}<br>
-	COUNT8: 상신문서함-반려문서개수 : ${docCounts.get("COUNT8")}<br>
-${lists}
+<div id="leftbox">
+	<div id="left2" onclick="location.href='./docLists.do?state=7'">결재필요 문서<br><br><b>${docCounts.get("COUNT3")}</b> 건</div>
+	<div id="right2" onclick="location.href='./docLists.do?state=0'">임시저장 문서<br><br><b>${docCounts.get("COUNT4")}</b> 건</div>
+</div>
+<div id="rightbox">
+	<div id="left2" onclick="location.href='./docLists.do?state=1'">결재대기 문서<br><br><b>${docCounts.get("COUNT5")}</b> 건</div>
+	<div id="right2" onclick="location.href='./docLists.do?state=2'">결재중 문서<br><br><b>${docCounts.get("COUNT6")}</b> 건</div>
+</div>
+<div id="quickview">
+	<div id="boxs">
+		<table>
+			<tbody>
+				<tr style="text-align: center;">
+					<td>휴가신청서</td><td>제목</td><td>기안자</td><td>결재상태</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
 
 </body>
 </html>
