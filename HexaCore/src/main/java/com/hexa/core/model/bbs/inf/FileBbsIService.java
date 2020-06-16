@@ -15,7 +15,7 @@ public interface FileBbsIService {
 //	public static final String ATTACH_PATH = "C:\\nobrand\\git\\hexacore\\HexaCore\\file";
 	
 	/*상대 경로*/
-	public static final String ATTACH_PATH = "C:\\nobrand\\eclipse_spring\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\HexaCore\\resource\\file";
+	public static final String ATTACH_PATH = "../webapps/HexaCore/files/upload";
 	
 	// 1. 자료실 글 작성
 	public BbsDTO insertFileBbs(BbsDTO dto,MultipartFile[] filename);
