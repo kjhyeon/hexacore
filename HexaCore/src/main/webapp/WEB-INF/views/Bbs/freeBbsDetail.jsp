@@ -79,7 +79,7 @@
      		 		<td>파일</td>
      		 		<td>
      		 			<c:forEach items="${list}" var="files" varStatus="n">
-     		 				<a href="./download.do?name=${files.name}" >${files.ori_name}</a> | ${files.f_size }byte
+     		 				<a href="./download.do?name=${files.name}" >${files.ori_name}</a> | ${files.f_path }byte
      		 			</c:forEach>
      		 		</td>
      		 	</tr>

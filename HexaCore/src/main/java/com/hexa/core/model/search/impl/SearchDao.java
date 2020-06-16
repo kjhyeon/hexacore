@@ -59,7 +59,7 @@ public class SearchDao implements SearchIDao{
 	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	private final String INDEX_PATH = "../webapps/HexaCore/lucene"; //인덱싱 파일이 저장될 공간 지정 나중에 바꿀거임
+	private final String INDEX_PATH = "/home/HexaCore/lucene"; //인덱싱 파일이 저장될 공간 지정 나중에 바꿀거임
 	
 	@Override
 	public void eDocIndex(List<DocumentDTO> list) {

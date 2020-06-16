@@ -24,7 +24,7 @@
 		<table class="table table-bordered">
 			<tr>
 				<td rowspan="10">
-					<img style="height: 120px; width: 120px;" alt="" src="./image/default_profile.png" id="image">
+					<img style="height: 120px; width: 120px;" alt="" src="./image/default_profile.png" id="profile-image">
 				</td>
 				<th>아이디</th>
 				<td>

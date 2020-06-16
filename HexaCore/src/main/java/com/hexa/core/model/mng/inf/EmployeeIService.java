@@ -9,8 +9,8 @@ import com.hexa.core.dto.RowNumDTO;
 
 public interface EmployeeIService {
 	
-	public static final String ATTACH_PATH = "../webapps/HexaCore/image/profile";
-
+//	public static final String ATTACH_PATH = "../webapps/HexaCore/image/profile";
+	public static final String ATTACH_PATH = "/home/HexaCore/image/profile";
 	public boolean insertEmployee(EmployeeDTO dto,MultipartFile profile_file);
 	
 	public boolean deleteEmployee(int employee_number);

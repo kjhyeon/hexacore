@@ -75,7 +75,7 @@ function formChk(){
 					<img style="height: 120px; width: 120px;" alt="" src="./image/default_profile.png" id="profile-image">
 				</c:when>
 				<c:otherwise>
-					<img style="height: 120px; width: 120px;" alt="" src="./image/profile/${dto.profile_img }" id="profile-image">
+					<img style="height: 120px; width: 120px;" alt="" src="/home/HexaCore/image/profile/${dto.profile_img }" id="profile-image">
 				</c:otherwise>
 			</c:choose>
 		</td><th>아이디</th><td>${dto.id }</td></tr>
@@ -103,7 +103,7 @@ function formChk(){
 					<img style="height: 80px; width: 80px;" id="sign-image" src="./image/default_sign.png" id="sign-image" >
 				</c:when>
 				<c:otherwise>
-					<img style="height: 80px; width: 80px;" id="sign-image" src="./image/profile/${dto.sign_img}" id="sign-image">
+					<img style="height: 80px; width: 80px;" id="sign-image" src="/home/HexaCore/image/profile/${dto.sign_img}" id="sign-image">
 				</c:otherwise>
 			</c:choose>
 		</td><th>사인</th><td><input type="file" name="sign_file" id="sign_file"  onchange="a(this,'sign-')" accept="image/*"></td></tr>

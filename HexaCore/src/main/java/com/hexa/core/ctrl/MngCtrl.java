@@ -87,12 +87,12 @@ public class MngCtrl {
 		log.info("Welcome goEmpUpdateForm {}", id);
 		model.addAttribute("dto",eService.selectEmployee(id));
 		model.addAttribute("ranks",eService.selectRank());
-		System.out.println("################################3"+eService.selectRank().size());
+//		System.out.println("################################3"+eService.selectRank().size());
 		return "mng/updateEmployee";
 	}
 	@RequestMapping(value="/updateEmployee.do",method=RequestMethod.POST)
 	public String EmployeeUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
-		log.info("Welcome EmployeeInsert {}/{}/{}", dto,profile_file,sign_file);
+		log.info("Welcome EmployeeUpdate {}/{}/{}", dto,profile_file,sign_file);
 		
 		boolean isc = eService.updateEmployee(dto,profile_file,sign_file);
 		if(isc)

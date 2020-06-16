@@ -18,7 +18,7 @@
 					<img style="height: 120px; width: 120px;" alt="" src="./image/default_profile.png">
 				</c:when>
 				<c:otherwise>
-					<img style="height: 120px; width: 120px;" alt="" src="./image/profile/${dto.profile_img }">
+					<img style="height: 120px; width: 120px;" alt="" src="/home/HexaCore/image/profile/${dto.profile_img }">
 				</c:otherwise>
 			</c:choose>
 		</td><th>아이디</th><td>${dto.id }</td></tr>
@@ -31,11 +31,11 @@
 		<tr><th>사인</th>
 		<td>
 		<c:choose>
-				<c:when test="${empty dto.profile_img || dto.profile_img eq '' }">
-					<img style="height: 80px; width: 80px;" id="sign-image" src="./image/default_sign" >
+				<c:when test="${empty dto.sign_img || dto.sign_img eq '' }">
+					<img style="height: 80px; width: 80px;" id="sign-image" src="./image/default_sign.png" >
 				</c:when>
 				<c:otherwise>
-					<img style="height: 80px; width: 80px;" id="sign-image" src="./image/profile/${dto.sign_img}" >
+					<img style="height: 80px; width: 80px;" id="sign-image" src="/home/HexaCore/image/profile/${dto.sign_img}" >
 				</c:otherwise>
 			</c:choose>
 		</td></tr>

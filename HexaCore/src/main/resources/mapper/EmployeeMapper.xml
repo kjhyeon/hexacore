@@ -5,7 +5,7 @@
 		INSERT INTO EMPLOYEES
 			(EMPLOYEE_NUMBER, ID, PASSWORD, NAME, PHONE, EMAIL, E_RANK, AUTH, BIRTH, DEPARTMENT_ID, JOIN_DATE, GENDER, POSTCODE, ADDRESS, DETAILADDRESS, STATE,PROFILE_IMG, SIGN_IMG)
 				VALUES(E_NUM_SEQ.NEXTVAL, #{id}, #{password}, #{name}, #{phone}, #{email}, 16
-						, 'U', #{birth}, #{department_id}, SYSDATE, #{gender}, #{postcode}, #{address}, #{detailaddress}, 0, #{profile_img}, null)
+						, 'U', TO_DATE(#{birth}, 'YYYY-MM-DD'), #{department_id}, SYSDATE, #{gender}, #{postcode}, #{address}, #{detailaddress}, 0, #{profile_img}, null)
 
 	</insert>
 	
@@ -20,7 +20,7 @@
 					PASSWORD=#{password}, 
 			</if>
 			<if test="birth != null">
-					BIRTH = #{birth},
+					BIRTH = TO_DATE(#{birth}, 'YYYY-MM-DD'),
 			</if>
 			<if test="gender != null">
 					 GENDER = #{gender},
