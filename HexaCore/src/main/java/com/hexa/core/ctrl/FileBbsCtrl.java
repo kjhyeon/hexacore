@@ -243,7 +243,6 @@ public class FileBbsCtrl {
 	public String updateDeleteFileBbs(SecurityContextHolder session, String seq) {
 		log.info("Welcome 글 단일삭제 값 보내기, {}", seq);
 		service.updateDeleteFileBbs(seq);
-
 		return "redirect:/fileBbsMain.do";
 	}
 	
