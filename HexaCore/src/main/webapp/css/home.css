@@ -8,73 +8,138 @@
  	margin: auto;
  }
  
+ #calendar{
+ 	border: 1px solid black;
+ }
+ 
  .container_div1{
  	position: absolute;
  	width: 22%;
- 	height: 725px;
- 	top: 175px;
+ 	height: 715px;
+ 	top: 185px;
  	background-color: skyblue;
  }
  
+ /* 메인페이지 이미지 */
  .container_div2{
  	position: absolute;
- 	width: 55%;
+ 	width: 50.5%;
  	height: 350px;
  	left: 23.5%;
  	background-image: url("../image/MainImage.png");
  }
  
+ /* 공지사항 */
  .container_div3{
  	position: absolute;
- 	width: 27%;
- 	height: 520px;
+ 	width: 24.75%;
+ 	height: 520px;	
  	left: 23.5%;
 	top: 380px;
-	background-color: pink;
  }
  
+ /* 자료실 */
  .container_div4{
  	position: absolute;
- 	width: 27%;;
+ 	width: 24.75%;
  	height: 520px;
- 	left: 51.5%;
+ 	left: 49.25%;
 	top: 380px;
- 	background-color: red;
  }
  
+ 
+ /* 캘린더 */
  .container_div5{
  	position: absolute;
- 	width: 400px;
- 	height: 350px;
+ 	width: 490px;
+ 	height: 418.5px;
  	right: 10px;
+ 	font-size: 0.5em;
  }
  
+ #calendar {
+   max-width: 900px;
+   margin: 0 auto;
+ }
+
+ .form-group > label, button, input[type="text"]{
+ 	margin-top : 20px;
+ }
+ 
+ 
+ /* 미정 */	
  .container_div6{
  	position: absolute;
- 	width: 400px;
- 	height: 520px;
- 	top: 380px;
+ 	width: 490px;
+ 	height: 450px;
+ 	top: 450px;
  	right: 10px;
  	background-color: orange;
  }
  
+ /* 사원정보 */
+ .container_div7{
+ 	position: absolute;
+ 	width: 22%;
+ 	height: 155px;
+ 	text-align: center;
+ }
+ 
+ #profile > img{
+ 	margin: 17.5px 10px;
+ 	margin-right: 25px;
+ 	box-shadow: 5px 5px gray;
+ }
+ 
+ .container_div7>table{
+ 	text-align: center;
+ 	font-size: 1.5em;
+ }
+ 
+ /* 공지게시판  */
  #NoticeBoard_Title_Header{
  	margin-bottom: 0px;
  	margin-left: 20px;
  	display: inline-block;
  }
  
+ /* more <a> 태그  */
  #Title_a{
  	color: gray;
  	text-decoration: none;
  	margin-bottom: 0px;
  }
  
+ /* 자료실 */
  #FileBoard_Title_Header{
  	margin-bottom: 0px;
  	margin-left: 20px;
  	display: inline-block;
  }
  
+ /* 공지게시판 제목 */
+ .NoticeList_Title{
+ 	margin-top: 15%;
+ 	margin-left: 20px;
+ 	font-size: 1.2em;
+ }
  
+ /* 공지게시판 리스트 */
+ #NoticeList_List{
+ 	padding-top: 15px;
+ 	padding-bottom: 15px;
+ }
+ 
+ /* 자료실 제목 */
+ .FileList_Title{
+ 	margin-top: 15%;
+ 	margin-left: 20px;
+ 	font-size: 1.2em;
+ }
+ 
+ /* 자료실 리스트 */
+ #NoticeList_List{
+ 	padding-top: 15px;
+ 	padding-bottom: 15px;
+ }
  

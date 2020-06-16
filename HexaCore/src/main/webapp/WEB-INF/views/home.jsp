@@ -2,25 +2,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="./css/home.css">
+<link rel="stylesheet" type="text/css" href="./css/home.css">
+<link href='./packages/core/main.css' rel='stylesheet' />
+<link href='./packages/daygrid/main.css' rel='stylesheet' />
+<link href='./packages/timegrid/main.css' rel='stylesheet' />
+<link href='./packages/list/main.css' rel='stylesheet' />
+<script src='./packages/core/main.js'></script>
+<script src='./packages/interaction/main.js'></script>
+<script src='./packages/daygrid/main.js'></script>
+<script src='./packages/timegrid/main.js'></script>
+<script src='./packages/list/main.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script type="text/javascript" src="./js/eapprhome.js"></script>
 </head>
 <body>
 	<div class="wrap">
 		<%@include file="./header.jsp"%>
+	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
 		<div class="container">
 			<div class="content">
 				<div class="container_div1" id="item">
-					<p>내용</p>
-				<!-- 권한 -->
-				<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth">${auth}</sec:authorize>
-				<!-- username : id  -->
-				<sec:authentication property="principal.username" />
-				<!-- name : 사원이름 -->
-				<sec:authentication property="principal.name" />
-				<!-- department_name : 부서이름 -->
-				<sec:authentication property="principal.department_name" />
-				<!-- e_rank_name : 사원직위 -->
-				<sec:authentication property="principal.e_rank_name" />
+					<table>
+						<c:forEach items="${eDocList}" var="Doc">
+							<tr>
+								<td>${Doc.title}</td>
+								<c:choose>
+									<c:when test="${Doc.state eq 0}">임시저장</c:when>
+								</c:choose>
+								<c:choose>
+									<c:when test="${Doc.state eq 1}">결재대기</c:when>
+								</c:choose>
+								<c:choose>
+									<c:when test="${Doc.state eq 2}">결재중</c:when>
+								</c:choose>
+								<c:choose>
+									<c:when test="${Doc.state eq 3}">결재완료</c:when>
+								</c:choose>
+								<c:choose>
+									<c:when test="${Doc.state eq 4}">반려</c:when>
+								</c:choose>
+								<td>${fn:substring(Doc.regdate,0,10)}</td>
+							</tr>
+						</c:forEach>
+					</table>
 				</div>
 				<div class="container_div2" id="item">
 					<p>내용</p>
@@ -28,6 +52,7 @@
 					<a href="./updateDepartment.do">부서 관리</a><br>
 					<a href="./totalIndex.do">인덱싱</a><br>
 				</div>
+				
 				<div class="container_div3" id="item">
 					<div id="NoticeBoard_Title_Header">
 						<h3 id="Title_h">공지사항</h3> 
@@ -38,7 +63,20 @@
 						</a>
 					</div>
 					<hr>
+					<div>
+						<table class="NoticeList_Title">
+							<c:forEach items="${noticeList}" var="notice">
+								<tr>
+									<td id="NoticeList_List">
+											[공지]${notice.title}&nbsp;&nbsp;${fn:substring(notice.regdate,0,10)}
+									</td>
+								</tr>
+							</c:forEach>
+						</table>
+					</div>
 				</div>
+				
+				
 				<div class="container_div4" id="item">
 					<div id="FileBoard_Title_Header">
 						<h3 id="Title_h">자료실</h3> 
@@ -49,16 +87,146 @@
 						</a>
 					</div>
 					<hr>
+					<div>
+						<table class="FileList_Title">
+							<c:forEach items="${fileList}" var="fileBbs">
+								<tr>
+									<td id="NoticeList_List">
+										[자료]${fileBbs.title}&nbsp;&nbsp;${fn:substring(fileBbs.regdate,0,10)}
+									</td>
+								</tr>
+							</c:forEach>
+						</table>
+					</div>
 				</div>
-				<div class="container_div5" id="item">
-					<p>내용</p>
+				
+				
+				<div class="container_div5" id="calendar">
+					<button style="display: none" type="button" id="btnModal"
+						class="btn btn-info btn-lg" data-toggle="modal"
+						data-target="#myModal">Open Modal</button>
+					<div id="addEventCal" class="modal fade" role="dialog">
+						<div class="modal-dialog">	
+							<!-- Modal content-->
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+									<h2 class="modal-title">간편공지</h2>
+									<h4 class="modal-title">간단하게 공지를 등록해주세요</h4>
+								</div>
+								<div class="modal-body">
+									<form id="addEventCals" action="./addEventCals.do"
+										method="POST">
+										<div class="form-group">
+											<label for="title">TITLE:</label> <input type="text"
+												name="title" class="form-control" id="txtTitle"> <label
+												for="start">START_DATE:</label> <input type="text"
+												name="start_date" class="form-control" id="start_date"
+												readonly="readonly"> <label for="end">END_DATE:</label>
+											<input type="text" name="end_date" class="form-control"
+												id="end_date" readonly="readonly"> <input
+												type="submit" class='btn btn-success' id='OKAY' value='일정등록'>
+											<button class='btn btn-default' data-dismiss='modal'>닫기</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
+				
 				<div class="container_div6" id="item">
-					<p>내용</p>
+					<h2>미정</h2>
 				</div>
+
+				<div class="container_div7" id="item">
+					<table>
+						<tr>
+							<td id="profile" rowspan="3"><img src="./image/default_profile.png" alt="사진"></td>
+							<th>직급 :</th>
+							<td>${emp.e_rank_name}</td>
+						</tr>
+						<tr>
+							<th>부서 :</th>
+							<td>${emp.department_name }</td>
+						</tr>
+						<tr>
+							<th>이름 :</th>
+							<td>${emp.name }</td>
+						</tr>
+					</table>
+				</div>
+				
 			</div>
 		</div>
 	</div>
 	<%@include file="./footer.jsp"%>
+	
+	<script type="text/javascript">
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      plugins: [ 'interaction' ,'dayGrid' ],
+      header: {
+        left: 'today',
+        center: 'title',
+        right: 'prev,next '
+      },
+      defaultDate: new Date(),
+      navLinks: false, // can click day/week names to navigate views
+	  <c:choose>
+      	<c:when test="${auth eq true}">
+      	selectable: true,
+      	</c:when>
+      	<c:otherwise>
+    	  selectable: false,
+      	</c:otherwise>
+      	</c:choose>
+      selectMirror: true,
+      select:  function(event) {
+    		  $("#addEventCal").modal("show");
+    		  $("#start_date").val(moment(event.start).format('YYYY-MM-DD'));
+    		  $("#end_date").val(moment(event.end).format('YYYY-MM-DD'));
+    	  },
+      editable: true,
+      disableDragging: true,
+      eventLimit: true, // allow "more" link when too many events
+      eventSources: [{
+  		events: function(info, successCallback, failureCallback) {
+  			$.ajax({
+  				url: './getCals.do',
+  				type: 'POST',
+  				data: {
+  					start : moment(info.startStr).format('YYYY-MM-DD'),
+  					end : moment(info.endStr).format('YYYY-MM-DD'),
+  				},
+  				success: function(data) {
+  					successCallback(data.lists);
+  				},
+  				error: function(data) {
+					alert(실패);
+				}
+  			});
+  		}
+  	}]
+	, eventClick:function(info, jsEvent, view) {
+		  <c:choose>
+	      	<c:when test="${auth eq true}">
+				 var r = confirm("일정을 삭제하시겠습니까? "+info.event.title);
+       			  if (r === true) {
+        			deleteCal(info.event.title);
+        			 }
+	      	</c:when>
+	      	<c:otherwise>
+	      		return false;
+	      	</c:otherwise>
+	      	</c:choose>
+       },
+    });
+    calendar.render();
+  });
+
+</script>
 </body>
 </html>

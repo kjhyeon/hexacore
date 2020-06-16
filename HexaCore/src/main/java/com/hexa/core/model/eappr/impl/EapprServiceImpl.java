@@ -177,7 +177,7 @@ public class EapprServiceImpl implements EapprIService{
 		int cnt=0;
 		
 		log.info("**** 실행 : {}",map);
-		if(Integer.parseInt((String)map.get("state"))<5) {
+		if(Integer.parseInt((String)map.get("state"))<5||Integer.parseInt((String)map.get("state"))==777) {
 			cnt = dao.selectMyDocCount(map);
 		}else {
 			switch ((String)map.get("state")) {

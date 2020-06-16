@@ -1,6 +1,7 @@
 package com.hexa.core.ctrl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +16,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.common.collect.Maps;
 import com.hexa.core.dto.BbsDTO;
+import com.hexa.core.dto.DocCommentDTO;
+import com.hexa.core.dto.DocumentDTO;
 import com.hexa.core.dto.EmployeeDTO;
 import com.hexa.core.dto.LoginDTO;
 import com.hexa.core.dto.RowNumDTO;
 import com.hexa.core.model.bbs.inf.FileBbsIService;
 import com.hexa.core.model.bbs.inf.FreeBbsIService;
 import com.hexa.core.model.bbs.inf.NoticeBbsIService;
+import com.hexa.core.model.eappr.inf.EapprIService;
 import com.hexa.core.model.mng.inf.EmployeeIService;
 
 @Controller
@@ -35,6 +40,9 @@ public class MngCtrl {
 	
 	@Autowired
 	private FileBbsIService fileService;
+	
+	@Autowired
+	private EapprIService eapprService;
 	
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -154,13 +162,28 @@ public class MngCtrl {
 
 	
 	@RequestMapping(value = "/result.do", method = RequestMethod.GET)
-	public String maingo(Model model) {
+	public String maingo(SecurityContextHolder session, Model model) {
+		Authentication auth = session.getContext().getAuthentication();
+		LoginDTO dto = (LoginDTO) auth.getPrincipal();
 		
-		List<BbsDTO> noticeList = noticeService.selectUserNoticeBbsList();
-		List<BbsDTO> fileList = fileService.selectUserFileBbsList();
+		RowNumDTO row = new RowNumDTO();
+		row.setTotal(5);
+		row.setPageNum(3);
+		row.setListNum(5);
 		
+		List<BbsDTO> noticeList = noticeService.selectUserNoticeBbsListRow(row);
+		List<BbsDTO> fileList = fileService.selectUserFileBbsListRow(row);
+		Map<String,Object> map = Maps.newHashMap();
+		map.put("start", 0);
+		map.put("last", 10);
+		map.put("id",dto.getUsername());
+		map.put("state","777");
+		List<DocumentDTO> eDocList = eapprService.selectMyDocList(map);
 		model.addAttribute("noticeList", noticeList);
 		model.addAttribute("fileList", fileList);
+		model.addAttribute("eDocList", eDocList);
+		EmployeeDTO emp = eService.selectEmployee(dto.getUsername());
+		model.addAttribute("emp", emp);
 		
 		return "home";
 	}
