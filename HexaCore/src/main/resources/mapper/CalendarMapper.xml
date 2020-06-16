@@ -3,7 +3,7 @@
 <mapper namespace="com.hexa.core.cal">
 
 <select id="selectEventsCal"  resultType="CalDto">
-	SELECT SEQ, ID, TITLE, zSTART_DATE, END_DATE
+	SELECT SEQ, ID, TITLE, START_DATE, END_DATE
 		FROM CALENDAR
 	</select>
 
