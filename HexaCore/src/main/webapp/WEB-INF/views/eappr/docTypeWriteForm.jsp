@@ -6,7 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="./ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
 	function cancelwrite(){
@@ -31,24 +33,26 @@
 	}
 </script>
 <body>
-	문서 양식 추가
+	<h1 style="padding-left: 50px;">문서 양식 추가</h1>
 	<form id="addType" name="addType" method="POST">
-		<table>
+		<table class="table" style="text-align: center;">
 			<tr>
-				<td>양식 이름 :</td>
-				<td><input type="text" name="name"></td>
+				<td>양식 이름</td>
+				<td><input type="text" name="name" style="width:100%;"></td>
 			</tr>
 			<tr>
-				<td>내용 :</td>
+				<td>내용</td>
 				<td>
 					<textarea id="p_content" name="content" rows="5" cols="50"></textarea>
 					<script type="text/javascript">CKEDITOR.replace('p_content', {height: 500});</script>
 				</td>
 			</tr>
 		</table>
-		<input type="button" value="취소" onclick="cancelwrite()">
-		<input type="button" value="초기화" onclick="resetDoc()">
-		<input type="button" value="저장" onclick="savedoc()">
+		<div style="text-align: center;">
+		<input class="btn" type="button" value="취소" onclick="cancelwrite()">
+		<input class="btn" type="button" value="초기화" onclick="resetDoc()">
+		<input class="btn" type="button" value="저장" onclick="savedoc()">
+		</div>
 	</form>
 </body>
 </html>

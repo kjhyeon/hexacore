@@ -15,15 +15,28 @@
 	}	
 </script>
 <body>
+	<h1 style="padding-left: 50px;">문서 양식 리스트</h1>
 	<form>
-		<table>
-			<c:forEach var="type" items="${list}">
+		<table class="table" style="width:50%; margin: auto; text-align: center;">
+			<thead>
 				<tr>
-					<td><a href="./goDocTypeDetail.do?seq=${type.type_seq}">${type.name}</a></td>
+					<td>No.</td><td>양식 이름</td>
 				</tr>
-			</c:forEach>
+			</thead>
+			<tbody>
+				<c:forEach var="type" items="${list}">
+					<tr>
+						<td>${type.type_seq}</td>
+						<td>
+							<a href="./goDocTypeDetail.do?seq=${type.type_seq}">${type.name}</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
 	</table>
-	<input type="button" value="문서 양식 추가" onclick="writeDocType()">
+	<div style="text-align: center;">
+	<input type="button" class="btn" value="문서 양식 추가" onclick="writeDocType()">
+	</div>
 	<input type="hidden" name="index" id="index" value="${row.index }">
 	<input type="hidden" name="pageNum" id="pageNum" value="${row.pageNum }">
 	<input type="hidden" name="listNum" id="listNum" value="${row.listNum }">

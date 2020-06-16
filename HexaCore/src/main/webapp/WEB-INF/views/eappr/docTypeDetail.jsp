@@ -5,14 +5,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
 	function goList(){
 		location.href="./goDocTypeMng.do";
 	}
 	function goModify(){
 		$("#form1").attr("action", "./goDocTypeModifyForm.do");
-		$("#form1").attr("method", "POST");
+		$("#form1").attr("method", "GET");
 		document.form1.submit();
 	}
 	function deleteDocType(){
@@ -22,23 +24,17 @@
 	}
 </script>
 <body>
-<%@include file="./../../header.jsp" %>
-	<form id="form1" name="form1">
-	<input type="hidden" name="type_seq" value="${dto.type_seq}">
-		<table>
-			<tr>
-				<td>문서양식 이름:</td>
-				<td>${dto.name}<input type="hidden" name="name" value="${dto.name}"></td>
-			</tr>
-			<tr>
-				<td>내용:</td>
-				<td>${dto.content}<input type="hidden" name="content" value="${dto.content}"></td>
-			</tr>
-		</table>
-		<input type="button" value="목록으로" onclick="goList()">
-		<input type="button" value="수정" onclick="goModify()">
-		<input type="button" value="삭제" onclick="deleteDocType()">
-	</form>
-<%@include file="./../../footer.jsp" %>
+	<div style="width: 50%; margin: auto;">
+	<h1 style="text-align: center;">${dto.name}</h1>
+		<form id="form1" name="form1">
+			<input type="hidden" name="type_seq" value="${dto.type_seq}">
+			${dto.content}<br>
+			<div style="text-align: center;">
+			<input class="btn" type="button" value="목록으로" onclick="goList()">
+			<input class="btn" type="button" value="수정" onclick="goModify()">
+			<input class="btn" type="button" value="삭제" onclick="deleteDocType()">
+			</div>
+		</form>
+	</div>
 </body>
 </html>

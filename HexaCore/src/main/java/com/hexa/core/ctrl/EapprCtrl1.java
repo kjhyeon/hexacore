@@ -155,8 +155,9 @@ public class EapprCtrl1 {
 	}
 	
 	// 문서 양식 수정 화면으로 이동
-	@RequestMapping(value = "/goDocTypeModifyForm.do", method = RequestMethod.POST)
-	public String DocTypeModifyForm(DocumentTypeDTO dto, Model model) {
+	@RequestMapping(value = "/goDocTypeModifyForm.do", method = RequestMethod.GET)
+	public String DocTypeModifyForm(String type_seq, Model model) {
+		DocumentTypeDTO dto = service.selectDocType(type_seq);
 		model.addAttribute("dto", dto);
 		return "eappr/docTypeModifyForm";
 	}
