@@ -165,14 +165,15 @@ public class FileBbsCtrl {
 		lists = cService.selectFileCommentListRow(map);
 		model.addAttribute("lists", lists);
 
+		BbsDTO dto = null;
 		if (!auth_check.trim().equalsIgnoreCase("role_admin")) {
-			boolean isc = false;
-			isc = service.updateViewsFileBbs(seq);
+			dto =service.updateViewsFileBbs(seq);
+		}else {
+			dto = service.selectDetailFileBbs(seq);
 		}
 
 		cDto.setParent_seq(Integer.parseInt(seq));
 
-		BbsDTO dto = service.selectDetailFileBbs(seq);
 		List<FileDTO> list = service.selectFileBbsFile(seq);
 		model.addAttribute("seq", dto);
 		model.addAttribute("list", list);

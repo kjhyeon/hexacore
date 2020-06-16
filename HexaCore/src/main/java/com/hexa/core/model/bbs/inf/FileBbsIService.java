@@ -33,7 +33,7 @@ public interface FileBbsIService {
 	public BbsDTO selectDetailFileBbs(String seq);
 	
 	// 6. 자료실 조회수 증가
-	public boolean updateViewsFileBbs(String seq);
+	public BbsDTO updateViewsFileBbs(String seq);
 	
 	// 7. 자료실 답글 달기(update, insert dao처리)
 	public BbsDTO ReplyFile(BbsDTO dto, MultipartFile[] filename);

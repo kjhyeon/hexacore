@@ -172,14 +172,15 @@ public class FreeBbsCtrl {
 		lists = cService.selectFreeCommentListRow(map);
 		model.addAttribute("lists", lists);
 		
+		BbsDTO dto = null;
 		if (!auth_check.trim().equalsIgnoreCase("role_admin")) {
-			boolean isc = false;
-			isc = service.updateViewsBbs(seq);
+			dto =service.updateViewsBbs(seq);
+		}else {
+			dto = service.selectDetailFreeBbs(seq);
 		}
 		
 		cDto.setParent_seq(Integer.parseInt(seq));
 		
-		BbsDTO dto = service.selectDetailFreeBbs(seq);
 		List<FileDTO> list = service.selectFile(seq);
 		model.addAttribute("seq", dto);
 		model.addAttribute("list", list);

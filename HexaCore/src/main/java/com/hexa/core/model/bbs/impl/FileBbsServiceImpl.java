@@ -111,9 +111,12 @@ public class FileBbsServiceImpl implements FileBbsIService {
 	}
 
 	@Override
-	public boolean updateViewsFileBbs(String seq) {
+	public BbsDTO updateViewsFileBbs(String seq) {
 		log.info("자료실 조회수 증가 updateViewsFileBbs,\t {}", seq);
-		return dao.updateViewsFileBbs(seq);
+		dao.updateViewsFileBbs(seq);
+		BbsDTO dto = dao.selectDetailFileBbs(seq);
+		sService.updateBbsIndex(dto, SearchIService.FILE);
+		return dto;
 	}
 
 	@Override

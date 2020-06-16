@@ -110,9 +110,12 @@ public class NoticeBbsServiceImpl implements NoticeBbsIService {
 	}
 
 	@Override
-	public boolean updateViewsNoticeBbs(String seq) {
+	public BbsDTO updateViewsNoticeBbs(String seq) {
 		log.info("공지게시판 조회수 증가 updateViewsNoticeBbs,\t {}", seq);
-		return dao.updateViewsNoticeBbs(seq);
+		dao.updateViewsNoticeBbs(seq);
+		BbsDTO dto = dao.selectDetailNoticeBbs(seq);
+		sService.updateBbsIndex(dto, SearchIService.NOTICE);
+		return dto;
 	}
 
 	@Override

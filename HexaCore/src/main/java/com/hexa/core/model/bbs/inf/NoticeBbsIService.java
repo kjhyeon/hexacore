@@ -33,7 +33,7 @@ public interface NoticeBbsIService {
 	public BbsDTO selectDetailNoticeBbs(String seq);
 	
 	// 6. 공지게시판 조회수 증가
-	public boolean updateViewsNoticeBbs(String seq);
+	public BbsDTO updateViewsNoticeBbs(String seq);
 	
 	// 7. 공지게시판 답글 달기(update, insert dao처리)
 	public BbsDTO ReplyNotice(BbsDTO dto, MultipartFile[] filename);

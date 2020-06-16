@@ -33,7 +33,7 @@ public interface FreeBbsIService {
 	public BbsDTO selectDetailFreeBbs(String seq);
 	
 	// 6. 자유게시판 조회수 증가
-	public boolean updateViewsBbs(String seq);
+	public BbsDTO updateViewsBbs(String seq);
 	
 	// 7. 자유게시판 답글 달기(update, insert dao처리)
 	public BbsDTO ReplyBbs(BbsDTO dto, MultipartFile[] filename);
