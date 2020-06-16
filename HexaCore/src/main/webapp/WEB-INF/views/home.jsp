@@ -9,13 +9,7 @@
 		<%@include file="./header.jsp"%>
 		<div class="container">
 			<div class="content">
-				<div class="item">
-					<p>내용</p>
-				<a href="./employeeList.do">유저 관리</a><br>
-				<a href="./updateDepartment.do">부서 관리</a><br>
-				<a href="./totalIndex.do">인덱싱</a><br>
-				</div>
-				<div class="item">
+				<div class="container_div1" id="item">
 					<p>내용</p>
 				<!-- 권한 -->
 				<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth">${auth}</sec:authorize>
@@ -28,16 +22,38 @@
 				<!-- e_rank_name : 사원직위 -->
 				<sec:authentication property="principal.e_rank_name" />
 				</div>
-				<div class="item">
+				<div class="container_div2" id="item">
+					<p>내용</p>
+					<a href="./employeeList.do">유저 관리</a><br>
+					<a href="./updateDepartment.do">부서 관리</a><br>
+					<a href="./totalIndex.do">인덱싱</a><br>
+				</div>
+				<div class="container_div3" id="item">
+					<div id="Notice_Title_Header">
+						<h3 id="Title_h">공지사항</h3> 
+					</div>
+					<div id="Notice_Title_Header">
+						<a href="./goBbs.do?category=1" id="Title_a">
+							more
+						</a>
+					</div>
+					<hr>
+				</div>
+				<div class="container_div4" id="item">
+					<div id="Board_Title_Header">
+						<h3 id="Title_h">자료실</h3> 
+					</div>
+					<div id="Board_Title_Header">
+						<a href="./goBbs.do?category=2" id="Title_a">
+							more
+						</a>
+					</div>
+					<hr>
+				</div>
+				<div class="container_div5" id="item">
 					<p>내용</p>
 				</div>
-				<div class="item">
-					<p>내용</p>
-				</div>
-				<div class="item">
-					<p>내용</p>
-				</div>
-				<div class="item">
+				<div class="container_div6" id="item">
 					<p>내용</p>
 				</div>
 			</div>

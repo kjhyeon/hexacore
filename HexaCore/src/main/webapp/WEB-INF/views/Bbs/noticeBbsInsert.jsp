@@ -18,6 +18,11 @@
 	// 스크립트 < > 제약조건 
 	function writeComplete(){
 		var temp = $("#title").val();
+		if(temp.length <1){
+	    	alert("제목을 입력해주세요");
+	    	$("#title").focus();
+	    	return false;
+	    }
 		if(temp.indexOf("<")>=0){
 			temp = temp.replace(/</g ,"&lt;");
 		}
@@ -87,7 +92,7 @@
     			<tr>
     				<td>제목</td>
     				<td>
-    					<input type="text" id="title" name="title" value="제목" maxlength="100">
+    					<input type="text" id="title" name="title" placeholder="제목" maxlength="100">
     				</td>
     			</tr>
        			<tr>

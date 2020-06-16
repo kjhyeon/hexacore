@@ -10,10 +10,8 @@ import com.hexa.core.dto.RowNumDTO;
 
 public interface MessageIService {
 
-//	public static final String ATTACH_PATH = "C:\\nobrand\\git\\hexacore\\HexaCore\\file";
 	
-	/*상대 경로*/
-	public static final String ATTACH_PATH = "C:\\nobrand\\eclipse_spring\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\HexaCore\\resource\\file";
+	public static final String ATTACH_PATH = "/home/HexaCore/files/upload";
 	
 	/**
 	 * 메세지 보내기
@@ -25,7 +23,8 @@ public interface MessageIService {
 	/**
 	 * 메세지 수신함 조회
 	 * @param receiver_id
-	 * @return 메세지 수신함
+	 * @return 메
+	 * 세지 수신함
 	 */
 	public List<MessageDTO> selectReceiveList(Map<String, Object> map);
 	

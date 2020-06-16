@@ -15,7 +15,7 @@ public interface FreeBbsIService {
 //	public static final String ATTACH_PATH = "C:\\nobrand\\git\\hexacore\\HexaCore\\file";
 	
 	/*상대 경로*/
-	public static final String ATTACH_PATH = "../webapps/HexaCore/files/upload";
+	public static final String ATTACH_PATH = "/home/HexaCore/files/upload";
 	
 	// 1. 자유게시판 글 작성
 	public BbsDTO insertFreeBbs(BbsDTO dto,MultipartFile[] filename);

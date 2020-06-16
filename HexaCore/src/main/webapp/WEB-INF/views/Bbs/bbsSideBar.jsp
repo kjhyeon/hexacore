@@ -42,6 +42,19 @@ $(document).ready(function(e) {
 	});
 
 	$(document).ready(function() {
+		<c:if test="${not empty param.category && param.category != ''}">
+		<c:choose>
+			<c:when test="${param.category eq 0}">
+				$('#iframe').attr('src','./freeBbsMain.do');
+			</c:when>
+			<c:when test="${param.category eq 1}">
+				$('#iframe').attr('src','./noticeBbsMain.do');
+			</c:when>
+			<c:when test="${param.category eq 2}">
+				$('#iframe').attr('src','./fileBbsMain.do');
+			</c:when>
+		</c:choose>
+		</c:if>
 		<c:if test="${not empty param.keyword && param.keyword != ''}">
 			<c:choose>
 				<c:when test="${param.category eq 0}">
