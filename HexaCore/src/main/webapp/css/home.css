@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
  .content{
 	height: 910px;
  }
@@ -17,7 +18,6 @@
  	width: 22%;
  	height: 715px;
  	top: 185px;
- 	background-color: skyblue;
  }
  
  /* 메인페이지 이미지 */
