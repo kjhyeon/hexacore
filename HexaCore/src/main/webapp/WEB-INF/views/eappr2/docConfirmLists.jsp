@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <link type="text/css" rel="stylesheet" href="./css/sweetalert.css">
+  <link rel="stylesheet" href="./css/doc.css">
 <meta charset="UTF-8">
 <title>전자</title>
 </head>
@@ -16,7 +17,6 @@
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
 <body>
 <div class="container">
-  <input class="form-control" id="myInput" type="text" placeholder="Search..">
 	<c:choose>
 		<c:when test="${state eq '0'}"><h1>임시보관함</h1></c:when>
 		<c:when test="${state eq '1'}"><h1>결재대기문서함</h1></c:when>
@@ -26,7 +26,7 @@
 		<c:when test="${state eq '7'}"><h1>결재필요문서함</h1></c:when>
 	</c:choose>
 		<form  method="post">
-			<table id="myTable" class="table table-bordered table-striped" style="width: 80%; margin: 50px auto 0px auto; text-align: center; ">
+			<table id="myTable" class="table table-bordered table-striped" >
 				<tr>
 					<th>문서번호</th>
 					<th>기안자</th>

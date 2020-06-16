@@ -15,17 +15,22 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="./js/sweetalert.js"></script>
   <script type="text/javascript">
+  window.onload = function() {
+	execute();
+}
+  
+  
   window.setInterval('timeset()',1000*60*15);
   function timeset () {
       if (window.Notification) {
           Notification.requestPermission();
       }
-  	aa();
+  	execute();
   }
   window.onbeforeunload = function() {
   	clearInterval();
   };
-  function aa(){
+  function execute(){
   	var beforeCnt = $("#cnt").val();
   	var beforeMCnt = $("#Mcnt").val();
   	cntCheck(beforeCnt,beforeMCnt);

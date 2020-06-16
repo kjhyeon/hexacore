@@ -22,7 +22,7 @@
 		<div class="sidebar">
 			<div class="menu01">문서 작성</div>
 			<div>
-			<div class="ddmenu">상신문서함</div>
+			<div class="ddmenu">상신문서함&nbsp;&nbsp;<img src="./image/ArrowDrop.png" style="height: 10px;"></div>
 				<div class="submenu" data-url="./docLists.do?state=0">임시저장문서</div>
 				<div class="submenu" data-url="./docLists.do?state=1">결재대기문서</div>
 				<div class="submenu" data-url="./docLists.do?state=2">결재중문서</div>
@@ -30,9 +30,9 @@
 				<div class="submenu" data-url="./docLists.do?state=4">반려문서</div>
 			</div>
 			<div>
-				<div class="ddmenu" >결재문서함</div>
+				<div class="ddmenu" >결재문서함&nbsp;&nbsp;<img src="./image/ArrowDrop.png" style="height: 10px;"></div>
+				<div class="submenu" data-url="./docLists.do?state=6">결재한문서</div>
 				<div class="submenu" id="appr" data-url="./docLists.do?state=7">결재필요문서</div>
-				<div class="submenu" data-url="./docLists.do?state=6">결재중문서</div>
 			</div>
 			<div id="referMenu" class="menu" data-url="./docLists.do?state=8">참조문서함</div>
 		</div>
@@ -44,6 +44,5 @@
 			</div>
 		</div>
 	</div>
-	<%@include file="../footer.jsp" %>
 </body>
 </html>

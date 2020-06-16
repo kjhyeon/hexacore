@@ -13,11 +13,8 @@
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<script type = "text/javascript" src = "http://code.jquery.com/jquery-latest.min.js"></script>
 <script type="text/javascript" src="./js/sweetalert.js"></script>
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script type="text/javascript">
 $(document).keypress(function(e) {
     if ($("#apprDoc").hasClass('in') && (e.keycode == 13 || e.which == 13)) {
@@ -165,7 +162,7 @@ $(document).keypress(function(e) {
 						<c:if test="${AdtoL.appr_kind ne '참조'}">
 								<c:choose>
 										<c:when test="${AdtoL.appr_sign ne null}">
-											<td style="border: 1px solid black; width:25px; ">${AdtoL.appr_sign}</td>
+											<td style="border: 1px solid black; width:25px; "><img src="${AdtoL.appr_sign}"></td>
 										</c:when>
 										<c:when test="${AdtoL.appr_sign eq null}">
 											<td  style="border: 1px solid black; width:25px; ">미결재</td>
@@ -182,7 +179,7 @@ $(document).keypress(function(e) {
 			</div>
 			</div>
 		</div>
-		<div class="commentTable" style="float: left; width: 100%;">
+		<div class="commentTable" style="float: left; width: 70%;">
 			<hr>
 			<table id="commentTable" class="table" style="text-align: center;">
 				<tr style="background: #E1E2E1;">

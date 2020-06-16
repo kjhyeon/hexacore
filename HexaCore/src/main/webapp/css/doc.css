@@ -1,5 +1,14 @@
 @charset "UTF-8";
 
+@import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
+* {
+	font-family: 'Jeju Gothic', sans-serif;
+}
+.container{
+	width: 90%;	
+}
+
+
 .leftBox {
 	float: left;
 	width: 70%;
@@ -104,4 +113,20 @@ hr {
 
 h1 {
 	margin-bottom: 50px; 
+}
+
+#myTable{
+	width: 100%; 
+	margin: 50px auto 0px auto; 
+	text-align: center;
+}
+
+#myTable> tbody> tr> th{
+	text-align: center;
+	
+}
+
+a:link, a:visited, a:hover{
+	text-decoration: none;
+	color: black;;
 }
