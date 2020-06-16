@@ -248,7 +248,7 @@ public class EapprCtrl2 {
 		log.info("addEventCals{}",CDto);
 		CDto.setId(principal.getName());
 		int n = CService.insertEventsCal(CDto);
-		return (n>0)?"redirect:/goEapprHome.do":"redirect:/goEapprHome.do";
+		return (n>0)?"redirect:/result.do":"redirect:/result.do";
 	}
 	
 	//이벤트 삭제
@@ -256,6 +256,6 @@ public class EapprCtrl2 {
 	public String deleteCal(String title) {
 		log.info("삭제{}",title);
 		int n = CService.deleteEventsCal(title);
-		return (n>0)?"redirect:/goEapprHome.do":"redirect:/goEapprHome.do";
+		return (n>0)?"redirect:/result.do":"redirect:/result.do";
 	}
 }
