@@ -491,10 +491,6 @@ public class SearchDao implements SearchIDao{
 			if(isBbs&&auth.trim().equalsIgnoreCase("role_user")) {
 				state = new QueryBuilder(analyzer).createBooleanQuery("state", "0");
 			}else if(!isBbs){
-				
-				BytesRef lower = new BytesRef(Integer.toBinaryString(0));
-				BytesRef upper = new BytesRef(Integer.toBinaryString(5));
-				state = new TermRangeQuery("state", lower, upper, true, false);
 				idquery = new QueryBuilder(analyzer).createBooleanQuery("author",id);
 			}
 			if(category.trim().equals("title")) {
@@ -526,7 +522,7 @@ public class SearchDao implements SearchIDao{
 			}else if(isBbs) {
 				query = new BooleanQuery.Builder().add(qq, Occur.MUST).build();
 			}else{
-				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(state, Occur.MUST).add(idquery, Occur.MUST).build();
+				query = new BooleanQuery.Builder().add(qq, Occur.MUST).add(idquery, Occur.MUST).build();
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();

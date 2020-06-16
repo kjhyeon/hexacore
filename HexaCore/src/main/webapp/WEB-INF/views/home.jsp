@@ -13,7 +13,6 @@
 <script src='./packages/timegrid/main.js'></script>
 <script src='./packages/list/main.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-<script type="text/javascript" src="./js/eapprhome.js"></script>
 </head>
 <body>
 	<div class="wrap">
@@ -160,7 +159,8 @@
 						</div>
 					</div>
 				</div>
-				
+				<form id="deleteCal">
+				</form>
 				<div class="container_div6" id="item">
 					<h2>미정</h2>
 				</div>
@@ -168,7 +168,16 @@
 				<div class="container_div7" id="item">
 					<table>
 						<tr>
-							<td id="profile" rowspan="3"><img src="./image/default_profile.png" alt="사진"></td>
+							<td id="profile" rowspan="3">
+							<c:choose>
+								<c:when test="${empty emp.profile_img|| emp.profile_img eq '' }">
+									<img src="./image/default_profile.png" alt="사진">
+								</c:when>
+								<c:otherwise>
+									<img src="/home/HexaCore/image/profile/${emp.profile_img }" alt="사진">
+								</c:otherwise>
+							</c:choose>
+							</td>
 							<th>직급 :</th>
 							<td>${emp.e_rank_name}</td>
 						</tr>
@@ -253,6 +262,11 @@ document.addEventListener('DOMContentLoaded', function() {
     calendar.render();
   });
 
+	function deleteCal(title) {
+	$("#deleteCal").attr("action",'./deleteCal.do?title='+title);
+	$("#deleteCal").attr("method","post");
+	$("#deleteCal").submit();
+}
 </script>
 </body>
 </html>

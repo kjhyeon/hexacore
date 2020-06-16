@@ -3,7 +3,7 @@
 <mapper namespace="com.hexa.core.cal">
 
 <select id="selectEventsCal"  resultType="CalDto">
-	SELECT SEQ, ID, TITLE, START_DATE, END_DATE
+	SELECT SEQ, ID, TITLE, zSTART_DATE, END_DATE
 		FROM CALENDAR
 	</select>
 
@@ -11,7 +11,7 @@
 	INSERT INTO 
 		HEXA.CALENDAR
 		      (SEQ, ID, TITLE, START_DATE, END_DATE)
-		VALUES((SELECT MAX(SEQ) FROM CALENDAR)+1,#{id}, #{title}, #{start_date}, #{end_date})
+		VALUES((SELECT MAX(SEQ) FROM CALENDAR)+1,#{id}, #{title}, TO_DATE(#{start_date},'YYYY-MM-DD'), TO_DATE(#{end_date},'YYYY-MM-DD'))
 </insert>
 
 <delete id="deleteEventsCal" parameterType="java.lang.String">
