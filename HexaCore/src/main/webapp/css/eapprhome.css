@@ -37,7 +37,7 @@
  	padding: 10px;
 }
 
-#left2:hover, #right2:hover {
+#left2:hover, #right2:hover, #boxs:hover {
 	background-color: #E1E2E1;
 	cursor: pointer;
 	transition: background-color 1s;
@@ -54,9 +54,10 @@ b {
 }
 
 #boxs {
-	width: 100%;
+	width: 60%;
 	height: 75px;
 	box-shadow: 3px 3px 3px 3px gray;
 	text-align: center;
  	padding: 10px;
+ 	margin: 20px auto;
 }

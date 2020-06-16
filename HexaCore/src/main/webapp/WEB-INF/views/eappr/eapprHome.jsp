@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <div id="quickview">
 <c:if test="${lists ne null}">
 	<c:forEach items="${lists}" var="Ddto" varStatus="num">
-	<div id="boxs">
+	<div id="boxs" onclick="location.href='./docDetail.do?seq=${Ddto.seq}'">
 		<table>
 			<tbody>
 				<tr style="text-align: center;">

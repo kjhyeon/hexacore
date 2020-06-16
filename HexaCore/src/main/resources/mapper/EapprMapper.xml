@@ -30,6 +30,7 @@
 			<if test="id!=null">
 				AND ID=#{id}
 			</if>
+			 ORDER BY TURN ASC
 	</select>
 	
 	<!-- 결재 루트 삭제 -->

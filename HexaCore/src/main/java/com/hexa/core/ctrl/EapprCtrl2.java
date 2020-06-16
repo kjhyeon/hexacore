@@ -147,8 +147,8 @@ public class EapprCtrl2 {
 	@RequestMapping(value="/saveUpDoc.do", method= RequestMethod.POST)
 	public String saveUpDoc(DocumentDTO Ddto, MultipartFile[] filename) {
 		log.info("********Ddto:{}", Ddto);
-		Ddto.setAppr_turn(0);
 		Ddto.setState(0);
+		Ddto.setAppr_turn(1);
 		boolean isc = service.saveUpDoc(Ddto,filename);
 		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
@@ -164,6 +164,7 @@ public class EapprCtrl2 {
 	@RequestMapping(value="/reportDoc.do",method=RequestMethod.POST)
 	public String reportDoc(DocumentDTO Ddto,MultipartFile[] filename) {
 		Ddto.setState(1);
+		Ddto.setAppr_turn(1);
 		boolean isc = service.saveUpDoc(Ddto,filename);
 		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
