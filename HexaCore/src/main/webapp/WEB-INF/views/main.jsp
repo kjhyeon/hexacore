@@ -8,7 +8,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%@include file="./../header.jsp" %>
 	<!-- 권한 -->
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth">${auth}</sec:authorize>
 	<!-- username : id  -->

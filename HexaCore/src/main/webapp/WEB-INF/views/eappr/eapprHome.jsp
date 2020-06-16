@@ -151,6 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <form id="deleteCal">
 </form>
 </div>
+${lists}
+
 	문서요약보기${docCounts}<br>
 	COUNT1: 참조문서함 개수 : ${docCounts.get("COUNT1")}<br>
 	COUNT2: 결재문서함-결재중문서 개수 : ${docCounts.get("COUNT2")}<br>

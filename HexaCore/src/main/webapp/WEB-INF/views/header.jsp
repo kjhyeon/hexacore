@@ -15,7 +15,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="./js/sweetalert.js"></script>
   <script type="text/javascript">
-  window.setInterval('timeset()',3000);
+  window.setInterval('timeset()',1000*60*15);
   function timeset () {
       if (window.Notification) {
           Notification.requestPermission();

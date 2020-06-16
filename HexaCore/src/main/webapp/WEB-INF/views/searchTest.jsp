@@ -7,7 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%@include file="./../header.jsp" %>
 
 <c:forEach items="${list }" var="dto">
 	${dto }<br>

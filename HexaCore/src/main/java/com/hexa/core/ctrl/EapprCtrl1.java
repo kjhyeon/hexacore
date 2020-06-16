@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,20 @@ public class EapprCtrl1 {
 	public String EapprHome(Principal scInfo, Model model) {
 		String userId = scInfo.getName();
 		Map<String, Object> docCounts = service.selectDocListAll(userId); // 각 문서함의 문서 개수들 가져오기
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", userId);
+		map.put("start",1);
+		map.put("last",5);
+		Map<String, Object> listAll = new HashMap<String, Object>();
+		for (int i = 0; i < 3; i++) {
+			map.put("state", Integer.toString(i));
+			listAll.put("listAll"+i,service.selectMyDocList(map));
+		}
+		map.put("state", "7");
+		listAll.put("listAll7",service.selectMyDocList(map));
+		//임시저장문서0127
+		model.addAttribute("lists",listAll);
+		model.addAttribute("id",userId);
 		model.addAttribute("docCounts",docCounts);
 		return "eappr/eapprHome";
 	}
