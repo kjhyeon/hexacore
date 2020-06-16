@@ -22,10 +22,31 @@
 		<div class="container">
 			<div class="content">
 				<div class="container_div1" id="item">
+					<div id="Doc_Title_Header">
+						<h3>문서상신함</h3>
+					</div>
+					<div id="Doc_Title_Header">
+						<a href="./goEapprMain.do" id="Title_a">
+							more
+						</a>
+					</div>
+					<hr>
 					<table>
 						<c:forEach items="${eDocList}" var="Doc">
-							<tr>
-								<td>${Doc.title}</td>
+							<tr id="Doc_List_Tr">
+								<td>
+									<a href="./docDetail.do?seq=${Doc.seq}">
+									<c:choose>
+										<c:when test="${fn:length(Doc.title) > 12 }">
+											${fn:substring(Doc.title,0,12)}ㆍㆍㆍ
+										</c:when>
+										<c:otherwise>
+											${Doc.title }
+										</c:otherwise>
+									</c:choose>
+									</a>
+								</td>
+								<td>
 								<c:choose>
 									<c:when test="${Doc.state eq 0}">임시저장</c:when>
 								</c:choose>
@@ -41,6 +62,7 @@
 								<c:choose>
 									<c:when test="${Doc.state eq 4}">반려</c:when>
 								</c:choose>
+								</td>
 								<td>${fn:substring(Doc.regdate,0,10)}</td>
 							</tr>
 						</c:forEach>
@@ -68,7 +90,9 @@
 							<c:forEach items="${noticeList}" var="notice">
 								<tr>
 									<td id="NoticeList_List">
+										<a href="./goBbs.do?seq=${notice.seq}&category=1">
 											[공지]${notice.title}&nbsp;&nbsp;${fn:substring(notice.regdate,0,10)}
+										</a>
 									</td>
 								</tr>
 							</c:forEach>
@@ -92,7 +116,9 @@
 							<c:forEach items="${fileList}" var="fileBbs">
 								<tr>
 									<td id="NoticeList_List">
-										[자료]${fileBbs.title}&nbsp;&nbsp;${fn:substring(fileBbs.regdate,0,10)}
+										<a href="./goBbs.do?seq=${fileBbs.seq}&category=2">
+											[자료]${fileBbs.title}&nbsp;&nbsp;${fn:substring(fileBbs.regdate,0,10)}
+										</a>
 									</td>
 								</tr>
 							</c:forEach>
