@@ -15,6 +15,9 @@
 <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="./js/sweetalert.js"></script>
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
+
+<script src="js/pdfmake/pdfmake.min.js"></script>
+<script src="js/pdfmake/vfs_fonts.js"></script>
 <script type="text/javascript">
 $(document).keypress(function(e) {
     if ($("#apprDoc").hasClass('in') && (e.keycode == 13 || e.which == 13)) {
@@ -179,6 +182,7 @@ $(document).keypress(function(e) {
 			</div>
 			</div>
 		</div>
+		<c:if test="${Cdto ne null }">
 		<div class="commentTable" style="float: left; width: 70%;">
 			<hr>
 			<table id="commentTable" class="table" style="text-align: center;">
@@ -201,6 +205,7 @@ $(document).keypress(function(e) {
 				</c:forEach>
 			</table>
 		</div>
+		</c:if>
 		
 		</form>
 		<div id="apprDoc" class="modal fade" role="dialog">

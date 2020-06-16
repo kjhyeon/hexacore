@@ -109,7 +109,8 @@ function totalSearch(){
 <body>
 	<sec:authorize access="hasRole('ROLE_ADMIN')" var="auth"></sec:authorize>
 	<header>
-		<div class="topmenu" style="width:12%" onclick="location.href='./result.do'"><img alt="logo" src="./image/hexa64.png"></div>
+		<div class="topmenu" style="width:12%" onclick="location.href='./result.do'">
+		</div>
 		<div class="topmenu" style="width:200px" onclick="location.href='./goEapprMain.do'" id="cntChkk">전자결재</div>
 		<div class="topmenu" style="width:200px" onclick="location.href='./goBbs.do'">게시판</div>
 		<c:choose >
