@@ -111,7 +111,9 @@ public class EapprCtrl2 {
 	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
 	public String updateDoc(Model model,Principal principal,ApprovalDTO ADto) {
 		String userId = principal.getName();
+		ADto.setId(userId);
 		Map<String, Object> map = service.goDetail(ADto);
+		model.addAttribute("turn",map.get("turn"));
 		model.addAttribute("typeDto",map.get("typeDto"));
 		model.addAttribute("comment",map.get("comment"));
 		model.addAttribute("Ddto",map.get("Ddto"));
@@ -145,14 +147,24 @@ public class EapprCtrl2 {
 	@RequestMapping(value="/saveUpDoc.do", method= RequestMethod.POST)
 	public String saveUpDoc(DocumentDTO Ddto, MultipartFile[] filename) {
 		log.info("********Ddto:{}", Ddto);
+		Ddto.setAppr_turn(0);
+		Ddto.setState(0);
 		boolean isc = service.saveUpDoc(Ddto,filename);
 		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
 	
-	//상신/취소 기능
+	//상세보기 _상신/취소 기능
 	@RequestMapping(value="/upApprDoc.do", method=RequestMethod.POST)
 	public String upApprDoc(DocumentDTO Ddto) {
 		boolean isc = service.upApprDoc(Ddto);
+		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
+	}
+	
+	//수정_상신
+	@RequestMapping(value="/reportDoc.do",method=RequestMethod.POST)
+	public String reportDoc(DocumentDTO Ddto,MultipartFile[] filename) {
+		Ddto.setState(1);
+		boolean isc = service.saveUpDoc(Ddto,filename);
 		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
 	

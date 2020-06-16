@@ -325,14 +325,12 @@ public class EapprServiceImpl implements EapprIService{
 		log.info("받아온 seq 값: {}", ADto.getSeq());
 		String seq = Integer.toString(ADto.getSeq());
 		String userId = ADto.getId();
-		ADto.setId(null);
+		String sign = dao.selectSignImg(userId);
 		Map<String, Object> map = new HashMap<String, Object>();
-		//도장 주소 결합
-//		String attach_path = "C:\\eclipse-spring\\git\\hexacore\\HexaCore\\src\\main\\webapp\\image\\profile\\";
-//		attach_path +=ADto.getAppr_sign();
 		//믄사 내용 조회
 		DocumentDTO Ddto = dao.selectDoc(seq);
 		//문서 결재선 전체 조회
+		ADto.setId(null);
 		List<ApprovalDTO> apprList = dao.selectApprRoot(ADto);
 		log.info("문서리스트{}",apprList);
 		for (int i = 0; i < apprList.size(); i++) {
@@ -340,7 +338,8 @@ public class EapprServiceImpl implements EapprIService{
 				apprList.get(i).setAppr_sign(apprList.get(i).getAppr_sign()); 
 			}
 		}
-		
+		//도장 갖고오기
+		ADto.setAppr_sign(APPR_SIGN+"/"+sign);
 		//문서 나의 결재선 조회
 		ADto.setId(userId);
 		List<ApprovalDTO> listsa = dao.selectApprRoot(ADto);
@@ -382,13 +381,13 @@ public class EapprServiceImpl implements EapprIService{
 
 	@Override
 	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename) {
-		Ddto.setAppr_turn(0);
-		Ddto.setState(0);
 		boolean isc = dao.updateDoc(Ddto);
-		boolean isc2=false;
-		boolean isc3=false;
+		boolean isc2=true;
+		boolean isc3=true;
+		if(filename.length!=0) {
 		isc2 = dao.deleteFile(Integer.toString(Ddto.getSeq()));
 		isc3 = saveDocFile(filename, Ddto.getSeq());
+		}
 		int iscI =0;
 		if(isc==true) {
 			if(Ddto.getLists()!=null) {
@@ -399,6 +398,7 @@ public class EapprServiceImpl implements EapprIService{
 					}
 			}
 		}
+		log.info("{}{}{}",iscI,isc2,isc3);
 		return (iscI>2&&isc2&&isc3)?true:false;
 	}
 

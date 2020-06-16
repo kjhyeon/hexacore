@@ -14,7 +14,8 @@ import com.hexa.core.dto.RowNumDTO;
 
 public interface EapprIService {
 	
-	public static final String ATTACH_PATH = "C:\\nobrand\\eclipse_spring\\.metadata\\.plugins\\org.eclipse.wst.server.core\\tmp0\\wtpwebapps\\HexaCore\\resource\\docfile";
+	public static final String ATTACH_PATH = "/home/HexaCore/files/edoc";
+	public static final String APPR_SIGN = "/home/HexaCore/image/profile";
 	
 	/**
 	 * 문서 양식 리스트 출력
@@ -224,4 +225,5 @@ public interface EapprIService {
 	 * @param Ddto
 	 */
 	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename);
+	
 }

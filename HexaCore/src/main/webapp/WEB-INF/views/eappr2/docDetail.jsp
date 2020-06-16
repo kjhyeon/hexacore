@@ -165,10 +165,10 @@ $(document).keypress(function(e) {
 						<c:if test="${AdtoL.appr_kind ne '참조'}">
 								<c:choose>
 										<c:when test="${AdtoL.appr_sign ne null}">
-											<td style="border: 1px solid black; width:25px; "></td>
+											<td style="border: 1px solid black; width:25px; ">${AdtoL.appr_sign}</td>
 										</c:when>
 										<c:when test="${AdtoL.appr_sign eq null}">
-											<td  style="border: 1px solid black; width:25px; ">""</td>
+											<td  style="border: 1px solid black; width:25px; ">미결재</td>
 										</c:when>
 								</c:choose>
 						</c:if>

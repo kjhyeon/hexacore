@@ -58,15 +58,10 @@ public class EapprCtrl1 {
 		map.put("id", userId);
 		map.put("start",1);
 		map.put("last",5);
-		Map<String, Object> listAll = new HashMap<String, Object>();
-		for (int i = 0; i < 3; i++) {
-			map.put("state", Integer.toString(i));
-			listAll.put("listAll"+i,service.selectMyDocList(map));
-		}
 		map.put("state", "7");
-		listAll.put("listAll7",service.selectMyDocList(map));
+		List<DocumentDTO> lists =service.selectMyDocList(map);
 		//임시저장문서0127
-		model.addAttribute("lists",listAll);
+		model.addAttribute("lists",lists);
 		model.addAttribute("id",userId);
 		model.addAttribute("docCounts",docCounts);
 		return "eappr/eapprHome";

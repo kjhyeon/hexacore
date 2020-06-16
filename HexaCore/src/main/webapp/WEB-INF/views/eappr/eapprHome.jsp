@@ -63,7 +63,7 @@
 				</div>
 			</div>
 		</div>
-<div id="calendar" style="width: 50%;">
+<div id="calendar" style="width: 35%;">
 <script type="text/javascript">
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
@@ -143,15 +143,19 @@ document.addEventListener('DOMContentLoaded', function() {
 	<div id="right2" onclick="location.href='./docLists.do?state=2'">결재중 문서<br><br><b>${docCounts.get("COUNT6")}</b> 건</div>
 </div>
 <div id="quickview">
+<c:if test="${lists ne null}">
+	<c:forEach items="${lists}" var="Ddto" varStatus="num">
 	<div id="boxs">
 		<table>
 			<tbody>
 				<tr style="text-align: center;">
-					<td>휴가신청서</td><td>제목</td><td>기안자</td><td>결재상태</td>
+					<td>${Ddto.title}</td><td>${Ddto.author}</td><td>${Ddto.regdate}</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
+	</c:forEach>
+</c:if>
 </div>
 
 </body>

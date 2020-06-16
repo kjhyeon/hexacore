@@ -97,7 +97,7 @@
 	<select id="selectNeedApprDoc" parameterType="java.util.Map" resultType="DocumentDto">
 		SELECT * FROM 
 			(SELECT 
-					ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.title, d.content, d.state, d.regdate, d.author, d.seq, d.appr_turn, a.turn a_turn FROM APPROVAL a ,DOCUMENT d  
+					ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.title, d.state, d.regdate, d.author, d.seq, d.appr_turn, a.turn a_turn FROM APPROVAL a ,DOCUMENT d  
 						WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F'
 							ORDER BY ROW_NUM ASC 
 				 	)
@@ -108,7 +108,7 @@
 	<select id="selectApprMyDoc" parameterType="java.util.Map" resultType="DocumentDto">
 		SELECT * FROM 			
 			(SELECT 
-				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.CONTENT, d.STATE, d.REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
+				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.STATE, d.REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
 					FROM DOCUMENT d ,APPROVAL a 
 						WHERE a.ID=#{id} AND d.STATE != 0 AND a.SEQ=d.SEQ AND d.APPR_TURN>=a.TURN AND (a.CHK IN ('T','R'))
 							ORDER BY ROW_NUM ASC)
@@ -119,7 +119,7 @@
 	<select id="selectReferDoc" parameterType="java.util.Map" resultType="DocumentDto">
 		SELECT * FROM 			
 			(SELECT 
-				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.CONTENT, d.STATE, d.REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
+				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.STATE, d.REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
 					FROM DOCUMENT d ,APPROVAL a 
 						WHERE ID = #{id} AND APPR_KIND = '참조' AND STATE>0 AND d.SEQ=a.SEQ
 							ORDER BY ROW_NUM ASC)
