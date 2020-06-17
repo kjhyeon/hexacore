@@ -99,12 +99,6 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public boolean updateDocTurn(ApprovalDTO Adto) {
-		log.info("updateDocTurn serviceImpl 실행");
-		return dao.updateDocTurn(Adto);
-	}
-
-	@Override
 	public boolean insertDocType(DocumentTypeDTO DTdto) {
 		log.info("insertDocType serviceImpl 실행");
 		return dao.insertDocType(DTdto);
@@ -203,12 +197,6 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public List<DocumentDTO> searchDoc(String word) {
-		log.info("searchDoc ServiceImpl 실행 : {}",word);
-		return dao.searchDoc(word);
-	}
-
-	@Override
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map) {
 		log.info("selectMyDoc ServiceImpl 실행 : {}",map);
 		List<DocumentDTO> lists = null;
@@ -274,6 +262,7 @@ public class EapprServiceImpl implements EapprIService{
 
 	@Override
 	public Map<String, Object> selectDocListAll(String id) {
+		log.info("selectDocListAll {}", id);
 		return dao.selectDocListAll(id);
 	}
 
@@ -327,6 +316,7 @@ public class EapprServiceImpl implements EapprIService{
 		String userId = ADto.getId();
 		String sign = dao.selectSignImg(userId);
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		//믄사 내용 조회
 		DocumentDTO Ddto = dao.selectDoc(seq);
 		//문서 결재선 전체 조회
@@ -367,7 +357,7 @@ public class EapprServiceImpl implements EapprIService{
 	@Override
 	public boolean upApprDoc(DocumentDTO Ddto) {
 		String seq = Integer.toString(Ddto.getSeq());
-		log.info("큰일이다{}",Ddto);
+		log.info("********upApprDoc{}",Ddto);
 		boolean isc = false;
 		if(Ddto.getState()==0) {
 			isc = dao.updateSaveToAppr(seq);

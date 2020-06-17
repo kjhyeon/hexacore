@@ -77,13 +77,6 @@ public interface EapprIService {
 	public boolean deleteFile(String seq);
 	
 	/**
-	 * 문서 상태 업데이트
-	 * @param Adto seq, state (appr_turn= 결재시사용)
-	 * @return True : 성공 / False 실패
-	 */
-	public boolean updateDocTurn(ApprovalDTO Adto);
-	
-	/**
 	 * 문서양식 입력
 	 * @param DTdto name, content, category
 	 * @return  True : 성공 / False 실패
@@ -163,13 +156,6 @@ public interface EapprIService {
 	 * @return 개수
 	 */
 	public int selectDocTypeListSize();
-	
-	/**
-	 * 문서 검색기능
-	 * @param word
-	 * @return 검색된 문서
-	 */
-	public List<DocumentDTO> searchDoc(String word);
 	
 	/**
 	 * 각 문서함 갯수
