@@ -59,7 +59,7 @@ function checkImgSize(obj, size) {
 function a(input,str) {
 	if (input.files && input.files[0]) {
 		if(this.value != "") { 
-			var extPlan = "JPG, PNG"; 
+			var extPlan = "JPG, PNG, GIF"; 
 			var checkSize = 1024*1024*5; // 5MB 
 			if(!checkImg(input, extPlan) | !checkImgSize(input, checkSize) | !checkLength(input)) { 
 //				input.select();
