@@ -170,7 +170,7 @@
 									<img src="./image/default_profile.png" alt="사진">
 								</c:when>
 								<c:otherwise>
-									<img src="/home/HexaCore/image/profile/${emp.profile_img }" alt="사진">
+									<img src="/home/HexaCore/image/profile/${emp.profile_img }" alt="사진" style="size: 120px 120px;">
 								</c:otherwise>
 							</c:choose>
 							</td>
