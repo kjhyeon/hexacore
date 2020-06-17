@@ -33,14 +33,14 @@
 					<table>
 						<c:forEach items="${eDocList}" var="Doc">
 							<tr id="Doc_List_Tr">
-								<td>
+								<td id="DocList_List">
 									<a href="./docDetail.do?seq=${Doc.seq}">
 									<c:choose>
-										<c:when test="${fn:length(Doc.title) > 12 }">
-											${fn:substring(Doc.title,0,12)}ㆍㆍㆍ
+										<c:when test="${fn:length(Doc.title) > 22 }">
+											${fn:substring(Doc.title,0,22)}ㆍㆍㆍ
 										</c:when>
 										<c:otherwise>
-											${Doc.title }
+											${Doc.title}
 										</c:otherwise>
 									</c:choose>
 									</a>
@@ -81,13 +81,29 @@
 					</div>
 					<hr>
 					<div>
-						<table class="NoticeList_Title">
-							<c:forEach items="${noticeList}" var="notice">
-								<tr>
+						<table class="NoticeList_Title" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+							<c:forEach items="${noticeList}" var="notice" varStatus="i">
+								<tr id="NoticeLists_tr">
 									<td id="NoticeList_List">
 										<a href="./goBbs.do?seq=${notice.seq}&category=1">
-											[공지]${notice.title}&nbsp;&nbsp;${fn:substring(notice.regdate,0,10)}
+											<c:choose>
+												<c:when test="${fn:length(notice.title) > 15 }">
+													[공지]${fn:substring(notice.title,0,15)}ㆍㆍㆍ
+												</c:when>
+												<c:otherwise>
+													[공지]${notice.title}							
+												</c:otherwise>
+											</c:choose>
 										</a>
+										<c:if test="${i.count ne noticeList.size() }">
+											<hr>
+										</c:if>
+									</td>
+									<td id="NoticeList_List">
+										${fn:substring(notice.regdate,0,10)}
+										<c:if test="${i.count ne noticeList.size() }">
+											<hr>
+										</c:if>
 									</td>
 								</tr>
 							</c:forEach>
@@ -107,13 +123,29 @@
 					</div>
 					<hr>
 					<div>
-						<table class="FileList_Title">
-							<c:forEach items="${fileList}" var="fileBbs">
+						<table class="FileList_Title" style="margin-left: auto; margin-right: auto; margin-top: 10px;">
+							<c:forEach items="${fileList}" var="fileBbs" varStatus="ㅑ">
 								<tr>
 									<td id="NoticeList_List">
 										<a href="./goBbs.do?seq=${fileBbs.seq}&category=2">
-											[자료]${fileBbs.title}&nbsp;&nbsp;${fn:substring(fileBbs.regdate,0,10)}
+											<c:choose>
+												<c:when test="${fn:length(fileBbs.title) > 15 }">
+													[자료]${fn:substring(fileBbs.title,0,15)}ㆍㆍㆍ
+												</c:when>
+												<c:otherwise>
+													[자료]${fileBbs.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;							
+												</c:otherwise>
+											</c:choose>
 										</a>
+										<c:if test="${i.count ne fileList.size() }">
+											<hr>
+										</c:if>
+									</td>
+									<td id="NoticeList_List">
+										${fn:substring(fileBbs.regdate,0,10)}
+										<c:if test="${i.count ne fileList.size() }">
+											<hr>
+										</c:if>
 									</td>
 								</tr>
 							</c:forEach>

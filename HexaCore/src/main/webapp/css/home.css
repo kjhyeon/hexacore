@@ -100,7 +100,7 @@
 	margin: 15px 20px;
  }
  
- #Emp_Table>tr{
+ #Emp_Table>tr{ 
  	margin: auto;
  	text-align: center;
  	font-size: 1.8em;
@@ -135,9 +135,20 @@
  }
  
  /* 공지게시판 리스트 */
- #NoticeList_List{
- 	padding-top: 15px;
+ #NoticeList_List > a{
+	padding-top: 15px;
  	padding-bottom: 15px;
+ 	font-size: 0.9em;
+ 	color: black;
+ 	text-decoration: none;
+ }
+ 
+ #NoticeList_List > a:hover{
+	padding-top: 15px;
+ 	padding-bottom: 15px;
+ 	font-size: 1.05em;
+ 	color: #0078FF;
+ 	text-decoration: blink;
  }
  
  /* 자료실 제목 */
@@ -147,12 +158,12 @@
  	font-size: 1.2em;
  }
  
- /* 자료실 리스트 */
+ /* 공지사항, 자료실 리스트 */
  #NoticeList_List{
  	padding-top: 15px;
  	padding-bottom: 15px;
+ 	font-size: 0.9em;
  }
- 
  
  #Doc_Title_Header{
 	margin-bottom: 0px;
@@ -162,13 +173,23 @@
  
  .container_div1>table{
  	text-align: center;
- 	font-size: 0.8em;
+ 	font-size: 1em;
 	margin: 20px 20px;
  }
  
   #Doc_List_Tr>td{
   	padding: 15px 10px;
+  	padding-left: 35px;
+  	
   }
- 
- 
+  
+  #DocList_List>a{
+  	color: black;
+  	text-decoration: none;
+  }
+  
+  #DocList_List>a:hover{
+  	color: #0078FF;
+  	text-decoration: blink;
+  }
  
