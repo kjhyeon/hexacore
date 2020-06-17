@@ -90,7 +90,7 @@ public interface EapprIDao {
 	 * @param seq 문서 seq
 	 * @return True : 성공 / False 실패
 	 */
-	public boolean deleteFile(String seq);
+	public boolean deleteFile(Map<String, Object> map);
 	
 	/**
 	 * 결재상태 chk 업데이트

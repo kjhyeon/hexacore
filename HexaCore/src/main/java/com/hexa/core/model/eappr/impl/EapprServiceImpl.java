@@ -93,9 +93,9 @@ public class EapprServiceImpl implements EapprIService{
 	}
 
 	@Override
-	public boolean deleteFile(String seq) {
+	public boolean deleteFile(Map<String, Object> map) {
 		log.info("deleteFIle serviceImpl 실행");
-		return dao.deleteFile(seq);
+		return dao.deleteFile(map);
 	}
 
 	@Override
@@ -369,12 +369,15 @@ public class EapprServiceImpl implements EapprIService{
 
 	@Transactional
 	@Override
-	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename) {
+	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename,String[] files) {
 		boolean isc = dao.updateDoc(Ddto);
 		boolean isc2=true;
 		boolean isc3=true;
 		if(filename.length!=0) {
-		isc2 = dao.deleteFile(Integer.toString(Ddto.getSeq()));
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("seq", Integer.toString(Ddto.getSeq()));
+			map.put("files", files);
+		isc2 = dao.deleteFile(map);
 		isc3 = saveDocFile(filename, Ddto.getSeq());
 		}
 		int iscI =0;

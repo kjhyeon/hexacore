@@ -92,9 +92,9 @@ public class EapprDaoImpl implements EapprIDao{
 	}
 
 	@Override
-	public boolean deleteFile(String seq) {
-		log.info("deleteFile daoImpl 실행 : {}",seq);
-		int n = sqlSession.insert(NS+"deleteFile",seq);
+	public boolean deleteFile(Map<String, Object> map) {
+		log.info("deleteFile daoImpl 실행 : {}",map);
+		int n = sqlSession.insert(NS+"deleteFile",map);
 		return (n>0)?true:false;
 	}
 
