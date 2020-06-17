@@ -123,7 +123,9 @@ public class MngCtrl {
 		if(isc) {
 			Authentication auth = session.getContext().getAuthentication();
 			LoginDTO lDto = (LoginDTO) auth.getPrincipal();
+			log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$44 {}/{}",lDto.getUsername(),dto.getId());
 			if(lDto.getUsername().equals(dto.getId())) {
+				log.info("$$$$$$$$$$$$$$$$$$$$$$$$$$$44 {}/{}",lDto.getUsername(),dto.getId());
 				EmployeeDTO eDto = eService.selectEmployee(dto.getId());
 				lDto.setDepartment_id(String.valueOf(eDto.getDepartment_id()));
 				lDto.setDepartment_name(eDto.getDepartment_name());
@@ -133,7 +135,7 @@ public class MngCtrl {
 				lDto.setProfile_img(eDto.getProfile_img());
 				lDto.setName(eDto.getName());
 				String auths = null;
-				if(dto.getAuth().trim().equalsIgnoreCase("a"))
+				if(eDto.getAuth().trim().equalsIgnoreCase("a"))
 					auths = "ROLE_ADMIN";
 				else
 					auths = "ROLE_USER";
@@ -182,7 +184,6 @@ public class MngCtrl {
 
 		if (logout != null) {
 			log.info("유저 로그아웃");
-			model.addAttribute("msg", "로그아웃 성공");
 		}
 		return "../login";
 	}
@@ -260,7 +261,7 @@ public class MngCtrl {
 			lDto.setProfile_img(eDto.getProfile_img());
 			lDto.setName(eDto.getName());
 			String auths = null;
-			if(dto.getAuth().trim().equalsIgnoreCase("a"))
+			if(eDto.getAuth().trim().equalsIgnoreCase("a"))
 				auths = "ROLE_ADMIN";
 			else
 				auths = "ROLE_USER";
