@@ -45,7 +45,7 @@
 	}
 	
 </style>
-<title>Insert title here</title>
+<title>HEXACORE 부서관리</title>
 </head>
 <body>
 	<div id="container">

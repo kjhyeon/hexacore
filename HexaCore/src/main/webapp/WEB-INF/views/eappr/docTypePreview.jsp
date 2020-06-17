@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>HEXACORE 문서양식 미리보기</title>
 </head>
 <body>
 	${dto}
