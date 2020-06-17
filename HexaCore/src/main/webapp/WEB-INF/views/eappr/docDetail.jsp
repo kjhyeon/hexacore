@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link type="text/css" rel="stylesheet" href="./css/sweetalert.css">
 <meta charset="UTF-8">
-<title>전자</title>
+<title>HEXACORE 문서상세조회</title>
 <link rel="stylesheet" href="./css/doc.css">
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -172,7 +172,6 @@
 			</div>
 			</div>
 		</div>
-		<c:if test="${Cdto ne null }">
 		<div class="commentTable" style="float: left; width: 70%;">
 			<hr>
 			<table id="commentTable" class="table" style="text-align: center;">
@@ -195,7 +194,6 @@
 				</c:forEach>
 			</table>
 		</div>
-		</c:if>
 		
 		</form>
 		<div id="apprDoc" class="modal fade" role="dialog">

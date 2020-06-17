@@ -79,7 +79,7 @@
 
 	<!-- 코멘트 조회  -->
 	<select id="selectComment" parameterType="java.lang.String" resultType="DocCommentDto">
-	SELECT SEQ, COMMENT_SEQ, ID, NAME, CONTENT, REGDATE
+	SELECT SEQ, COMMENT_SEQ, ID, NAME, CONTENT, TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MM') REGDATE
 		FROM DOC_COMMENTS
 			WHERE SEQ = #{seq}
 				ORDER BY COMMENT_SEQ
@@ -201,7 +201,7 @@
 	<select id="selectMyDocList" parameterType="java.util.Map" resultType="DocumentDto">
 		SELECT * FROM 			
 			(SELECT 
-				ROW_NUMBER() OVER(ORDER BY SEQ DESC) AS ROW_NUM, TITLE, STATE, REGDATE, AUTHOR, SEQ, APPR_TURN
+				ROW_NUMBER() OVER(ORDER BY SEQ DESC) AS ROW_NUM, TITLE, STATE, TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MI') REGDATE, AUTHOR, SEQ, APPR_TURN
 					FROM DOCUMENT
 						WHERE AUTHOR=#{id}
 						<if test="state != 777">

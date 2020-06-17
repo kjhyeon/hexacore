@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>전자결재 메인</title>
+<title>HEXACORE 전자결재</title>
 <link rel="stylesheet" href="./css/sidebar.css">
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
 </head>

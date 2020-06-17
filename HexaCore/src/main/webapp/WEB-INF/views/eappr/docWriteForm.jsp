@@ -5,7 +5,7 @@
 <html>	
 <head>	
 <meta charset="UTF-8">	
-<title>전자문서 작성</title>	
+<title>HEXACORE 전자문서 작성</title>	
 <link rel="stylesheet" href="./css/doc.css">	
 </head>	
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>	

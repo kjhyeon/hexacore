@@ -1,7 +1,6 @@
 package com.hexa.core.dto;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class DocCommentDTO implements Serializable{
 	
@@ -12,13 +11,13 @@ public class DocCommentDTO implements Serializable{
 	String id        ;
 	String name      ;
 	String content   ;
-	Date regdate     ;
+	String regdate     ;
 	
 	public DocCommentDTO() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DocCommentDTO(int seq, int comment_seq, String id, String name, String content, Date regdate) {
+	public DocCommentDTO(int seq, int comment_seq, String id, String name, String content, String regdate) {
 		super();
 		this.seq = seq;
 		this.comment_seq = comment_seq;
@@ -74,11 +73,11 @@ public class DocCommentDTO implements Serializable{
 		this.content = content;
 	}
 
-	public Date getRegdate() {
+	public String getRegdate() {
 		return regdate;
 	}
 
-	public void setRegdate(Date regdate) {
+	public void setRegdate(String regdate) {
 		this.regdate = regdate;
 	}
 	
