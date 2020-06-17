@@ -74,7 +74,7 @@ public interface EapprIService {
 	 * @param seq 문서 seq
 	 * @return True : 성공 / False 실패
 	 */
-	public boolean deleteFile(String seq);
+	public boolean deleteFile(Map<String, Object> map);
 	
 	/**
 	 * 문서양식 입력
@@ -210,6 +210,6 @@ public interface EapprIService {
 	 * 임시저장 기능
 	 * @param Ddto
 	 */
-	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename);
+	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename,String[] files);
 	
 }

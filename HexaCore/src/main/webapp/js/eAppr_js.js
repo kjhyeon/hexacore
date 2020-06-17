@@ -164,7 +164,7 @@ function report() {
 		alert("결재자를 선택하세요.");
 	}else{
 		$(".leftBox").append("<input type='hidden' name='state' value='1'>");
-		$("#formDoc").attr("action", "./reportDoc.do");
+		$("#formDoc").attr("action", "./saveUpDoc.do");
 		$("#formDoc").attr("method", "post");
 		$("#formDoc").submit();
 	}
@@ -196,7 +196,8 @@ function cancelmodify(){
 	}
 }
 
-function modifyFormDoc(val){
+function modifyFormDoc(val,flist){
+	var len = document.getElementsByName("files").length;
 	$.ajax({
 		url:"./modifyFormDoc.do",
 		type : "post",
@@ -211,8 +212,11 @@ function modifyFormDoc(val){
 			$("#contentModi").html("");
 			$("#contentModi").append(contentInsert(msg.content));
 			$(".apprSignTable").html("");
+			if(len<3){
 				var button = "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
 				$("#file_td").append(button);
+			}
+				$(delBtn).attr("type","button");
 		},	error: function() {
 			alert("실패");
 		}
@@ -243,6 +247,14 @@ function btnInsert() {
 	return result;
 }
 
+function deleteFile(val) {
+	$(val).parent().remove();
+	var len = document.getElementsByName("files").length;
+	if(len==2){
+		$("#file_td").append("<input id='addbutton' type='button' value='추가' onclick='addinput()'>");
+	}
+}
+
 function deleteDocc(seq,state){
 	$("#formDoc").attr("action",'./deleteDoc.do?seq='+seq+"&state="+state);
 	$("#formDoc").attr("method","GET");
@@ -257,10 +269,12 @@ function upApprDocc(){
 
 
 function addinput(){
-	var len = document.getElementsByName("filename").length;
+	var len = document.getElementsByName("files").length;
+	var input = "<span>";
 	if(len<3){
 		$("#addbutton").remove();
-		var input = "<input type='file' name='filename' onchange='fileChk(this)'><br>";
+		input += "<input type='file' name='filename' onchange='fileChk(this)'><input type='button'  onclick='deleteFile(this)' value='파일삭제'>";
+		input += "</span>";
 		if(len<2){
 			input += "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
 		}
@@ -292,7 +306,5 @@ function fileChk(f){
 		}
 	}
 }
-
-
 
 

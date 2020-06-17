@@ -96,7 +96,7 @@
 					test="${name eq Ddto.author && (Ddto.state eq '0' || Ddto.state eq '1') && (Ddto.appr_turn ne '2')}">
 					<c:if test="${Ddto.state eq '0'}">
 						<input type="button" id="upApprDoc" value="상신"	onclick="upApprDocc()">
-					<input type="button" id="modifyDoc" value="수정"		onclick="modifyFormDoc('${Ddto.seq}')">
+					<input type="button" id="modifyDoc" value="수정"		onclick="modifyFormDoc('${Ddto.seq}','${flist}')">
 					<input type="button" id="deleteDoc" value="삭제"		onclick="deleteDocc('${Ddto.seq}','${Ddto.state}')">
 					</c:if>
 					<c:if test="${Ddto.state eq '1'}">
@@ -116,7 +116,11 @@
 					<tr>
 						<td id="file_td">
 						<c:forEach items="${flist}" var="files" varStatus="n">
-     		 				<a href="./fdownload.do?name=${files.name}" >${files.ori_name}</a> | ${files.f_size }byte
+							<span id="file">
+							<input readonly="readonly" type="hidden" name="files" value="${files.name}" >
+     		 				<a href="./fdownload.do?name=${files.name}" >${files.ori_name} | ${files.f_size }byte</a>
+     		 				<input id="delBtn" type='hidden' value='파일삭제' onclick='deleteFile(this)' ><br>
+     		 				</span>
      		 			</c:forEach>
 						</td>
 					</tr>
@@ -151,7 +155,7 @@
 						</c:forEach>
 							</tr>
 							<tr>
-								<c:forEach  var="AdtoL" items="${apprList}" >
+						<c:forEach  var="AdtoL" items="${apprList}" >
 						<c:if test="${AdtoL.appr_kind ne '참조'}">
 								<c:choose>
 										<c:when test="${AdtoL.appr_sign ne null}">
@@ -162,7 +166,7 @@
 										</c:when>
 								</c:choose>
 						</c:if>
-								</c:forEach>
+						</c:forEach>
 							</tr>
 							</c:if>
 					</table>

@@ -58,9 +58,16 @@
 	</insert>
 	
 	<!-- 업로드한 파일 삭제	DB에 저장되어있는 첨부파일 영구 삭제 하는 쿼리 작성 및 테스트 -->
-	<delete id="deleteFile" parameterType="java.lang.String">
+	<delete id="deleteFile" parameterType="java.util.Map">
 	DELETE FROM DOC_FILES
-		WHERE SEQ= #{seq}
+		WHERE <if test="files != null">
+				NAME NOT IN
+				<foreach collection="files" item="name" open="(" separator="," close=")">
+					#{name}
+				</foreach> 
+				AND
+			</if>
+				SEQ = #{seq}
 	</delete>
 	
 	<!-- 문서 결재시 결재선 업데이트 CHK T 반려시 R 업데이트-->
