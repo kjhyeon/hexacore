@@ -255,7 +255,7 @@ public class FileBbsCtrl {
 		map.put("seqs", chkVal);
 		isc = service.updateMultiDelFileBbs(map);
 
-		return isc?"redirect:/fileBbsMain.do":"redirect:/logout.do";
+		return isc?"redirect:/fileBbsMain.do":"redirect:/fileBbsMain.do";
 	}
 	
 	// 자유게시판 답글 작성.GET

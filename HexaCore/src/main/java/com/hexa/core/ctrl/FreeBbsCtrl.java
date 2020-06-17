@@ -263,7 +263,7 @@ public class FreeBbsCtrl {
 		map.put("seqs", chkVal);
 		isc = service.updateMultiDelFreeBbs(map);
 		
-		return isc?"redirect:/freeBbsMain.do":"redirect:/logout.do";
+		return isc?"redirect:/freeBbsMain.do":"redirect:/freeBbsMain.do";
 	}
 	
 	

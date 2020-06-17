@@ -256,7 +256,7 @@ private Logger log = LoggerFactory.getLogger(this.getClass());
 			map.put("seqs", chkVal);
 			isc = service.updateMultiDelNoticeBbs(map);
 			
-			return isc?"redirect:/noticeBbsMain.do":"redirect:/logout.do";
+			return isc?"redirect:/noticeBbsMain.do":"redirect:/noticeBbsMain.do";
 		}
 		
 		
