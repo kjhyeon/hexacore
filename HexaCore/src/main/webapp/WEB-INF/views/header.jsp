@@ -103,7 +103,31 @@ function empPop() {
 }
 
 function totalSearch(){
-	document.forms[0].submit();
+	temp = $("#keyword").val();
+	if(temp.length<1){
+		alert("검색어를 입력해주세요");
+		return false;
+	}
+	else{
+		$("#keyword").val($("#keyword").val().trim());
+		document.forms[0].submit();
+	}
+	return false;
+}
+
+function totalSearchEnter(e){
+	if(e.keyCode === 13){
+		temp = $("#keyword").val();
+		if(temp.length<1){
+			alert("검색어를 입력해주세요");
+			return false;
+		}
+		else{
+			$("#keyword").val($("#keyword").val().trim());
+			document.forms[0].submit();
+		}
+		return false;
+	}
 }
 </script>
 <body>
@@ -121,7 +145,7 @@ function totalSearch(){
 			</c:otherwise>
 		</c:choose>
 		<div class="searchbar">
-			<form class="navbar-form" role="search" action="./totalSearch.do" method="get">
+			<form class="navbar-form" role="search" action="./totalSearch.do" method="get" onsubmit="return false;" onkeydown="return totalSearchEnter(event)" >
 				<div class="input-group-btn">
 					<select name="type" style="width:120px;  margin:1px" class="form-control">
 						<option value="title/con">제목+내용</option>
@@ -129,8 +153,8 @@ function totalSearch(){
 						<option value="content">내용</option>
 						<option value="author">글쓴이</option>
 					</select>
-					<input type="text" class="form-control" style="width:300px;  margin:1px" name="keyword">
 					<input id="cnt" type="hidden" value="0">
+					<input type="text" class="form-control" style="width:300px;  margin:1px" name="keyword" id="keyword">
 					<input id="Mcnt" type="hidden" value="0">
 						<button class="form-control btn btn-default" type="button" style="border-radius: 5px; margin:1px;" onclick="totalSearch()">
 							<span class="glyphicon glyphicon-search"></span>
