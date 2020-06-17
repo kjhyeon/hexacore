@@ -113,13 +113,6 @@ public class EapprDaoImpl implements EapprIDao{
 	}
 
 	@Override
-	public boolean updateDocTurn(ApprovalDTO Adto) {
-		log.info("updateDocTurn daoImpl 실행 : {}",Adto);
-		int n = sqlSession.insert(NS+"updateDocTurn",Adto);
-		return (n>0)?true:false;
-	}
-
-	@Override
 	public boolean insertDocType(DocumentTypeDTO DTdto) {
 		log.info("insertDocType daoImpl 실행 : {}",DTdto);
 		int n = sqlSession.insert(NS+"insertDocType",DTdto);
@@ -219,13 +212,13 @@ public class EapprDaoImpl implements EapprIDao{
 
 	@Override
 	public List<DocumentDTO> selectApprMyDoc(Map<String, Object> map) {
-		log.info("searchDoc DaoImpl 실행 : {}",map);
+		log.info("selectApprMyDoc DaoImpl 실행 : {}",map);
 		return sqlSession.selectList(NS+"selectApprMyDoc",map);
 	}
 
 	@Override
 	public List<DocumentDTO> selectMyDocList(Map<String, Object> map) {
-		log.info("selectMyDoc DaoImpl 실행 : {}",map);
+		log.info("selectMyDocList DaoImpl 실행 : {}",map);
 		return sqlSession.selectList(NS+"selectMyDocList", map);
 	}
 

@@ -6,7 +6,7 @@
 	<!-- 문서 수정을 위한 해당 문서 조회 -->
 	<select id="selectDoc" parameterType="java.lang.String" resultType="DocumentDto">
 	SELECT	SEQ, 		AUTHOR, 	TITLE,		STATE,
-		 	APPR_TURN, 	TYPE_SEQ, 	CONTENT,	REGDATE 
+		 	APPR_TURN, 	TYPE_SEQ, 	CONTENT,	TO_CHAR(REGDATE, 'YYYY-MM-DD HH24:MM') REGDATE
 		FROM DOCUMENT
 			WHERE SEQ = #{seq}
 	</select>
@@ -85,20 +85,11 @@
 				ORDER BY COMMENT_SEQ
 	</select>
 	
-	<!-- 승인시  문서함 TURN 업데이트 -->
-	<update id="updateDocTurn" parameterType="ApprovalDto">
-	UPDATE DOCUMENT
-		SET STATE =#{state}
-		<if test="appr_turn!= null AND appr_turn gte 1 AND appr_turn lte 2">
-			,APPR_TURN = (SELECT MAX(APPR_TURN) FROM DOCUMENT)+1
-		</if>
-			WHERE SEQ =#{seq}
-	</update>
 	<!-- 결재해야되는 문서 리스트 조회 -->
 	<select id="selectNeedApprDoc" parameterType="java.util.Map" resultType="DocumentDto">
 		SELECT * FROM 
 			(SELECT 
-					ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.title, d.state, d.regdate, d.author, d.seq, d.appr_turn, a.turn a_turn FROM APPROVAL a ,DOCUMENT d  
+					ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.title, d.state,  TO_CHAR(d.REGDATE, 'YYYY-MM-DD HH24:MM') REGDATE, d.author, d.seq, d.appr_turn, a.turn a_turn FROM APPROVAL a ,DOCUMENT d  
 						WHERE a.ID=#{id} AND d.STATE>0 AND a.SEQ = d.SEQ AND a.TURN = d.APPR_TURN AND a.CHK = 'F'
 							ORDER BY ROW_NUM ASC 
 				 	)
@@ -109,7 +100,7 @@
 	<select id="selectApprMyDoc" parameterType="java.util.Map" resultType="DocumentDto">
 		SELECT * FROM 			
 			(SELECT 
-				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.STATE, d.REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
+				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.STATE, TO_CHAR(d.REGDATE, 'YYYY-MM-DD HH24:MM') REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
 					FROM DOCUMENT d ,APPROVAL a 
 						WHERE a.ID=#{id} AND d.STATE != 0 AND a.SEQ=d.SEQ AND d.APPR_TURN>=a.TURN AND (a.CHK IN ('T','R'))
 							ORDER BY ROW_NUM ASC)
@@ -120,28 +111,11 @@
 	<select id="selectReferDoc" parameterType="java.util.Map" resultType="DocumentDto">
 		SELECT * FROM 			
 			(SELECT 
-				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.STATE, d.REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
+				ROW_NUMBER() OVER(ORDER BY d.seq DESC) AS ROW_NUM, d.TITLE, d.STATE, TO_CHAR(d.REGDATE, 'YYYY-MM-DD HH24:MM') REGDATE, d.AUTHOR, d.SEQ, d.APPR_TURN, id, a.TURN a_turn
 					FROM DOCUMENT d ,APPROVAL a 
 						WHERE ID = #{id} AND APPR_KIND = '참조' AND STATE>0 AND d.SEQ=a.SEQ
 							ORDER BY ROW_NUM ASC)
 				WHERE ROW_NUM BETWEEN #{start} AND #{last}
-	</select>
-	
-	<select id="searchDoc" parameterType="java.util.Map" resultType="DocumentDto">
-	SELECT TITLE, AUTHOR , CONTENT 
-		FROM DOCUMENT d
-			
-			<trim prefix="where" prefixOverrides="OR">
-				<if test="title!= null">
-					TITLE LIKE '#{title}%'
-				</if>
-				<if test="content!=null">
-					OR CONTENT LIKE '#{content}%'
-				</if>
-				<if test="author!=null">
-					OR AUTHOR LIKE '#{author}%'
-				</if>
-			</trim>
 	</select>
 	
 	<!-- 문서 양식 추가	 -->
@@ -277,7 +251,7 @@
 		SELECT TYPE_SEQ FROM DOCUMENT_TYPE WHERE TYPE_SEQ=(SELECT MAX(TYPE_SEQ) FROM DOCUMENT_TYPE)
 	</select>
 	
-	
+	<!-- 문서함 갯수 조회-->
 	<select id="selectDocListAll" parameterType="java.lang.String" resultType="java.util.Map">
 		SELECT * 
 		FROM

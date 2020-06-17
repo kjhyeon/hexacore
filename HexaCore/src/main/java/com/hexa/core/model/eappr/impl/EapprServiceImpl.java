@@ -73,7 +73,7 @@ public class EapprServiceImpl implements EapprIService{
 		sService.addDocIndex(newDto);
 		return intSeq;
 	}
-
+	
 	@Override
 	public DocumentDTO selectDoc(String seq) {
 		log.info("selectDoc serviceImpl 실행");

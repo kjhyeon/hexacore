@@ -114,13 +114,6 @@ public interface EapprIDao {
 	public List<DocCommentDTO> selectComment(String seq);
 	
 	/**
-	 * 문서 상태 업데이트
-	 * @param Adto seq, state (appr_turn= 결재시사용)
-	 * @return True : 성공 / False 실패
-	 */
-	public boolean updateDocTurn(ApprovalDTO Adto);
-	
-	/**
 	 * 문서양식 입력
 	 * @param DTdto name, content, category
 	 * @return  True : 성공 / False 실패

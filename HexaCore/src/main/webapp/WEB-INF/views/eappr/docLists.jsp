@@ -28,11 +28,11 @@
 		<form  method="post">
 			<table id="myTable" class="table table-bordered table-striped" >
 				<tr>
-					<th>문서번호</th>
-					<th>기안자</th>
+					<th style="width:100px;">문서번호</th>
+					<th style="width:100px;">기안자</th>
 					<th>제목</th>
-					<th>기안일</th>
-					<th>문서상태</th>
+					<th style="width:200px;">기안일</th>
+					<th style="width:100px;">문서상태</th>
 				</tr>
 				<c:if test="${empty lists}">
 					<tr>

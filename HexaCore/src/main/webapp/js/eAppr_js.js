@@ -86,8 +86,7 @@ function rejectDoc(a_turn,number){
 }
 
 
-//
-//////////////////////////////////
+//결재선 지정//////////////////////////////////////////////////////////////////
 
 
 function apprSearch() {
@@ -103,9 +102,6 @@ function setChildValue(nodes) {
 	$(".apprtable > tbody").append(ap);
 	for (var i = 0; i < nodes.length; i++) {
 		var child = nodes[i].children;
-//				 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3종류 4X 5아이디 6e_rank
-//				 			alert(child[j].innerHTML);
-//				 		}
 		var app = "<tr>"
 				+ "<td>"+child[0].innerHTML+" "+child[1].innerHTML+"<input type='hidden' name='lists["+i+"].duty' value='"+child[0].innerHTML+" "+child[1].innerHTML+"'></td>"
 				+ "<td>"+child[2].innerHTML+"<input type='hidden' name='lists["+i+"].name' value='"+child[2].innerHTML+"'></td>"
@@ -128,9 +124,6 @@ function setChildValue2(nodes1) {
 	$(".refertable > tbody").append(ap);
 	for (var i = 0; i < nodes.length; i++) {
 		var child = nodes[i].children;
-//				 		for (var j = 0; j < child.length; j++) { //0부서 1직위 2이름 3종류 4X 5아이디 6e_rank
-//				 			alert(child[j].innerHTML);
-//				 		}
 		var app = "<tr>"
 				+ "<td>"+child[0].innerHTML+" "+child[1].innerHTML+"<input type='hidden' name='lists["+(i+3)+"].duty' value='"+child[0].innerHTML+" "+child[1].innerHTML+"'></td>"
 				+ "<td>"+child[2].innerHTML+"<input type='hidden' name='lists["+(i+3)+"].name' value='"+child[2].innerHTML+"'>"
@@ -161,6 +154,8 @@ function nodeSort(nodes){
 	
 	return nodes;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////
 
 function report() {
 	if($("#inputTitle").val()==""){
