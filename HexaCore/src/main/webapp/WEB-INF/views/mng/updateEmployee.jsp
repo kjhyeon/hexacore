@@ -34,6 +34,7 @@ $(document).ready(
 	<h2>사원 수정</h2>
 	<form action="./updateEmployee.do" method="post" id="frm" enctype="multipart/form-data">
 		<input type="hidden" value="${dto.employee_number }" name="employee_number">
+		<input type="hidden" name ="id" value="${dto.id }">
 		<table class="table table-bordered">
 			<tr>
 				<td rowspan="13">

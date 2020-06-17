@@ -68,6 +68,7 @@ function formChk(){
 	<input type="hidden" name ="employee_number" value="${dto.employee_number }">
 	<input type="hidden" name ="name" value="${dto.name }">
 	<input type="hidden" name ="state" value="${dto.state }">
+	<input type="hidden" name ="id" value="${dto.id }">
 	<table class="table table-bordered" style="width:75%">
 		<tr><td rowspan="10">
 			<c:choose>

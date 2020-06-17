@@ -21,7 +21,10 @@
 <security:intercept-url pattern="/css/**" access="permitAll" />
 <security:intercept-url pattern="/image/**" access="permitAll" />
 <security:intercept-url pattern="/javascript/**" access="permitAll" />
-<security:intercept-url pattern="/views/mng/**" access="hasRole('ADMIN')" />
+<security:intercept-url pattern="/**Employee.do" access="hasRole('ADMIN')" />
+<security:intercept-url pattern="/**Department.do" access="hasRole('ADMIN')" />
+<security:intercept-url pattern="/**employeeList.do" access="hasRole('ADMIN')" />
+<security:intercept-url pattern="/**mngMain.do" access="hasRole('ADMIN')" />
 <security:intercept-url pattern="/**" access="hasAnyRole('USER, ADMIN')" />
 <security:form-login
 login-processing-url="/logingo.do"
