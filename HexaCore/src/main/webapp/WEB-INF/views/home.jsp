@@ -62,7 +62,6 @@
 									<c:when test="${Doc.state eq 4}">반려</c:when>
 								</c:choose>
 								</td>
-								<td>${fn:substring(Doc.regdate,0,10)}</td>
 							</tr>
 						</c:forEach>
 					</table>

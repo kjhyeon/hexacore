@@ -110,8 +110,6 @@
 			<textarea id="Detail_textarea" rows="10" cols="10" name=content placeholder="댓글을 입력해주세요..."></textarea>
 		</div>
 		<input type="hidden" name="parent_seq" value="${seq.seq}">
-	        
-	
 		<div class="Detail_Comment_Write">        
       		<div class="Detail_Comment_Button">
         		<input type="button" class="btn btn-default" id=write_Comment value="작성" onclick="writeComment()">

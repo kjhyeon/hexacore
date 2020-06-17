@@ -119,7 +119,7 @@
   		</table>
    	<hr>
 	    <div class="form-group">        
-	      <div class="col-sm-offset-2 col-sm-10">
+	      <div class="Reply_Button">
 	        <button class="btn btn-default">답글작성완료</button>
 	       <a href="./freeBbsMain.do">
 	        <input type="button" class="btn btn-default" value="답글작성취소">
