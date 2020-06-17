@@ -117,7 +117,7 @@
    	<hr>
 	    <div class="form-group">        
 	      <div class="col-sm-offset-2 col-sm-10">
-	        <button class="btn btn-default">답글작성완료</button>
+	        <input type="button" class="btn btn-default" onclick="writeComplete()" value="답글작성완료">
 	       <a href="./fileBbsMain.do">
 	        <input type="button" class="btn btn-default" value="답글작성취소">
 	       </a>
