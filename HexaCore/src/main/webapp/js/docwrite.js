@@ -111,14 +111,18 @@ $(document).ready(function() {
 });
 function addinput(){
 	var len = document.getElementsByName("filename").length;
+	var input = "<span>"
 	if(len<3){
 		$("#addbutton").remove();
-		var input = "<input type='file' name='filename' onchange='fileChk(this)'><br>";
+			input += "<input type='file' name='filename' onchange='fileChk(this)'><input type='button' class='btn btn-default' name='deleteFile' onclick='delFile(this)' value='삭제'><br>";
+			input += "</span>"
 		if(len<2){
 			input += "<input id='addbutton' type='button' value='추가' onclick='addinput()'>";
 		}
+		
 		$("#file_td").append(input);
 	}
+	
 }
 
 function fileChk(f){
@@ -143,5 +147,13 @@ function fileChk(f){
 			$(f).val("");
 			return
 		}
+	}
+}
+
+function delFile(val){
+	$(val).parent().remove();
+	var len = document.getElementsByName("filename").length;
+	if(len==2){
+		$("#file_td").append("<input id='addbutton' type='button' value='추가' onclick='addinput()'>");
 	}
 }
