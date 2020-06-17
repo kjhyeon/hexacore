@@ -51,7 +51,7 @@
     		<thead>
     			<tr>
         			<th colspan="2">
-        				<input type="text" name="title" value="${dto.title}">
+        				<input type="text" id="title" name="title" value="${dto.title}">
         			</th>
       			</tr>
     		</thead>

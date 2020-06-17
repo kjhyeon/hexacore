@@ -26,7 +26,7 @@ function fileChk(f){
 
 function writeComplete(){
 	var temp = $("#title").val();
-	if(temp.length <1){
+	if(temp.length < 1){
   	  alert("제목을 입력해주세요");
   	  $("#title").focus();
   	  return false;
