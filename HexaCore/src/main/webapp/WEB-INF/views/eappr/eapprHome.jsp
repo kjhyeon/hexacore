@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>전자결재 홈</title>
+<title>HEXACORE 전자결재 홈</title>
 <style type="text/css">
 @import url(//fonts.googleapis.com/earlyaccess/jejugothic.css);
 * {

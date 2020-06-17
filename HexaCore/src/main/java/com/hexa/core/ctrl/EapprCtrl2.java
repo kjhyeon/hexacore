@@ -103,7 +103,7 @@ public class EapprCtrl2 {
 		model.addAttribute("row", row);
 		model.addAttribute("id",id);
 		model.addAttribute("state",state);
-		return "eappr2/docConfirmLists";
+		return "eappr/docLists";
 	}
 	
 	//문서 상세조회
@@ -120,7 +120,7 @@ public class EapprCtrl2 {
 		model.addAttribute("name",userId);
 		model.addAttribute("apprList",map.get("apprList"));
 		model.addAttribute("flist", map.get("flist"));
-		return "eappr2/docDetail";
+		return "eappr/docDetail";
 	}	
 	
 	//문서수정 Ajax
