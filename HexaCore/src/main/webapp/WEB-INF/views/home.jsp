@@ -68,10 +68,7 @@
 					</table>
 				</div>
 				<div class="container_div2" id="item">
-					<p>내용</p>
-					<a href="./employeeList.do">유저 관리</a><br>
-					<a href="./updateDepartment.do">부서 관리</a><br>
-					<a href="./totalIndex.do">인덱싱</a><br>
+					<img alt="메인이미지" src="./image/MainPageImage.png">
 				</div>
 				
 				<div class="container_div3" id="item">
@@ -162,11 +159,11 @@
 				<form id="deleteCal">
 				</form>
 				<div class="container_div6" id="item">
-					<h2>미정</h2>
+					<img alt="코로나" src="./image/corona19.png">
 				</div>
 
 				<div class="container_div7" id="item">
-					<table>
+					<table id="Emp_Table">
 						<tr>
 							<td id="profile" rowspan="3">
 							<c:choose>
@@ -183,11 +180,11 @@
 						</tr>
 						<tr>
 							<th>부서 :</th>
-							<td>${emp.department_name }</td>
+							<td>${emp.department_name}</td>
 						</tr>
 						<tr>
 							<th>이름 :</th>
-							<td>${emp.name }</td>
+							<td>${emp.name}</td>
 						</tr>
 					</table>
 				</div>
