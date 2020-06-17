@@ -16,16 +16,6 @@
 <script type="text/javascript" src="./js/sweetalert.js"></script>
 <script type="text/javascript" src="./js/eAppr_js.js"></script>
 
-<script src="js/pdfmake/pdfmake.min.js"></script>
-<script src="js/pdfmake/vfs_fonts.js"></script>
-<script type="text/javascript">
-$(document).keypress(function(e) {
-    if ($("#apprDoc").hasClass('in') && (e.keycode == 13 || e.which == 13)) {
-      return false;
-    }
-});	
-
-</script>
 <body>
 	<div id="ajaxModify">
 		<form id="formDoc" enctype="multipart/form-data">
