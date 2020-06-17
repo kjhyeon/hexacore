@@ -170,7 +170,6 @@ public class EapprServiceImpl implements EapprIService{
 		return dao.selectApprDocCount(map);
 	}
 
-	@Transactional
 	@Override
 	public int selectAllApprDocCount(Map<String, Object> map) {
 		log.info("selectNeedApprDocCount ServiceImpl 실행 : {}",map);
@@ -378,6 +377,7 @@ public class EapprServiceImpl implements EapprIService{
 		return (isc)?true:false;
 	}
 
+	@Transactional
 	@Override
 	public boolean saveUpDoc(DocumentDTO Ddto,MultipartFile[] filename) {
 		boolean isc = dao.updateDoc(Ddto);

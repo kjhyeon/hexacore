@@ -16,7 +16,7 @@
 		width: 100%;
 	}
 </style>
-<title>Insert title here</title>
+<title>HEXACORE 관리</title>
 </head>
 <body>
 	<div class="wrap">

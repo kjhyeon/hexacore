@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>HEXACORE 게시판</title>
 </head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -87,7 +87,7 @@
     			<tr>
     				<td>제목</td>
     				<td>
-    					<input type="text" id="title" name="title" value="제목">
+    					<input type="text" id="title" name="title" placeholder="제목">
     				</td>
     			</tr>
        			<tr>

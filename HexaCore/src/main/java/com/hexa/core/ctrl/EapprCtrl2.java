@@ -149,7 +149,10 @@ public class EapprCtrl2 {
 		log.info("********Ddto:{}", Ddto);
 		Ddto.setState(0);
 		Ddto.setAppr_turn(1);
-		boolean isc = service.saveUpDoc(Ddto,filename);
+		boolean isc=false;
+		if(Ddto.getLists().size()>2) {
+			isc = service.saveUpDoc(Ddto,filename);
+		}
 		return (isc)?"redirect:/docDetail.do?seq="+Ddto.getSeq():"redirect:/eApprMain.do";
 	}
 	

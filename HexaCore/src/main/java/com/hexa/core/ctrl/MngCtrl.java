@@ -1,12 +1,17 @@
 package com.hexa.core.ctrl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -111,12 +116,34 @@ public class MngCtrl {
 		return "mng/updateEmployee";
 	}
 	@RequestMapping(value="/updateEmployee.do",method=RequestMethod.POST)
-	public String EmployeeUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
+	public String EmployeeUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file,SecurityContextHolder session) {
 		log.info("Welcome EmployeeUpdate {}/{}/{}", dto,profile_file,sign_file);
 		
 		boolean isc = eService.updateEmployee(dto,profile_file,sign_file);
-		if(isc)
+		if(isc) {
+			Authentication auth = session.getContext().getAuthentication();
+			LoginDTO lDto = (LoginDTO) auth.getPrincipal();
+			if(lDto.getUsername().equals(dto.getId())) {
+				EmployeeDTO eDto = eService.selectEmployee(dto.getId());
+				lDto.setDepartment_id(String.valueOf(eDto.getDepartment_id()));
+				lDto.setDepartment_name(eDto.getDepartment_name());
+				lDto.setE_rank(String.valueOf(eDto.getE_rank()));
+				lDto.setE_rank_name(eDto.getE_rank_name());
+				lDto.setemail(eDto.getEmail());
+				lDto.setProfile_img(eDto.getProfile_img());
+				lDto.setName(eDto.getName());
+				String auths = null;
+				if(dto.getAuth().trim().equalsIgnoreCase("a"))
+					auths = "ROLE_ADMIN";
+				else
+					auths = "ROLE_USER";
+				Collection<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+				roles.add(new SimpleGrantedAuthority(auths));
+				Authentication newAuth = new UsernamePasswordAuthenticationToken(lDto, auth.getCredentials(), roles);
+				session.getContext().setAuthentication(newAuth);
+			}
 			return "redirect:/employeeList.do";
+		}
 		else
 			return "../../error";
 	}
@@ -217,12 +244,32 @@ public class MngCtrl {
 	}
 	
 	@RequestMapping(value="/empInfoUpdate.do", method = RequestMethod.POST)
-	public String empInfoUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file) {
+	public String empInfoUpdate(EmployeeDTO dto,MultipartFile profile_file, MultipartFile sign_file, SecurityContextHolder session) {
 		log.info("Welcome Page empInfoUpdate {}/{}/{}",dto,profile_file.getOriginalFilename(),sign_file.getOriginalFilename());
 		
 		boolean isc = eService.updateEmployee(dto,profile_file,sign_file);
-		if(isc)
+		if(isc) {
+			EmployeeDTO eDto = eService.selectEmployee(dto.getId());
+			Authentication auth = session.getContext().getAuthentication();
+			LoginDTO lDto = (LoginDTO) auth.getPrincipal();
+			lDto.setDepartment_id(String.valueOf(eDto.getDepartment_id()));
+			lDto.setDepartment_name(eDto.getDepartment_name());
+			lDto.setE_rank(String.valueOf(eDto.getE_rank()));
+			lDto.setE_rank_name(eDto.getE_rank_name());
+			lDto.setemail(eDto.getEmail());
+			lDto.setProfile_img(eDto.getProfile_img());
+			lDto.setName(eDto.getName());
+			String auths = null;
+			if(dto.getAuth().trim().equalsIgnoreCase("a"))
+				auths = "ROLE_ADMIN";
+			else
+				auths = "ROLE_USER";
+			Collection<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+			roles.add(new SimpleGrantedAuthority(auths));
+			Authentication newAuth = new UsernamePasswordAuthenticationToken(lDto, auth.getCredentials(), roles);
+			session.getContext().setAuthentication(newAuth);
 			return "redirect:/empInfo.do";
+		}
 		else
 			return "../../error";
 	}
